@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/colorwhite" />
+    <corners
+        android:bottomLeftRadius="@dimen/tv_width10"
+        android:bottomRightRadius="@dimen/tv_width10"
+        android:topLeftRadius="@dimen/tv_width10"
+        android:topRightRadius="@dimen/tv_width10" />
+
+    <padding
+        android:bottom="@dimen/tv_width5"
+        android:left="@dimen/tv_width5"
+        android:right="@dimen/tv_width5"
+        android:top="@dimen/tv_width5" />
+</shape>
