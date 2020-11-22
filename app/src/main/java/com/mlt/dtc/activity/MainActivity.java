@@ -11,8 +11,13 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.view.View;
 import android.view.Window;
+import android.widget.RelativeLayout;
+
 import com.github.infinitebanner.InfiniteBannerView;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.mlt.dtc.R;
+import com.mlt.dtc.adapter.OffersRecyclerViewAdapter;
 import com.mlt.dtc.adapter.RecyclerviewBottomAdapter;
 import com.mlt.dtc.fragment.TopBannerDialogFragment;
 import com.mlt.dtc.adapter.BannerAdapter;
@@ -20,8 +25,12 @@ import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.Constant;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.common.SystemUIService;
+import com.mlt.dtc.fragments.OffersDialogFragment;
 import com.mlt.dtc.interfaces.TaskListener;
+import com.mlt.dtc.modal.SideBannerObject;
 import com.mlt.dtc.model.TopBannerObject;
+
+import java.io.File;
 import java.util.ArrayList;
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
 import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
@@ -30,16 +39,20 @@ import static com.mlt.dtc.common.Common.getdateTime;
 import static com.mlt.dtc.common.Common.prepareMenuData;
 import static com.mlt.dtc.common.Common.topBannerList;
 import static com.mlt.dtc.common.Constant.count;
+import static com.mlt.dtc.common.Constant.multimediaPath;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener {
     public InfiniteBannerView infiniteBannerView;
     public Boolean isSelected=false;
-    private RecyclerView rvBottomMenu;
-
+    private RecyclerView rvBottomMenu, recycler_view_side_offers;
+    private RelativeLayout layout_uparrow,down_arrow;
+    public ArrayList<SideBannerObject> fileList;
     int topBannerCount,positionTopBanner;
-
+    public OffersRecyclerViewAdapter adapter_menus = null;
     public static MainActivity mainActivity;
-
+    private GoogleApiClient googleApiClient;
+    public static int restrict_double_click = 0;
+    private int Position, sideoffersCount;
 
     public static MainActivity getInstance(){
 
@@ -69,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void findviewbyid() {
         mainActivity = this;
         infiniteBannerView = findViewById(R.id.pager);
+        rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
         recycler_view_side_offers = findViewById(R.id.recycler_view_side_offers);
         layout_uparrow = findViewById(R.id.layout_uparrow);
         down_arrow = findViewById(R.id.down_arrow);
@@ -155,17 +169,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         }
-    }
-
-    @Override
-    public void onFinished(String result) {
-//        iv_happyscreen.setEnabled(true);
-//        ll_Driverinfo.setEnabled(true);
-//        ll_Time.setEnabled(true);
-//        iv_weatherimage.setEnabled(true);
-//        tripdetail.setEnabled(true);
-//        ivMenu.setEnabled(true);
-//        view.setEnabled(true);
     }
 
     private GoogleApiClient getAPIClientInstance() {
