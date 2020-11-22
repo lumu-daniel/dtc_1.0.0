@@ -11,6 +11,7 @@
     <dimen name="tv_width4">4dp</dimen>
     <dimen name="tv_width5">5dp</dimen>
     <dimen name="tv_width7">7dp</dimen>
+    <dimen name="tv_width8">8dp</dimen>
     <dimen name="tv_width9">9dp</dimen>
     <dimen name="tv_width10">10dp</dimen>
     <dimen name="tv_width30">30dp</dimen>
