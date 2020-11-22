@@ -3,7 +3,8 @@ package com.mlt.dtc.common;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class PreferenceConnector {
+public
+class PreferenceConnector {
     public static final String PREF_NAME = "USER_PREFERENCES";
     public static final int MODE = Context.MODE_WORLD_READABLE;
 
@@ -62,9 +63,6 @@ public class PreferenceConnector {
     public static void RemoveItem(Context context, String key) {
         getEditor(context).remove(key).commit();
     }
-
-
-
 
 
 }
