@@ -131,7 +131,7 @@
                                     android:scrollHorizontally="true"
                                     android:singleLine="true"
                                     android:text="@string/marquee"
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/colorblack"
                                     android:textSize="13sp" />
                             </RelativeLayout>
 
@@ -335,7 +335,7 @@
                                             android:layout_width="match_parent"
                                             android:layout_height="wrap_content"
                                             android:text="Today"
-                                            android:textColor="@color/black"
+                                            android:textColor="@color/colorblack"
                                             android:textSize="@dimen/text_size_s" />
 
 
@@ -492,7 +492,7 @@
                                     android:layout_height="wrap_content"
                                     android:gravity="start|center"
                                     android:text=""
-                                    android:textColor="@color/black"
+                                    android:textColor="@color/colorblack"
                                     android:textSize="@dimen/text_size_da"
                                     android:layout_weight="3.5"
                                     android:layout_gravity="start|center"
@@ -558,6 +558,7 @@
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="@dimen/tv_width9"
                             android:clickable="true"
+                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                             android:focusable="true"
                             android:orientation="vertical" />
 

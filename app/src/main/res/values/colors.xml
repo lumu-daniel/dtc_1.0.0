@@ -4,25 +4,66 @@
     <!--<color name="colorPrimaryDark">#F7F0DD</color>-->
     <color name="colorPrimaryDark">#9C763F</color>
     <color name="colorAccent">#FF4081</color>
-
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="colorbrown">#9C763F</color>
+    <color name="colorlightbrown">#C5A471</color>
+    <color name="colorblack">#000000</color>
+    <color name="colorred">#EC1C24</color>
+    <color name="colorredlight">#FE3939</color>
+    <color name="colorredlightborder">#FE8484</color>
+    <color name="colorred1">#EC1C24</color>
+    <color name="colorblacktransparent">#99000000</color>
+    <color name="colorblacktransparent1">#10000000</color>
+    <color name="colorwhite">#FFFFFF</color>
+    <color name="colordarkgreen">#424F36</color>
+    <color name="colorgrey">#757373</color>
+    <color name="colorgreyrtabuttons">#595353</color>
+    <color name="colorlightgrey">#99757373</color>
+    <color name="colorblueinstant">#2C364D</color>
+    <color name="colorbluerta">#2A328D</color>
+    <color name="colorredrta">#EE1C25</color>
+    <color name="colordarkbluerta">#2E3747</color>
+    <color name="colorlightgreytransparent">#40757373</color>
+    <color name="colorgreylight">#00E2E1E1</color>
+    <color name="colorlightbluehappy">#25A9E1</color>
+    <color name="colorlbluesea">#8dbab3</color>
+    <color name="colordarkbluehappy">#33394E</color>
+    <color name="colormainbackground">#BBBBC0</color>
+    <color name="colorborderfourboxes">#939498</color>
+    <color name="colorinvisible">#00ffffff</color>
+    <color name="colorwhitetransparent">#99FFFFFF</color>
+    <color name="disabled_color">#80FFFFFF</color>
 
     <color name="new_dialog_border">#FB5252</color>
 
     <color name="grey_bg">#EEF0F2</color>
 
-    <color name="colorwhite">#FFFFFF</color>
-
-    <color name="shoppingDarkGrayColor">#3C3C3C</color>
-
     <color name="darkgreytxt">#757575</color>
+    <color name="mdtp_white">#ffffff</color>
+    <color name="shoppingPrimaryColor">#EB2330</color>
+    <color name="shoppingGrayColor">#707070</color>
+    <color name="shoppingDarkGrayColor">#3C3C3C</color>
+    <color name="shoppingBackgroundColor">#444</color>
+    <color name="cardTitleColor">#9333</color>
 
+    <color name="backgroundbanner">#a1adb2</color>
+    <color name="alternativeColor">#D7565D</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="defaultColor">#BD1D46</color>
+    <color name="color_grey">#BDB29D</color>
+    <color name="defaultAppColor">#BB1E45</color>
+    <color name="formText">#707070</color>
 
+    <color name="mp_mainColor">#707070</color>
+    <color name="mp_mainColorLight">#66707070</color>
+    <color name="mp_mainAdScreenColor">#f5cc4b</color>
+    <color name="mp_mainAdScreenColorLight">#66f5cc4b</color>
+    <color name="mp_cartCountColor">#ff725e</color>
+    <color name="mp_searchBar">#858585</color>
+    <color name="mp_searchHint">#BCBCBC</color>
+    <color name="mp_liteWhiteColor">#bbFFFFFF</color>
+
+    <color name="background">#8A8888</color>
+
+    <color name="dark_blue">#000033</color>
 
 </resources>
