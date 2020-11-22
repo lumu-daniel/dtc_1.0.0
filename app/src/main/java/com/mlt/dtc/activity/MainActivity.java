@@ -1,8 +1,10 @@
-package com.mlt.dtc;
+package com.mlt.dtc.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.mlt.dtc.R;
 
 public class MainActivity extends AppCompatActivity {
 
