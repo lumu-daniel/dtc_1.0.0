@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Boolean isSelected=false;
     private RecyclerView rvBottomMenu;
 
-    int topBannerCount,positionTopBanner;
+    int topBannerCount,positionTopBanner,DTCservicesCount,rtaservicesCount,mltbuttonCount;
 
     public static MainActivity mainActivity;
 
@@ -157,39 +157,39 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemClick(int position, View v) {
         Intent i;
         if (position==0){
-//            mltbuttonCount++;
-//
-//            PreferenceConnector.writeInteger(getApplicationContext(), Constant.MLTButtonCount, mltbuttonCount);
-//            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameMLTButton);
-//            Constant.ButtonClicked = Constant.nameMLTButton;
-//            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
-//            Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+            mltbuttonCount++;
+
+            PreferenceConnector.writeInteger(getApplicationContext(), Constant.MLTButtonCount, mltbuttonCount);
+            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameMLTButton);
+            Constant.ButtonClicked = Constant.nameMLTButton;
+            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+            Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
 //            mFragment = new ContactUsFragment();
 //            addFragment();
         }else if (position==1){
-//            rtaservicesCount++;
-//            PreferenceConnector.writeInteger(getApplicationContext(), Constant.RTAServicesCount, rtaservicesCount);
-//            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameRTAServices);
-//
-//            Constant.ButtonClicked = Constant.nameRTAServices;
-//            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
-//            Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
-//
-//            i = new Intent(Intent.ACTION_MAIN);
-//            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            i.putExtra("isFromDTC",true);
-//            i.setComponent(new ComponentName("example.rta","rtaservices.RTAMainActivity"));
-//            startActivity(i);
+            rtaservicesCount++;
+            PreferenceConnector.writeInteger(getApplicationContext(), Constant.RTAServicesCount, rtaservicesCount);
+            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameRTAServices);
+
+            Constant.ButtonClicked = Constant.nameRTAServices;
+            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+            Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+
+            i = new Intent(Intent.ACTION_MAIN);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.putExtra("isFromDTC",true);
+            i.setComponent(new ComponentName("example.rta","rtaservices.RTAMainActivity"));
+            startActivity(i);
 
         }else if (position==2){
-//            DTCservicesCount++;
-//            PreferenceConnector.writeInteger(getApplicationContext(), Constant.RTAServicesCount, DTCservicesCount);
-//            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameDTCServices);
-//
-//            Constant.ButtonClicked = Constant.nameDTCServices;
-//            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
-//            Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+            DTCservicesCount++;
+            PreferenceConnector.writeInteger(getApplicationContext(), Constant.RTAServicesCount, DTCservicesCount);
+            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameDTCServices);
+
+            Constant.ButtonClicked = Constant.nameDTCServices;
+            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+            Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
 
         }
     }
