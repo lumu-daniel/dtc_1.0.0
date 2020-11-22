@@ -1,0 +1,591 @@
+<resources>
+    <string name="app_name">RTA</string>
+    <string name="progress_title">请 等待 </string>
+    <string name="page_is_loading">页面正在加载 </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="interactive_animation">Interactive animation</string>
+    <string name="auto_visibility">Auto visibility</string>
+    <string name="animation_type">Animation type</string>
+    <string name="orientation">Orientation</string>
+    <string name="home">主页</string>
+    <string name="right_to_left_mode">Right to left mode</string>
+    <string name="Phoneno">+971 (0)2 681 7493</string>
+    <string name="PObox">P.O. Box 47388, Abu Dhabi, U.A.E.</string>
+    <string name="Email">  support@mlt-uae.ae</string>
+
+    <string name="Fax">Fax</string>
+    <string name="fax">+971 (0)2 681 7499</string>
+    <string name="Area">Office # 5311 and 5312, Addax Tower, Al-Reem Island</string>
+    <string name="Coordinates">24.4989° N 54.4031° E</string>
+    <string name="name">Name*</string>
+    <string name="email">邮箱*</string>
+    <string name="mobileno">手机号码*</string>
+    <string name="issueoccured">Issue Type</string>
+    <string name="message">Message*</string>
+    <string name="google_maps_key">	AIzaSyB0ZCLT-QKhe5S4gdIP5h9MAE9x6w33WuY</string>
+    <string name="hidekeyboard">Hide Keyboard</string>
+    <string name="destend">Kilometers Travelled :</string>
+    <string name="deststartaddress">Start Address:   </string>
+    <string name="destendaddress">End Address:   </string>
+    <string name="duration">Trip Duration : </string>
+    <string name="Country">Country : </string>
+    <string name="fare">Fare : </string>
+    <string name="startfare">Start Fare : </string>
+    <string name="startdatetime">Start Date and Time : </string>
+    <string name="enddatetime">End Date and Time : </string>
+    <!--Time Fragment-->
+    <string name="City">City : </string>
+    <string name="Abbreviations">Abbreviations :  </string>
+    <string name="Capital">Capital : </string>
+    <string name="DialCode">Dial Code : </string>
+    <string name="CurrentTime">Current Time : </string>
+    <string name="CurrentDate">Current Date : </string>
+
+    <string-array name="issues_array">
+        <item>Driver Details</item>
+        <item>Trip Details</item>
+        <item>About us</item>
+        <item>Happy Meter</item>
+        <item>RTA services</item>
+        <item>DTC services</item>
+        <item>Other government Services</item>
+        <item>Utilities and other services</item>
+        <item>E-Commerce online shop</item>
+        <item>Classified Advertisement</item>
+        <item>Offers</item>
+        <item>Banners</item>
+        <item>About Us</item>
+        <item>News</item>
+        <item>Maps</item>
+        <item>Weather</item>
+        <item>Entertainment</item>
+    </string-array>
+
+    <string-array name="animation_type">
+        <item>None</item>
+        <item>Color</item>
+        <item>Scale</item>
+        <item>Worm</item>
+        <item>Slide</item>
+        <item>Fill</item>
+        <item>Thin Worm</item>
+        <item>Drop</item>
+        <item>Swap</item>
+    </string-array>
+
+    <string-array name="orientation">
+        <item>Horizontal</item>
+        <item>Vertical</item>
+    </string-array>
+
+    <string-array name="rtl">
+        <item>On</item>
+        <item>Off</item>
+        <item>Auto</item>
+    </string-array>
+
+    <string name="description_zoom_touch_close">Expanded image (touch to close)</string>
+
+    <!--Regulatory-->
+    <string name="mlt">Multi Level Technology</string>
+    <string name="modelno">Model xCL_E200CP</string>
+    <string name="fccid">FCC ID:MQT-E200CP</string>
+    <string name="pci">PCI 5.0:4-40217</string>
+    <string name="europe">Europe</string>
+    <string name="traid">TRA ID DA65900/17</string>
+    <string name="ta">TA ER60424/18</string>
+    <string name="weee">WEEE Verified</string>
+    <string name="rohs">RoHS Compliance</string>
+    <string name="svhc">SVHC Tested</string>
+    <string name="mltaboutus1"><b>Multi Level Technology “MLT”</b> is a subsidiary of <b>Al Sayegh Group</b> specialized in &amp; providing Payment Solutions. <b>MLT</b> is based in UAE, and it provides its customers withend-to-end payment solutions, spanning from acquiring, payment processing to process automation and back-end services such as automated segregation, reconciliation, posting, ERP integration and more customized.</string>
+    <string name="mltaboutus2">Our solutions can be tailored for any sized business and can either be created from the ground up, or be integrated seamlessly with existing infrastructure. Additionally,<b>MLT</b>can provide its customers with turnkey integrated solution.</string>
+    <string name="mltaboutus3"><b>MLT</b> with coordination of <b>Network Intelligent Payment Solution “NIPS”</b>, a sister company of <b>MLT</b>, provides tailor-made developed platforms to execute services and facilitate payment for all types of payment channels and their associated support infrastructure.</string>
+
+    <!--Happy Screen-->
+    <string name="happyscreenthankyoutext">Thank you for helping make Dubai the happiest city on earth</string>
+
+    <!--RTA Text Common For All Screens -->
+    <string name="Home">主页</string>
+    <string name="Info">信息</string>
+    <string name="Back">返回</string>
+
+    <string name="RTAService">RTA 服务</string>
+    <string name="CompletePayment">完成支付</string>
+    <string name="CardPayment">卡片支付</string>
+    <string name="RTACertificates">证书发行</string>
+    <string name="Selectanyoneoption">选择任意选项</string>
+    <string name="FineInquiryandPayments">罚款询问和支付</string>
+    <string name="VehicleRegistrationServices">RTA车辆服务</string>
+    <string name="VehicleRegistrationRenewal">车辆登记续订</string>
+    <string name="VehicleRegistrationLossDamage">车辆登记卡遗失/损坏</string>
+    <string name="DrivingLicenseServices">RTA驾驶服务</string>
+    <string name="DrivingLicenseRenewal">驾驶证更新</string>
+    <string name="DrivingLicenseLossDamage">驾驶证遗失/损坏</string>
+    <string name="ParkingServices">RTA 停车服务</string>
+    <string name="PrintingCertificate">证书正在打印中</string>
+    <string name="Newseasonalcard">新的季度卡</string>
+    <string name="Seasonalcardrennewal">季度卡更新</string>
+    <string name="seasonalparkingcard">季度停车卡</string>
+    <string name="seasonalparkingcardrenewal">季节性停车卡续订</string>
+    <string name="ApplicantName">申请人名字</string>
+    <string name="EnterCardNumber">输入卡号</string>
+    <string name="PleaseEnteryourCVV">请输入CVV</string>
+    <string name="CardType">卡片类型</string>
+    <string name="CardPeriod">卡片周期</string>
+    <string name="MobileNumber">手机号码</string>
+    <string name="ActivationDate">激活日期</string>
+    <string name="FineInquiryandPayment">罚款询问和支付</string>
+    <string name="TrafficFileNumber">交通文件号</string>
+    <string name="DrivingLicense">驾驶证 </string>
+    <string name="PlateNumber">车牌号码</string>
+    <string name="FineNumber">罚款号码</string>
+    <string name="FinesByTrafficFileNo">交通文件罚款号码</string>
+    <string name="FinesByPlateNo">车牌号码罚金</string>
+    <string name="FinesByDrivingLicense">驾驶证罚款</string>
+    <string name="FinesByFineNumber">细则罚款</string>
+    <string name="LicenseNo">驾驶证号码</string>
+    <string name="LicenseSource">驾驶证来源</string>
+    <string name="Placeofissue">签发地</string>
+    <string name="BirthYear">持有人出生年份</string>
+    <string name="TicketYear">票据年份</string>
+    <string name="Plateno">车牌号码</string>
+    <string name="Platecode">车牌码</string>
+    <string name="Platecategory">车牌目录</string>
+    <string name="ReplacementReason">更换理由</string>
+    <string name="Platetype">车牌类型</string>
+    <string name="Fineno">罚款号码</string>
+    <string name="BeneficiaryCode">受益人码</string>
+    <string name="Search">搜索</string>
+    <string name="Continue">继续</string>
+    <string name="Submit">提交 </string>
+    <string name="AddVehicle">增加车辆</string>
+    <string name="TicketNumber">票据号码</string>
+    <string name="DrivingLicenseInformation">驾驶证信息</string>
+    <string name="FineInformation">罚款信息</string>
+    <string name="Date">日期</string>
+    <string name="FineAmount">罚款总额 </string>
+    <string name="Penalty">罚金</string>
+    <string name="KnowledgeFee">知道费用</string>
+    <string name="Expirydate">有效日期</string>
+    <string name="Total">合计</string>
+    <string name="Details">详情</string>
+    <string name="UnPayableTickets">未付款票据</string>
+    <string name="FineCount">罚款计数:</string>
+    <string name="BlackPointsCount">黑点计算:\u0020</string>
+    <string name="SelectedFine">选择罚款:\u0020</string>
+    <string name="fineAmount">罚款总额:\u0020</string>
+    <string name="SelectedFineAmount">选择合计罚款:\u0020</string>
+    <string name="FineSource">罚款来源</string>
+    <string name="Time">时间</string>
+    <string name="VehicleSpeed">车辆速度</string>
+    <string name="TotalAmount">合计</string>
+    <string name="DueAmount">到期金额</string>
+    <string name="Amount">合计</string>
+    <string name="ServiceCharge">服务费</string>
+    <string name="FineYear">黑点年份</string>
+    <string name="Violations">违例</string>
+    <string name="FineStatus">罚款状态</string>
+    <string name="PlateSource">车牌来源</string>
+    <string name="ContactDetails">联系详情</string>
+    <string name="EnteryourEmailAddressor">输入你的电子邮箱地址</string>
+    <string name="EnteryourEmailAddress">输入你的电子邮箱地址</string>
+    <string name="EnteryourMobileNumber">输入你的手机号码</string>
+    <string name="getdigitalpass">输入电子邮件和手机号码即可收到收据和数字通行证.</string>
+    <string name="getreceipt">输入电子邮件地址以接收收据.</string>
+    <string name="RTAParkingFines">RTA (Parking Fines) FINE NO. 12345</string>
+    <string name="PaymentConfirmation">支付确认</string>
+    <string name="Paynow">现在支付</string>
+    <string name="YourPaymentisbeingprocessed">您的付款正在处理中</string>
+    <string name="Pleaseswipeyourcard">请刷卡</string>
+    <string name="ProceedToPayment">进行支付</string>
+    <string name="Description">描述</string>
+    <string name="Birthyearhint">e.g. 1988</string>
+    <string name="seconds">秒</string>
+
+    <!--Courier Detials Screen-->
+    <string name="couriorServices">                 快递服务             </string>
+    <string name="kioskServices">                   自助服务亭               </string>
+    <string name="chooseDelivery">                  选择服务              </string>
+    <string name="contactname">                     联系人姓名*               </string>
+    <string name="Preferreddeliverydate">           首选交货日期*    </string>
+    <string name="address1">                        地址 1*                  </string>
+    <string name="address2">                        地址 2                    </string>
+    <string name="selectemirates">                  选择 Emirates*            </string>
+    <string name="preferredarea">                   首选区域*             </string>
+    <string name="courierdetails">                  快递详情             </string>
+    <string name="proceed">                         继续                     </string>
+
+
+    <!--Payment-->
+    <string name="PaymentisCompleted">支付成功完成</string>
+    <string name="PaymentisFailed">付款失败</string>
+    <string name="PaymentThankyou">谢谢</string>
+    <string name="PaymentSorry">对不起</string>
+    <string name="PayemntEReceipt">电子收据已成功发送至所提供的联系方式</string>
+    <string name="PayemntEReceiptandDPass">电子收据和数字通行证成功发送至提供的联系人</string>
+    <string name="ProgressFinishedReferenceNo">进展完成 - 参考编号:</string>
+    <string name="VisitSmartTeller">请访问最近的Smart Teller信息亭，然后扫描您的数字通行证以完成交易</string>
+
+    <!--Driving License-->
+    <string name="replacementreason">替换原因</string>
+    <string name="Location">地点</string>
+
+    <!--Vehicle Information-->
+    <string name="vehicleinformation">车辆信息</string>
+    <string name="chassisno">车架号</string>
+    <string name="doorno">门数量</string>
+    <string name="registrationexpiry">登记有效日期</string>
+    <string name="insurancecompany">保险公司</string>
+    <string name="vehiclebrand">车辆品牌</string>
+    <string name="platecode">车牌码</string>
+    <string name="carmodel">车辆款式</string>
+    <string name="platesource">车牌来源</string>
+    <string name="seatsnumber">座位数量</string>
+    <string name="insuranceexpiry">保险有效日期</string>
+    <string name="insurancetype">保险类型</string>
+    <string name="vehiclecolor">保险类型</string>
+
+
+    <!--RTA Driving Services-->
+    <string name="LicenseNumber">驾驶证号码</string>
+    <string name="LicenseType">驾驶证类型</string>
+    <string name="IssueDate">签发日期</string>
+    <string name="Name">名字</string>
+    <string name="LicenseClass">驾驶证等级</string>
+    <string name="ExpiryDate">有效日期</string>
+    <string name="LicenseStatus">驾驶证状态</string>
+
+    <string name="CertificateTitleOwnership">物主证书</string>
+    <string name="CertificateTitleNonOwnership">非物主证书</string>
+    <string name="CertificateTitleInsuranceRefund">保险退款证书</string>
+    <string name="CertificateTitleClearance">结关证书</string>
+    <string name="CertificateTitleDrivingExperience">驾驶经验证书</string>
+
+    <string name="AddressedDepartment">部门地址</string>
+    <string name="InsuranceCompany">保险公司</string>
+
+    <!--RMS Services-->
+    <string name="RMSServices">RMS 服务</string>
+    <string name="SaleOrder">销售订单</string>
+    <string name="SalesInvoice">销售发票</string>
+    <string name="RMSEmiratesId">RMS 阿联酋身份证</string>
+    <string name="TradeLicense">交易证</string>
+    <string name="EnterOrderNo">输入订单号</string>
+    <string name="OrderNo">订单号.</string>
+    <string name="OrderDate">下单日期</string>
+    <string name="StatusCode">状态码</string>
+    <string name="ListofPendingPayment">待付款清单</string>
+    <string name="Itemquantity">项目数量 :</string>
+    <string name="Amountwithcolon">合计:</string>
+
+
+    <string-array name="licensesourcecitiesarray">
+        <item>Dubai</item>
+    </string-array>
+
+    <string-array name="licensesourcecitiesarrayUpperCase">
+        <item>DUBAI</item>
+    </string-array>
+
+    <!--Fines by fine number-->
+    <string-array name="beneficiaryCode">
+        <item>Dubai Police</item>
+        <item>RTA (Parking Fines)</item>
+        <item>Abu Dhabi Traffic</item>
+        <item>Sharjah Traffic</item>
+        <item>Ajman Traffic</item>
+        <item>Um Al Quewain Traffic</item>
+        <item>Ras Al Khaymah Traffic</item>
+        <item>Al Fujairah Traffic</item>
+        <item>Salik</item>
+        <item>RTA LIS Inspection</item>
+        <item>Abu Dhabi Manucipality</item>
+        <item>Sharjah Manucipality</item>
+        <item>Oman</item>
+        <item>Bahrain</item>
+        <item>KSA</item>
+        <item>Kuwait</item>
+        <item>Qatar</item>
+        <item>RTA PTA Inspection</item>
+        <item>Parking Spaces for Trains</item>
+        <item>Sharjah Transportation</item>
+        <item>Vehicle Safety Database</item>
+        <item>Abu Dhabi Transportation</item>
+    </string-array>
+
+    <!--Certificates by Insurance refund-->
+    <string-array name="insurancecompanies">
+        <item>UNITED FIDELITY INSURANCE COMPANY DUBAI BRANCH</item>
+        <item>SHARJAH INSURANCE CO</item>
+        <item>AL AIN AHLIA INSURANCE CO (DUBAI BR )</item>
+        <item>AXA INSURANCE (GULF) B S C (C) DUBAI BRANCH</item>
+        <item>AL ITTIHAD AL WATANI GENERAL INSURANCE SOCIETY FOR NEAR EAST  </item>
+        <item>UNION INSURANCE </item>
+        <item>AL BUHAIRA NATIONAL INSURANCE CO (DUBAI BR )   </item>
+        <item>RAS AL KHAIMAH NATIONAL INSURANCE CO P S C </item>
+        <item>OMAN INSURANCE COMPANY (P S C)   </item>
+        <item>AL DHAFRA INSURANCE CO (PUBLIC SHAREHOLDING CO ) DUBAI BRANCH    </item>
+        <item>FUJAIRAH NATIONAL INSURANCE CO (DUBAI BRANCH)  </item>
+        <item>DUBAI ISLAMIC INSURANCE RE INSURANCE COMANY (AMAN )(P J S C)     </item>
+        <item>American Life Insurance Company   </item>
+        <item>DUBAI NATIONAL INSURANCE AND REINSURANCE CO (P S C )  </item>
+        <item>abu dhabi national takaful            </item>
+        <item>JORDAN INSURANCE CO LTD      </item>
+        <item>Abu Dhabi National Insurance Company     </item>
+        <item>DUBAI INSURANCE COMPANY(P S C )    </item>
+        <item>NATIONAL GENERAL INSURANCE CO (P J S C)      </item>
+        <item>ALLIANCE INSURANCE (PSC) (BR)     </item>
+        <item>TOKIO MARINE AND NICHIDO FIRE INSURANCE COMPANY LIMITED (DUBAI BR)          </item>
+        <item>CIGNA INSURANCE MIDDLE EAST (S.A.L) DUBAI BRANCH          </item>
+        <item>ORIENT INSURANCE P J S C          </item>
+        <item>Lebanese Security          </item>
+        <item>EMIRATES INSURANCE COMPANY (Br of EMIRATES INSURANCE COMPANY )(Dubai Branch)          </item>
+        <item>QATAR INSURANCE CO          </item>
+        <item>al wathba natiuonal insurance          </item>
+        <item>NORWAITCH UNION INSURANCE GULF.          </item>
+        <item>QATAR GENERAL INSURANCE AND RE INSURANCE CO (S A Q)          </item>
+        <item>Gulf Resources to Manage the Insurance Services          </item>
+        <item>Conteniantal Insurance          </item>
+        <item>The Middle East Insurance Company (S)          </item>
+        <item>وكاله كاستريل للتامين</item>
+        <item>ADAMJEE INSURANCE COMPANY LTD (DUBAI BRANCH)          </item>
+        <item>Islamic Arab Insurance Company          </item>
+        <item>SAUDI ARABIAN INSURANCE CO.BSCC DUBAI BRANCH          </item>
+        <item>AL DAWLIYAH INSURANCE SERVICES(L L C)          </item>
+        <item>Arab European Security and reinsurance          </item>
+        <item>General Accident Fire and Life Insurance          </item>
+        <item>NORTHERN INSURANCE BROKERS LLC          </item>
+        <item>THE NEW INDIA ASSURANCE COMPANY LIMITED          </item>
+        <item>Royal International Insurance          </item>
+        <item>AL KHAZNA INSURANCE CO (P S C) (DUBAI BRANCH)          </item>
+        <item>THE ORIENTAL INSURANCE COMPANY LTD (DUBAI BRANCH)          </item>
+        <item>IRAN INSURANCE CO          </item>
+        <item>Bronchial for Insurance Services          </item>
+        <item>THE BALOISE INSURANCE CO LTD (DUBAI BRANCH)          </item>
+        <item>Norwoch Union Insurance Gulf          </item>
+        <item>شركة البحرين للتامين</item>
+        <item>French General Insurance          </item>
+        <item>ROYAL AND SUN ALLIANCE INSURANCE MIDDLE EAST BSCC (DUBAI BRANCH)          </item>
+        <item>AL SAGR NATIONAL INSURANCE CO (PSC)          </item>
+        <item>National Resources for Insurance Services          </item>
+        <item>MITSUI SUMITOMO INSURANCE COMPANY LIMITED DUBAI BR          </item>
+        <item>Arab Resource Insurance          </item>
+        <item>اسيتاليا لي اسكرازيوني دي ايطاليا</item>
+        <item>jordan French Insurance          </item>
+        <item>ARABIAN SCANDINAVIAN INSURANCE          </item>
+        <item>arabia insurance          </item>
+        <item>Tahir Insurance          </item>
+        <item>Delta for Insurance Services          </item>
+        <item>ALS          </item>
+        <item>DAR AL TAKAFUL (P J S C)          </item>
+        <item>NOOR TAKAFUL GENERAL (PJSC)          </item>
+        <item>METHAQ TAKAFUL INSURANCE P S C DUBAI BR          </item>
+        <item>Al Hilal Takaful Company P.S.C          </item>
+        <item>AMERICAN HOME ASSURANCE COMPANY (DUBAI BR)          </item>
+        <item>INSURANCE HOUSE P S C          </item>
+        <item>This vehicle is does not have insurance          </item>
+        <item>NATIONAL TAKAFUL COMPANY WATANIA P J S C DUBAI BRANCH          </item>
+        <item>ORIENT U N B TAKAFUL P J S C          </item>
+    </string-array>
+
+    <!--owner ship and non owner ship-->
+    <string-array name="addresseddepartment">
+        <item>Department of Economic Development</item>
+        <item>TARKHEES-Ports,Customs and Free Zone Corporation</item>
+        <item>Ministry of Labour</item>
+        <item>Dubai Police</item>
+        <item>Dubai Courts</item>
+        <item>Department of Immigration</item>
+        <item>Banks</item>
+        <item>Car Dealers</item>
+        <item>Insurance Companies</item>
+        <item>Dubai municipality</item>
+        <item>Personal Purpose</item>
+        <item>Department of Tourism and Commerce Marketing</item>
+        <item>Dubai Silicon Oasis Authority</item>
+        <item>Dubai Airport Freezone</item>
+        <item>National Media Council</item>
+        <item>Dubai Chamber of Commerce and Industry</item>
+        <item>Al Meydan Free Zone</item>
+        <item>Community Development Authority</item>
+        <item>Dubai Silicon Oasis</item>
+        <item>Department of Economic Development-Abu-Dhabi</item>
+        <item>Department of Islamic Affairs</item>
+        <item>Department of Economic Development-SHARJAH</item>
+        <item>Department of Economic Development-UM-QUWAIN</item>
+        <item>Department of Economic Development-FUJAIRAH</item>
+        <item>Department of Economic Development-AJMAN</item>
+        <item>Department of Economic Development-RAS-ALKHAIMAH</item>
+        <item>SAUDIA COMPANY</item>
+        <item>QATAR COMPANY</item>
+        <item>OMAN COMPANY</item>
+        <item>KUWAIT COMPANY</item>
+    </string-array>
+
+    <string-array name="platecodearray">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+        <item>AA</item>
+    </string-array>
+
+    <string-array name="platecategoryarray">
+        <item>Private</item>
+        <item>Clasic</item>
+        <item>MotorCycle</item>
+    </string-array>
+
+    <string-array name="replacementreason">
+        <item>LOST</item>
+        <item>DAMAGED</item>
+    </string-array>
+
+    <!--Parking Service-->
+    <!--Card Type-->
+    <string-array name="parkingcardtype">
+        <item>My Parking Areas</item>
+        <item>My Parking General</item>
+    </string-array>
+    <!--Card Period-->
+    <string-array name="parkingcardperiod">
+        <item>90</item>
+        <item>180</item>
+        <item>365</item>
+    </string-array>
+
+    <!--RTA Screens End-->
+
+    <!--firebase-->
+
+    <!--login-->
+
+    <string name="enternoltagid">NOL标签号码</string>
+
+    <string name="cancel">取消</string>
+
+    <string name="pincode">PIN码</string>
+
+    <string name="requestnolbalancerefund">NOL余额退款请求</string>
+
+    <string name="transferbalance">转帐余额</string>
+
+    <string name="disclaimer">免责声明：现金退款的服务费为5 AED或退款金额的2.5％，以较高者为准</string>
+    <string name="reasonforrefund">退款理由</string>
+    <string name="cashrefund_success">您的现金退款要求已成功提交</string>
+    <string name="note_card_replacement">您的卡更换请求已成功提交</string>
+    <string name="your_requestfortransferingbalnce">NOL ID的请求已成功提交</string>
+
+    <string name="hasbeensubmitted">您的将余额转为</string>
+
+    <string name="enter_mobile_no">请输入您的手机号码</string>
+
+    <string name="nolservices">    NOL服务</string>
+
+    <string name="CardReplacement">补卡</string>
+
+    <string name="thenolcard">此要求将在1天内阻止NOL卡，您将无法再次使用NOL卡 </string>
+
+    <string name="alloweightdays">       允许8个工作日内退款     </string>
+    <string name="youcanask"> 您可以要求退还已过期，有故障或损坏的NOL卡</string>
+    <string name="youcanrequest"> 您可以要求更换您的个性化NOL卡（将收取70迪拉姆的费用）  </string>
+    <string name="thisrequest">提交后无法取消此请求</string>
+
+    <string name="smswillbe">退款获得批准后，我们将向您发送短信和应用通知，以通知您</string>
+
+
+    <string name="enternolid">     输入NOL TagID</string>
+
+    <string name="selectrefundoptions"> 选择退款选项</string>
+
+    <string name="transfer_nol_balance">转移NOL卡余额</string>
+
+    <string name="YourPaymentHasBeenTransferSuccessful">您的付款已成功转帐</string>
+
+    <string name="CashTransferSuccessful">       现金转移成功。</string>
+
+
+    <string name="transferbalancenote">将您的NOL卡余额转移到任何其他NOL卡上。</string>
+    <string name="InvalidNOLCardTagID">无效的NOL卡标签ID</string>
+
+    <string name="PleaseEnterTheCorrect10Digits">请输入正确的10位数字卡ID，该ID位于您的NOL卡背面。</string>
+
+    <string name="Refertothepicturebelow">请参考下图：</string>
+
+    <string name="SorryThePersonalised">抱歉，您输入的个性化NOL卡ID无效。</string>
+
+    <string name="sorrythepin">  抱歉，您输入的PIN码无效。 请输入正确的6位PIN码。</string>
+
+    <string name="toﬁndyourpin"> 要找到您的PIN码，请在提交您的NOL卡申请后检查发送给您的SMS。</string>
+
+    <string name="ifyoucant">如果找不到短信，请致电800 90 90与RTA呼叫中心联系。</string>
+
+    <string name="invalidpincode">无效的PIN码</string>
+
+    <string name="enter_valid_emailaddress">输入一个有效的电子邮件地址</string>
+
+
+    <string name="enter_valid_mobile_no">请输入有效的手机号码</string>
+
+    <string name="error_dialog">连接出现错误，请重试</string>
+
+    <string name="tryagain">再试一次</string>
+    <string name="RequestCardBalanceRefund">要求卡余额退款</string>
+
+    <string name="Information">信息</string>
+
+    <string name="IfYouCantLocate"> 如果找不到短信，请致电800 90 90与RTA呼叫中心联系。</string>
+    <string name="string_tofindyourpincode">要找到您的PIN码，请在提交您的NOL卡申请后检查发送给您的SMS。</string>
+    <string name="FindyourNOLTagID">查找您的NOL标签ID</string>
+    <string name="please_provide_validtentagid">请提供有效的10位数字的TagId</string>
+
+    <string name="Pleaseprovideavaliddigitpin">请提供有效的6位数密码</string>
+
+    <string name="cardreplacementfee">补卡费</string>
+
+    <string name="special_card_not_Replaces">这是一张不允许更换或退还的特殊卡。 </string>
+
+    <string name="cardblockstart">卡被阻止，无法执行其他服务  </string>
+
+    <string name="sorryfor_inconvenionse">	抱歉给你带来不便。不允许更换此卡。 </string>
+
+    <string name="card_transfer_declined">余额转帐至您的nol卡的要求已被拒绝  </string>
+
+    <string name="transfer_tagid_notenable">由于未启用您的nol标签ID，请与RTA联系。 </string>
+
+    <string name="card_expired">	输入的nol标签ID已过期，请重试。 </string>
+
+    <string name="Ok">好</string>
+
+    <string name="card">卡</string>
+    <string name="paymentcategory">付款类别</string>
+    <string name="nol_pay_soon">Nol付款即将推出。</string>
+    <string name="NOLPayment">零付款</string>
+
+    <string name="mltaboutus4">Tel. 600 54 55 56, or</string>
+    <string name="mltaboutus5">Email. ask@mlt-uae.ae</string>
+</resources>

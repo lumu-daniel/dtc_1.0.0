@@ -1,0 +1,222 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+        <!-- <item name="android:windowShowWallpaper">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>-->
+    </style>
+
+
+    <!--Setting Login-->
+    <style name="AppTheme.Dark.Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="colorAccent">@color/colorwhite</item>
+        <item name="android:textColorPrimary">@color/colorgrey</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+
+    <style name="Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <!--<item name="android:windowContentOverlay">@null</item>-->
+        <!--  <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>-->
+        <!--   <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:minWidth" type="dimen">630dp</item>
+        <!--<item name="android:minHeight" type="dimen">100dp</item>-->
+
+    </style>
+
+    <style name="CustomDialog" parent="Dialog">
+        <item name="android:windowAnimationStyle">@style/CustomDialogAnimation</item>
+    </style>
+
+    <style name="CustomDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_zoom_in</item>
+    </style>
+
+    <style name="CusomDialogStyle">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/dialog_red_radius</item>
+    </style>
+
+    <style name="CusomDialogStyleMenu">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/dialog_red_radius_menu</item>
+    </style>
+
+    <style name="CusomDialogStyleBrownNews">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/dialogradiusbrownnews</item>
+    </style>
+
+    <style name="CusomDialogStyleWhiteNews">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/dialogradiuswhitenews</item>
+    </style>
+
+    <style name="CusomDialogStyleWhite">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/dialogradiuswhite</item>
+    </style>
+
+    <!--To remove the gap from the instant image and uppper view thats why the padding from top is 0-->
+    <style name="CusomDialogStyleWhiteinstant">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/dialogradiuswhiteinstant</item>
+    </style>
+
+    <style name="CusomDialogStyleHappyBlue">
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+        <item name="android:background">@drawable/dialogradiusinstantblue</item>
+    </style>
+
+    <style name="BaseToolbar">
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:elevation" tools:targetApi="lollipop">4dp</item>
+    </style>
+
+    <style name="pin_button">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:clickable">false</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:focusable">false</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:background">@color/colorwhite</item>
+    </style>
+
+    <style name="ToolbarTextAppearance" parent="@android:style/TextAppearance.Medium">>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="AlertBox" parent="android:Theme.Holo" />
+
+    <style name="Widget.GifView" parent="@android:style/Widget" />
+
+    <!-- Base application theme. -->
+    <style name="AppThemeShopping" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorwhite</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+
+
+    <style name="customerDetailLabel">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="fontFamily">@font/bebasneue_regular</item>
+        <item name="android:textColor">@color/mdtp_white</item>
+    </style>
+
+    <style name="customerDetailInputputBox">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+
+    <style name="customerDetailInputputBoxCVV">
+        <item name="android:textSize">16sp</item>
+        <item name="android:singleLine">true</item>
+    </style>
+
+    <style name="top_panel">
+        <item name="android:layout_height">@dimen/top_app_bar</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="main_view_card">
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginLeft">7dp</item>
+        <item name="android:layout_marginRight">7dp</item>
+        <item name="android:elevation">10dp</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:backgroundTint">@color/colorwhite</item>
+    </style>
+
+    <style name="EditTextNormal">
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_height">42dp</item>
+        <item name="android:paddingTop">0dp</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">@dimen/form_field_padding</item>
+    </style>
+
+    <style name="form_button_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorwhite</item>
+        <item name="android:textSize">@dimen/form_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/button_background_light</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:elevation">10dp</item>
+    </style>
+
+    <dimen name="top_app_bar">50dp</dimen>
+    <dimen name="form_field_padding">10dp</dimen>
+    <dimen name="form_text_size">17sp</dimen>
+    
+    
+    <style name="MP_Spinner">
+        <item name="android:popupBackground">#FFFFFF</item>
+        <item name="android:background">@drawable/shape_mp_spinner</item>
+    </style>
+
+    <style name="Radio" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="buttonCompat">@null</item> <!-- Key! -->
+        <item name="android:button">@null</item>
+    </style>
+
+
+</resources>

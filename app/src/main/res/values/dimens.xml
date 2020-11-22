@@ -1,0 +1,118 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+
+    <dimen name="snap_list_view_width">180dp</dimen>
+    <dimen name="snap_list_view_height">80dp</dimen>
+    <dimen name="snap_list_view_margin">1dp</dimen>
+
+    <!--Payment white background-->
+    <dimen name="text_size_l">21sp</dimen>
+    <dimen name="text_size_payment">25sp</dimen>
+    <dimen name="text_size_amount_payment">30sp</dimen>
+    <dimen name="text_size_contact_us">10sp</dimen>
+    <dimen name="text_size_fare">20sp</dimen>
+    <dimen name="text_size_s">12sp</dimen>
+    <dimen name="text_size_m">14sp</dimen>
+    <dimen name="text_size_nm">15sp</dimen>
+    <dimen name="text_size_n">16sp</dimen>
+    <dimen name="space_time">10dp</dimen>
+    <dimen name="text_size_da">18sp</dimen>
+    <dimen name="text_size_rtafineinquirylist">15sp</dimen>
+    <!--RTA main services images height and width -->
+    <dimen name="rta_main_service_images_width">350dp</dimen>
+    <dimen name="rta_main_service_images_height">80dp</dimen>
+    <!--fine inquiry and payments details customize text size-->
+    <dimen name="text_size_finpdetailscustomize">15sp</dimen>
+    <dimen name="text_size_finpdetailsheadingscustomize">15sp</dimen>
+
+
+    <!--Width for linearlayouts driver inquiry and details headings-->
+    <dimen name="tv_fipdate_custom_width">140dp</dimen>
+    <dimen name="tv_fipfineamount_custom_width">110dp</dimen>
+    <dimen name="tv_fippenalty_custom_width">110dp</dimen>
+    <dimen name="tv_fipknowledgefee_custom_width">110dp</dimen>
+    <dimen name="spacewidthfipdetails">30dp</dimen>
+
+    <dimen name="tv_size_n">15sp</dimen>
+
+    <dimen name="tv_size_m">20sp</dimen>
+
+
+    <!--Width for linearlayouts fine inquiry and details headings-->
+    <dimen name="tvf_fipticketfineno_width">120dp</dimen>
+    <dimen name="tvf_fipticketfineno_custom_width">120dp</dimen>
+    <dimen name="tvf_fipdate_width">90dp</dimen>
+    <dimen name="tvf_fipdate_custom_width">100dp</dimen>
+    <dimen name="tvf_fipfineamount_custom_width">100dp</dimen>
+    <dimen name="tvf_fippenalty_custom_width">70dp</dimen>
+    <dimen name="tvf_fipknowledgefee_width">110dp</dimen>
+    <dimen name="tv_width1">1dp</dimen>
+    <dimen name="tv_width2">2dp</dimen>
+    <dimen name="tv_width3">3dp</dimen>
+    <dimen name="tv_width4">4dp</dimen>
+    <dimen name="tv_width5">5dp</dimen>
+    <dimen name="tv_width6">6dp</dimen>
+    <dimen name="tv_width7">7dp</dimen>
+    <dimen name="tv_width8">8dp</dimen>
+    <dimen name="tv_width9">9dp</dimen>
+    <dimen name="tv_width10">10dp</dimen>
+    <dimen name="tv_width11">11dp</dimen>
+    <dimen name="tv_width12">12dp</dimen>
+    <dimen name="tv_width13">13dp</dimen>
+    <dimen name="tv_width14">14dp</dimen>
+    <dimen name="tv_width15">15dp</dimen>
+    <dimen name="tv_width20">20dp</dimen>
+    <dimen name="tv_width30">30dp</dimen>
+    <dimen name="tv_width40">40dp</dimen>
+    <dimen name="tv_width50">50dp</dimen>
+    <dimen name="tv_width60">60dp</dimen>
+    <dimen name="tv_width70">70dp</dimen>
+    <dimen name="tv_width80">80dp</dimen>
+    <dimen name="tv_width90">90dp</dimen>
+    <dimen name="tv_width100">100dp</dimen>
+    <dimen name="tv_width110">110dp</dimen>
+    <dimen name="tv_width120">120dp</dimen>
+    <dimen name="tv_width130">130dp</dimen>
+    <dimen name="tv_width140">140dp</dimen>
+    <dimen name="tv_width150">150dp</dimen>
+    <dimen name="tvf_fipknowledgefee_custom_width">120dp</dimen>
+    <dimen name="tvf_fiptotal_custom_width">80dp</dimen>
+    <!--FARE main view top four boxes-->
+    <dimen name="farefourboxesmain">13sp</dimen>
+
+    <!--driverfragmenttextgap-->
+
+    <!--tripfragmenttextgap-->
+
+    <!--Width for vehicle fine inquiry and details headings-->
+    <dimen name="tv_vticketfineno_custom_width">100dp</dimen>
+    <dimen name="tv_vdate_custom_width">140dp</dimen>
+    <dimen name="tv_vfineamount_custom_width">140dp</dimen>
+    <dimen name="tv_vpenalty_custom_width">110dp</dimen>
+    <dimen name="tv_vknowledgefee_custom_width">110dp</dimen>
+
+    <dimen name="rtalogowidth">200dp</dimen>
+    <dimen name="rtalogoheight">80dp</dimen>
+    <dimen name="forgot_password">12sp</dimen>
+    <dimen name="text_size_curr_price">12sp</dimen>
+    <dimen name="text_size_curr_price_small">10sp</dimen>
+    <dimen name="text_size_prev_price_small">8sp</dimen>
+    <dimen name="text_size_prev_price">9sp</dimen>
+    <dimen name="sign_up_text">14sp</dimen>
+    <dimen name="app_top_bar_name_size">25sp</dimen>
+    <dimen name="text_size_send_button">21sp</dimen>
+    <dimen name="margin_start">10dp</dimen>
+    <dimen name="tv_width18">18sp</dimen>
+    <dimen name="tv_width35">35dp</dimen>
+    <dimen name="tv_width200">200dp</dimen>
+    <dimen name="tv_width180">180dp</dimen>
+    <dimen name="tv_width25">25dp</dimen>
+    <dimen name="tv_width16">16dp</dimen>
+
+    <dimen name="activityPadding">16dp</dimen>
+    <dimen name="placeholderImage">60dp</dimen>
+    <dimen name="placeholderTextHeight">8dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+
+</resources>

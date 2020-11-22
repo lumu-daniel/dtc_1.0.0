@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="12dp"
+    android:background="@drawable/dialog_red_radius"
+    android:orientation="vertical">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/tv_width8">
+
+
+                    <androidx.viewpager.widget.ViewPager
+                        android:id="@+id/adsviewPageroffer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/iv_arrowleft_offers_dialog"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_keyboard_arrow_left_white_36dp"
+                            android:contentDescription="@string/todo" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:id="@+id/iv_arrowright_offers_dialog"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_keyboard_arrow_right_white_36dp"
+                            android:contentDescription="@string/todo" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="end">
+
+                    <Button
+                        android:id="@+id/btnbuy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:padding="20dp"
+                        android:text="@string/buy_this_offer" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iv_close"
+            android:layout_width="@dimen/tv_width30"
+            android:layout_height="@dimen/tv_width30"
+            android:clickable="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="right"
+            android:src="@drawable/close"
+            android:contentDescription="@string/todo"
+            android:focusable="true" />
+
+</RelativeLayout>

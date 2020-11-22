@@ -1,6 +1,838 @@
 <resources>
+
     <string name="app_name">DTC</string>
-    <string name="tripdetail">Trip Details</string>
+    <string name="progress_title">Please wait</string>
+    <string name="page_is_loading">Page is loading</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="interactive_animation">Interactive animation</string>
+    <string name="auto_visibility">Auto visibility</string>
+    <string name="animation_type">Animation type</string>
+    <string name="orientation">Orientation</string>
+    <string name="home">Home</string>
+    <string name="right_to_left_mode">Right to left mode</string>
+    <string name="Phoneno">+971 (0)2 681 7493</string>
+    <string name="PObox">P.O. Box 47388, Abu Dhabi, U.A.E.</string>
+    <string name="Email">  support@mlt-uae.ae</string>
+    <string name="Location">Location</string>
+    <string name="Fax">Fax</string>
+    <string name="fax">+971 (0)2 681 7499</string>
+    <string name="Area">Office # 5311 and 5312, Addax Tower, Al-Reem Island</string>
+    <string name="Coordinates">24.4989° N 54.4031° E</string>
+    <string name="name">Name*</string>
+    <string name="email">Email*</string>
+    <string name="mobileno">Mobile No*</string>
+    <string name="issueoccured">Issue Type</string>
+    <string name="message">Message*</string>
+    <string name="google_maps_key">	AIzaSyB0ZCLT-QKhe5S4gdIP5h9MAE9x6w33WuY</string>
+    <string name="hidekeyboard">Hide Keyboard</string>
+    <string name="destend">Kilometers Travelled </string>
+    <string name="deststartaddress">Start Address  </string>
+    <string name="destendaddress">End Address  </string>
+    <string name="duration">Trip Duration  </string>
+    <string name="Country">Country </string>
+    <string name="fare">Fare  </string>
+    <string name="startfare">Start Fare  </string>
+    <string name="startdatetime">Start Date and Time  </string>
+    <string name="enddatetime">End Date and Time  </string>
+    <!--Time Fragment-->
+    <string name="City">City </string>
+    <string name="Abbreviations">Abbreviations  </string>
+    <string name="Capital">Capital</string>
+    <string name="DialCode">Dial Code</string>
+    <string name="CurrentTime">Current Time</string>
+    <string name="CurrentDate">Current Date</string>
+
+    <string-array name="issues_array">
+        <item>Driver Details</item>
+        <item>Trip Details</item>
+        <item>About us</item>
+        <item>Happy Meter</item>
+        <item>RTA services</item>
+        <item>DTC services</item>
+        <item>Other government Services</item>
+        <item>Utilities and other services</item>
+        <item>E-Commerce online shop</item>
+        <item>Classified Advertisement</item>
+        <item>Offers</item>
+        <item>Banners</item>
+        <item>About Us</item>
+        <item>News</item>
+        <item>Maps</item>
+        <item>Weather</item>
+        <item>Entertainment</item>
+    </string-array>
+
+    <string-array name="animation_type">
+        <item>None</item>
+        <item>Color</item>
+        <item>Scale</item>
+        <item>Worm</item>
+        <item>Slide</item>
+        <item>Fill</item>
+        <item>Thin Worm</item>
+        <item>Drop</item>
+        <item>Swap</item>
+    </string-array>
+
+    <string-array name="orientation">
+        <item>Horizontal</item>
+        <item>Vertical</item>
+    </string-array>
+
+    <string-array name="rtl">
+        <item>On</item>
+        <item>Off</item>
+        <item>Auto</item>
+    </string-array>
+
+    <string name="description_zoom_touch_close">Expanded image (touch to close)</string>
+
+    <!--Regulatory-->
+    <string name="mlt">Multi Level Technology</string>
+    <string name="modelno">Model xCL_E200CP</string>
+    <string name="fccid">FCC ID:MQT-E200CP</string>
+    <string name="pci">PCI 5.0:4-40217</string>
+    <string name="europe">Europe</string>
+    <string name="traid">TRA ID DA65900/17</string>
+    <string name="ta">TA ER60424/18</string>
+    <string name="weee">WEEE Verified</string>
+    <string name="rohs">RoHS Compliance</string>
+    <string name="svhc">SVHC Tested</string>
+    <string name="mltaboutus1"><b>Multi Level Technology</b> (MLT), a UAE based Fintech company established a strategic partnership with Dubai Taxi Corporation (DTC) for the implementation of a unique in taxi platform to provide customers with smart and cashless payment options in addition to various infotainment options.</string>
+    <string name="mltaboutus2">The Smart Screen platform provides passengers with interactive services, media content, advertisements extended to payment that encourages a  cashless environment and e-commerce through a single platform.</string>
+    <string name="mltaboutus3"><b>To advertise here, contact us at:</b></string>
+    <string name="mltaboutus4">Tel. 600 54 55 56, or</string>
+    <string name="mltaboutus5">Email. ask@mlt-uae.ae</string>
+
+    <!--Happy Screen-->
+    <string name="happyscreenthankyoutext">Thank you for helping make Dubai the happiest city on earth</string>
+
+    <!--RTA Text Common For All Screens -->
+    <string name="Home">Home</string>
+    <string name="Info">Info</string>
+    <string name="Back">Back</string>
+    <string name="BackEnglish">Back</string>
+    <string name="Ok">OK</string>
+
+    <string name="RTAService">RTA Services</string>
+    <string name="CompletePayment">Complete Payment</string>
+    <string name="CardPayment">Card Payment</string>
+    <string name="RTACertificates">Certificates</string>
+    <string name="Selectanyoneoption">Select any one option</string>
+    <string name="FineInquiryandPayments">Fine Inquiry and Payments</string>
+    <string name="VehicleRegistrationServices">RTA Vehicle Services</string>
+    <string name="VehicleRegistrationRenewal">Vehicle Registration Renewal</string>
+    <string name="VehicleRegistrationLossDamage">Vehicle Registration Card Loss/Damage</string>
+    <string name="DrivingLicenseServices">RTA Driving Services</string>
+    <string name="DrivingLicenseRenewal">Driving License Renewal</string>
+    <string name="DrivingLicenseLossDamage">Driving License Loss/Damaged</string>
+    <string name="ParkingServices">RTA Parking Services</string>
+    <string name="PrintingCertificate">Printing Certificate</string>
+    <string name="Newseasonalcard">New Seasonal Card</string>
+    <string name="Seasonalcardrennewal">Seasonal Card Renewal</string>
+    <string name="seasonalparkingcard">Seasonal Parking Card</string>
+    <string name="seasonalparkingcardrenewal">Seasonal Parking Card Renewal</string>
+    <string name="ApplicantName">Applicant Name</string>
+    <string name="EnterCardNumber">Enter Card Number</string>
+    <string name="PleaseEnteryourCVV">Please Enter your CVV</string>
+    <string name="CardType">Card Type</string>
+    <string name="CardPeriod">Card Period</string>
+    <string name="MobileNumber">Mobile Number*</string>
+    <string name="ActivationDate">Activation Date</string>
+    <string name="FineInquiryandPayment">Fine Inquiry and Payment</string>
+    <string name="TrafficFileNumber">Traffic File Number</string>
+    <string name="DrivingLicense">Driving License</string>
+    <string name="PlateNumber">Plate Number</string>
+    <string name="FineNumber">Fine Number</string>
+    <string name="FinesByTrafficFileNo">Fines By Traffic File Number</string>
+    <string name="FinesByPlateNo">Fines By Plate Number</string>
+    <string name="FinesByDrivingLicense">Fines By Driving License</string>
+    <string name="FinesByFineNumber">Fines By Fine Number</string>
+    <string name="LicenseNo">License Number</string>
+    <string name="LicenseSource">License Source</string>
+    <string name="Placeofissue">Place of Issue</string>
+    <string name="BirthYear">Birth Year</string>
+    <string name="TicketYear">Ticket Year</string>
+    <string name="Plateno">Plate Number</string>
+    <string name="Platecode">Plate Code</string>
+    <string name="Platecategory">Plate Category</string>
+    <string name="ReplacementReason">Replacement Reason</string>
+    <string name="Platetype">Plate Type</string>
+    <string name="Fineno">Fine Number</string>
+    <string name="BeneficiaryCode">Beneficiary Code</string>
+    <string name="Search">Search</string>
+    <string name="Continue">Continue</string>
+    <string name="Submit">Submit</string>
+    <string name="AddVehicle">Add Vehicle</string>
+    <string name="TicketNumber">TicketNumber</string>
+    <string name="DrivingLicenseInformation">Driving License Information</string>
+    <string name="FineInformation">Fine Information</string>
+    <string name="Date">Date</string>
+    <string name="FineAmount">FineAmount</string>
+    <string name="Penalty">Penalty</string>
+    <string name="KnowledgeFee">Knowledge Fee</string>
+    <string name="Expirydate">Expiry Date</string>
+    <string name="Total">Total</string>
+    <string name="Details">Details</string>
+    <string name="UnPayableTickets">Unpayable Tickets</string>
+    <string name="FineCount">FineCount:</string>
+    <string name="BlackPointsCount">Black Points Count:\u0020</string>
+    <string name="SelectedFine">Selected Fine:\u0020</string>
+    <string name="fineAmount">FineAmount:\u0020</string>
+    <string name="SelectedFineAmount">Selected Fine Amount:\u0020</string>
+    <string name="FineSource">Fine Source</string>
+    <string name="Time">Time</string>
+    <string name="VehicleSpeed">Vehicle Speed</string>
+    <string name="TotalAmount">Total Amount</string>
+    <string name="DueAmount">Due Amount</string>
+    <string name="Amount">Amount</string>
+    <string name="Status">Status</string>
+    <string name="ServiceCharge">Service Charge</string>
+    <string name="FineYear">Fine Year</string>
+    <string name="Violations">Violations</string>
+    <string name="FineStatus">Fine Status</string>
+    <string name="PlateSource">Plate Source</string>
+    <string name="ContactDetails">Contact Details</string>
+    <string name="EnteryourEmailAddressor">Enter your Email Address </string>
+    <string name="EnteryourEmailAddress">Enter your Email Address</string>
+    <string name="EnteryourMobileNumber">Enter your Mobile Number</string>
+    <string name="getdigitalpass">Enter email and mobile no to receive the receipt and Digital Pass.</string>
+    <string name="getreceipt">Enter email address to receive the receipt.</string>
+    <string name="RTAParkingFines">RTA (Parking Fines) FINE NO. 12345</string>
+    <string name="PaymentConfirmation">Payment Confirmation</string>
+    <string name="Paynow">Pay Now</string>
+    <string name="YourPaymentisbeingprocessed">Your Payment is under process</string>
+    <string name="Pleaseswipeyourcard">Please swipe your card</string>
+    <string name="ProceedToPayment">Proceed To Payment</string>
+    <string name="Proceed">Proceed</string>
+    <string name="Description">Description</string>
+    <string name="Birthyearhint">e.g. 1988</string>
+    <string name="seconds">Sec </string>
+    <string name="sixtysecs">60</string>
+    <string name="Phone">Phone:</string>
+    <string name="Phonemlt">600 54 55 56</string>
+    <string name="EmailMLT">E-Mail:</string>
+    <string name="Emailmlt">support@mlt-uae.ae</string>
+    <string name="ContactUs">Contact Us</string>
+
+    <!--Courier Detials Screen-->
+    <string name="couriorServices">Courier Service</string>
+    <string name="kioskServices">Kiosk Service</string>
+    <string name="chooseDelivery">Choose Service</string>
+    <string name="contactname">Contact Name*</string>
+    <string name="Preferreddeliverydate">Preferred Delivery Date*</string>
+    <string name="address1">Address1*</string>
+    <string name="address2">Address2</string>
+    <string name="selectemirates">Select Emirates*</string>
+    <string name="preferredarea">Preferred Area*</string>
+    <string name="courierdetails">Courier Details</string>
+    <string name="proceed">Proceed</string>
+
+    <!--Payment-->
+    <string name="PaymentisCompleted">Payment is completed successfully!</string>
+    <string name="PaymentisFailed">Payment is Failed</string>
+    <string name="Payment">Payment </string>
+    <string name="PaymentThankyou">Thankyou</string>
+    <string name="PaymentSorry">Sorry</string>
+    <string name="PayemntEReceipt">E-Receipt is sent successfully to the contact provided</string>
+    <string name="PayemntEReceiptandDPass">E-Receipt and Digital Pass is sent successfully to the contact provided</string>
+    <string name="ProgressFinishedReferenceNo">Progress Finished - Reference No:</string>
+    <string name="VisitSmartTeller">Please visit the nearest Smart Teller Kiosk and scan your Digital Pass to complete the transaction.</string>
+
+    <!--Driving License-->
+    <string name="replacementreason">Replacement Reason</string>
+
+    <!--Vehicle Information-->
+    <string name="vehicleinformation">Vehicle Information</string>
+    <string name="chassisno">Chassis No</string>
+    <string name="doorno">Door No</string>
+    <string name="registrationexpiry">Registration Expiry</string>
+    <string name="insurancecompany">Insurance Company</string>
+    <string name="vehiclebrand">Vehicle Brand</string>
+    <string name="platecode">Plate Code</string>
+    <string name="carmodel">Car Model</string>
+    <string name="platesource">Plate Source</string>
+    <string name="seatsnumber">Seats Number</string>
+    <string name="insuranceexpiry">Insurance Expiry</string>
+    <string name="insurancetype">Insurance Type</string>
+    <string name="vehiclecolor">Vehicle Color</string>
+
+
+    <!--RTA Driving Services-->
+    <string name="LicenseNumber">License Number</string>
+    <string name="LicenseType">License Type</string>
+    <string name="IssueDate">Issue Date</string>
+    <string name="Name">Name</string>
+    <string name="LicenseClass">License Class</string>
+    <string name="ExpiryDate">Expiry Date</string>
+    <string name="LicenseStatus">License Status</string>
+
+    <string name="CertificateTitleOwnership">Ownership Certificate</string>
+    <string name="CertificateTitleNonOwnership">Non-Ownership Certificate</string>
+    <string name="CertificateTitleInsuranceRefund">Insurance Refund Certificate</string>
+    <string name="CertificateTitleClearance">Clearance Certificate</string>
+    <string name="CertificateTitleDrivingExperience">Driving Experience Certificate</string>
+
+    <string name="AddressedDepartment">Addressed Department</string>
+    <string name="InsuranceCompany">Insurance Company</string>
+
+
+    <!--Payment-->
+    <string name="courierFinalMsgDri">Dear customer, RTA will send your Driver Registration Card to the provided address through Courier.</string>
+
+    <string name="EvehicleBySMSAndEmail">Dear Customer , RTA will send you the E-vehicle registration card by sms and E-mail.</string>
+    <string name="drivingsmsandemail">Dear Customer , RTA will send you a Digital Driving License card by SMS and Email.</string>
+    <string name="ScanQRToDownloadSW">Scan the QR to download the RTA Smart Wallet.This can be used later to print your card once the printing service is reactivated.</string>
+    <string name="courierFinalMsgVeh">Dear customer, RTA will send your Vehicle Registration Card to the provided address through Courier.</string>
+
+
+    <!--RMS Services-->
+    <string name="RMSServices">RMS Services</string>
+    <string name="SaleOrder">Sale Order</string>
+    <string name="SalesInvoice">Sales Invoice</string>
+    <string name="SalesID">Sales ID</string>
+    <string name="RMSEmiratesId">RMS EmiratesID</string>
+    <string name="TradeLicense">Trade License</string>
+    <string name="EnterOrderNo">Enter Order Number</string>
+    <string name="EnterInvoiceNo">Enter Invoice Number</string>
+    <string name="EnterEmiratesIdno">Enter Emirates ID Number</string>
+    <string name="EnterTradeLicense">Enter Trade License Number</string>
+    <string name="OrderNo">Order Number</string>
+    <string name="InvoiceNo">Invoice Number</string>
+    <string name="OrderInvoiceNo">Order/Invoice No</string>
+    <string name="Emiratesid">Emirates ID</string>
+    <string name="OrderDate">Order Date</string>
+    <string name="OrderInvoiceDate">Order/Invoice Date</string>
+    <string name="StatusCode">Status Code</string>
+    <string name="ListofPendingPayment">List of Pending Payment</string>
+    <string name="SalesOrderDetails">Sales Order Details</string>
+    <string name="InvoiceDetails">Invoice Details</string>
+    <string name="Itemquantity">Item Quantity:</string>
+    <string name="Amountwithcolon">Amount:</string>
+    <string name="Payable">Payable</string>
+    <string name="UnPayable">UnPayable</string>
+    <string name="ItemID">Item ID</string>
+    <string name="ItemName">Item Name</string>
+    <string name="InvoiceID">Invoice ID</string>
+    <string name="InvoiceDate">Inovice Date</string>
+    <string name="Quantity">Quantity</string>
+    <string name="ItemQuantity">Item Quantity</string>
+
+    <!--RMS Services-->
+    <string name="EmployeeServices">Employee Services</string>
+    <string name="EmployeeService">Employee Service</string>
+    <string name="EnterEmployeeID">Enter Employee ID</string>
+    <string name="EmployeeID">Employee ID</string>
+    <string name="SelectServices">SelectServices</string>
+    <string name="AmounttoPay">Amount to Pay</string>
+    <string name="Service">Service</string>
+
+    <!--Info Text-->
+
+    <!--CyberSource-->
+    <string name="Sorryfortheinconvinience">Sorry for the inconvinience the server is temporary unavailable</string>
+
+    <string-array name="licensesourcecitiesarray">
+        <item>Dubai</item>
+    </string-array>
+
+    <string-array name="licensesourcecitiesarrayUpperCase">
+        <item>DUBAI</item>
+    </string-array>
+
+    <!--Fines by fine number-->
+    <string-array name="beneficiaryCode">
+        <item>Dubai Police</item>
+        <item>RTA (Parking Fines)</item>
+        <item>Abu Dhabi Traffic</item>
+        <item>Sharjah Traffic</item>
+        <item>Ajman Traffic</item>
+        <item>Um Al Quewain Traffic</item>
+        <item>Ras Al Khaymah Traffic</item>
+        <item>Al Fujairah Traffic</item>
+        <item>Salik</item>
+        <item>RTA LIS Inspection</item>
+        <item>Abu Dhabi Manucipality</item>
+        <item>Sharjah Manucipality</item>
+        <item>Oman</item>
+        <item>Bahrain</item>
+        <item>KSA</item>
+        <item>Kuwait</item>
+        <item>Qatar</item>
+        <item>RTA PTA Inspection</item>
+        <item>Parking Spaces for Trains</item>
+        <item>Sharjah Transportation</item>
+        <item>Vehicle Safety Database</item>
+        <item>Abu Dhabi Transportation</item>
+    </string-array>
+
+    <!--Certificates by Insurance refund-->
+    <string-array name="insurancecompanies">
+        <item>UNITED FIDELITY INSURANCE COMPANY DUBAI BRANCH</item>
+        <item>SHARJAH INSURANCE CO</item>
+        <item>AL AIN AHLIA INSURANCE CO (DUBAI BR )</item>
+        <item>AXA INSURANCE (GULF) B S C (C) DUBAI BRANCH</item>
+        <item>AL ITTIHAD AL WATANI GENERAL INSURANCE SOCIETY FOR NEAR EAST  </item>
+        <item>UNION INSURANCE </item>
+        <item>AL BUHAIRA NATIONAL INSURANCE CO (DUBAI BR )   </item>
+        <item>RAS AL KHAIMAH NATIONAL INSURANCE CO P S C </item>
+        <item>OMAN INSURANCE COMPANY (P S C)   </item>
+        <item>AL DHAFRA INSURANCE CO (PUBLIC SHAREHOLDING CO ) DUBAI BRANCH    </item>
+        <item>FUJAIRAH NATIONAL INSURANCE CO (DUBAI BRANCH)  </item>
+        <item>DUBAI ISLAMIC INSURANCE RE INSURANCE COMANY (AMAN )(P J S C)     </item>
+        <item>American Life Insurance Company   </item>
+        <item>DUBAI NATIONAL INSURANCE AND REINSURANCE CO (P S C )  </item>
+        <item>abu dhabi national takaful            </item>
+        <item>JORDAN INSURANCE CO LTD      </item>
+        <item>Abu Dhabi National Insurance Company     </item>
+        <item>DUBAI INSURANCE COMPANY(P S C )    </item>
+        <item>NATIONAL GENERAL INSURANCE CO (P J S C)      </item>
+        <item>ALLIANCE INSURANCE (PSC) (BR)     </item>
+        <item>TOKIO MARINE AND NICHIDO FIRE INSURANCE COMPANY LIMITED (DUBAI BR)          </item>
+        <item>CIGNA INSURANCE MIDDLE EAST (S.A.L) DUBAI BRANCH          </item>
+        <item>ORIENT INSURANCE P J S C          </item>
+        <item>Lebanese Security          </item>
+        <item>EMIRATES INSURANCE COMPANY (Br of EMIRATES INSURANCE COMPANY )(Dubai Branch)          </item>
+        <item>QATAR INSURANCE CO          </item>
+        <item>al wathba natiuonal insurance          </item>
+        <item>NORWAITCH UNION INSURANCE GULF.          </item>
+        <item>QATAR GENERAL INSURANCE AND RE INSURANCE CO (S A Q)          </item>
+        <item>Gulf Resources to Manage the Insurance Services          </item>
+        <item>Conteniantal Insurance          </item>
+        <item>The Middle East Insurance Company (S)          </item>
+        <item>وكاله كاستريل للتامين</item>
+        <item>ADAMJEE INSURANCE COMPANY LTD (DUBAI BRANCH)          </item>
+        <item>Islamic Arab Insurance Company          </item>
+        <item>SAUDI ARABIAN INSURANCE CO.BSCC DUBAI BRANCH          </item>
+        <item>AL DAWLIYAH INSURANCE SERVICES(L L C)          </item>
+        <item>Arab European Security and reinsurance          </item>
+        <item>General Accident Fire and Life Insurance          </item>
+        <item>NORTHERN INSURANCE BROKERS LLC          </item>
+        <item>THE NEW INDIA ASSURANCE COMPANY LIMITED          </item>
+        <item>Royal International Insurance          </item>
+        <item>AL KHAZNA INSURANCE CO (P S C) (DUBAI BRANCH)          </item>
+        <item>THE ORIENTAL INSURANCE COMPANY LTD (DUBAI BRANCH)          </item>
+        <item>IRAN INSURANCE CO          </item>
+        <item>Bronchial for Insurance Services          </item>
+        <item>THE BALOISE INSURANCE CO LTD (DUBAI BRANCH)          </item>
+        <item>Norwoch Union Insurance Gulf          </item>
+        <item>شركة البحرين للتامين</item>
+        <item>French General Insurance          </item>
+        <item>ROYAL AND SUN ALLIANCE INSURANCE MIDDLE EAST BSCC (DUBAI BRANCH)          </item>
+        <item>AL SAGR NATIONAL INSURANCE CO (PSC)          </item>
+        <item>National Resources for Insurance Services          </item>
+        <item>MITSUI SUMITOMO INSURANCE COMPANY LIMITED DUBAI BR          </item>
+        <item>Arab Resource Insurance          </item>
+        <item>اسيتاليا لي اسكرازيوني دي ايطاليا</item>
+        <item>jordan French Insurance          </item>
+        <item>ARABIAN SCANDINAVIAN INSURANCE          </item>
+        <item>arabia insurance          </item>
+        <item>Tahir Insurance          </item>
+        <item>Delta for Insurance Services          </item>
+        <item>ALS          </item>
+        <item>DAR AL TAKAFUL (P J S C)          </item>
+        <item>NOOR TAKAFUL GENERAL (PJSC)          </item>
+        <item>METHAQ TAKAFUL INSURANCE P S C DUBAI BR          </item>
+        <item>Al Hilal Takaful Company P.S.C          </item>
+        <item>AMERICAN HOME ASSURANCE COMPANY (DUBAI BR)          </item>
+        <item>INSURANCE HOUSE P S C          </item>
+        <item>This vehicle is does not have insurance          </item>
+        <item>NATIONAL TAKAFUL COMPANY WATANIA P J S C DUBAI BRANCH          </item>
+        <item>ORIENT U N B TAKAFUL P J S C          </item>
+    </string-array>
+
+    <!--owner ship and non owner ship-->
+    <string-array name="addresseddepartment">
+        <item>Department of Economic Development</item>
+        <item>TARKHEES-Ports,Customs and Free Zone Corporation</item>
+        <item>Ministry of Labour</item>
+        <item>Dubai Police</item>
+        <item>Dubai Courts</item>
+        <item>Department of Immigration</item>
+        <item>Banks</item>
+        <item>Car Dealers</item>
+        <item>Insurance Companies</item>
+        <item>Dubai municipality</item>
+        <item>Personal Purpose</item>
+        <item>Department of Tourism and Commerce Marketing</item>
+        <item>Dubai Silicon Oasis Authority</item>
+        <item>Dubai Airport Freezone</item>
+        <item>National Media Council</item>
+        <item>Dubai Chamber of Commerce and Industry</item>
+        <item>Al Meydan Free Zone</item>
+        <item>Community Development Authority</item>
+        <item>Dubai Silicon Oasis</item>
+        <item>Department of Economic Development-Abu-Dhabi</item>
+        <item>Department of Islamic Affairs</item>
+        <item>Department of Economic Development-SHARJAH</item>
+        <item>Department of Economic Development-UM-QUWAIN</item>
+        <item>Department of Economic Development-FUJAIRAH</item>
+        <item>Department of Economic Development-AJMAN</item>
+        <item>Department of Economic Development-RAS-ALKHAIMAH</item>
+        <item>SAUDIA COMPANY</item>
+        <item>QATAR COMPANY</item>
+        <item>OMAN COMPANY</item>
+        <item>KUWAIT COMPANY</item>
+    </string-array>
+
+    <string-array name="platecodearray">
+        <item>A</item>
+        <item>AA</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+
+    </string-array>
+
+    <string-array name="platecategoryarray">
+        <item>Private</item>
+        <item>Classic</item>
+        <item>MotorCycle</item>
+
+    </string-array>
+
+    <string-array name="replacementreason">
+        <item>LOST</item>
+        <item>DAMAGED</item>
+    </string-array>
+
+    <!--Parking Service-->
+    <!--Card Type-->
+    <string-array name="parkingcardtype">
+        <item>My Parking Areas</item>
+        <item>My Parking General</item>
+    </string-array>
+    <!--Card Period-->
+    <string-array name="parkingcardperiod">
+        <item>90</item>
+        <item>180</item>
+        <item>365</item>
+    </string-array>
+
+    <!--Copyright Text-->
+    <string name="Copyright">Copyright</string>
+    <string name="CopyrightSymbol">\u00a9</string>
+    <string name="MLTAllRightsReserved">MLT. All rights reserved.</string>
+    <string name="Version">v.5.1.0.2</string>
+
+    <!--RTA Screens End-->
+
+    <!--firebase-->
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+
+    <!--login-->
+
+
+    <!--for the card swipe port -->
+
+
+    <!--Nol Top up-->
+    <string name="topupnolcard">                    Top Up NOL Card                 </string>
+    <string name="nol_card_card_details">           Card Details                    </string>
+    <string name="nol_card_cardno">                 Nol Card No.                    </string>
+    <string name="nol_card_expiry_date">            Expiry Date                     </string>
+    <string name="nol_card_card_type">              Card Type                       </string>
+    <string name="nol_card_card_status">            Card Status                     </string>
+    <string name="nol_proceed_transfer">Proceed Transfer</string>
+    <string name="nol_card_balance">Card Balance</string>
+    <string name="nol_card_concession_profile">     Concession Profile              </string>
+    <string name="noltopup">                        Nol Top Up                      </string>
+    <string name="cancel">                          Cancel                          </string>
+    <string name="pleasesselectamount">             Please Select Amount            </string>
+    <string name="selectedamount">                  Selected Amount                 </string>
+    <string name="reset">                           Reset                           </string>
+    <string name="zeroaed">0.00 AED</string>
+    <string name="fiveaed">5.00 AED</string>
+    <string name="tenaed">10.00 AED</string>
+    <string name="twentyaed">20.00 AED</string>
+    <string name="thirtyaed">30.00 AED</string>
+    <string name="fourtyaed">40.00 AED</string>
+    <string name="fiftyaed">50.00 AED</string>
+    <string name="hundredaed">100.00 AED</string>
+    <string name="hundrednfiftyaed">150.00 AED</string>
+    <string name="twohundredaed">200.00 AED</string>
+    <string name="threehundredaed">300.00 AED</string>
+    <string name="fourhundredaed">400.00 AED</string>
+    <string name="fivehundredaed">500.00 AED</string>
+    <string name="thousandaed">1000.00 AED</string>
+
+
+
+    <!--Nol Refund-->
+    <string name="nolservices">                             NOL Services                                                                                                    </string>
+    <string name="enternolid">                              Enter NOL TagID                                                                                                 </string>
+    <string name="transferbalancenote">                     Transfer your NOL Card balance to any other NOL card.                                                           </string>
+    <string name="requestnolbalancerefund">                 NOL Balance Refund Request                                                                                     </string>
+    <string name="thenolcard">                              .The NOL card will be blocked within 1 day of this request and you would not be able to use your NOL card again </string>
+    <string name="alloweightdays">                          .Allow 8 working days for the amount to be refunded                                                             </string>
+    <string name="youcanask">                               .You can ask for a refund of Expired, Faulty or Damaged NOL card                                                </string>
+    <string name="youcanrequest">                           .You can request a replacement of your Personalised NOL card(fee of AED 70 will be applied)                     </string>
+    <string name="thisrequest">                             .This request can not be cancelled once submitted                                                               </string>
+    <string name="smswillbe">                               Upon the refund approval we will send you the SMS and app notification to inform you                            </string>
+    <string name="enternoltagid">                           NOL Tag ID*                                                                                                </string>
+    <string name="pincode">                                 PIN Code*                                                                                                        </string>
+    <string name="reasonforrefund">                         Reason For Refund*                                                                                               </string>
+    <string name="invalidpincode">                          Invalid PIN Code                                                                                                </string>
+    <string name="sorrythepin">                             Sorry, the PIN code you have entered is not valid. Please enter the correct 6 digits PIN Code.                  </string>
+    <string name="toﬁndyourpin">                            To ﬁnd your PIN code, please check the SMS which was sent to you after submitting your NOL Card application.    </string>
+    <string name="ifyoucant">                               If you can’t locate the SMS, please contact RTA call centre on 800 90 90                                        </string>
+    <string name="tryagain">                                Try again                                                                                                       </string>
+    <string name="selectrefundoptions">                     Select Refund Options                                                                                           </string>
+    <string name="cashrefund">                              Cash Refund                                                                                                     </string>
+    <string name="transferbalance">                         Transfer Balance                                                                                                </string>
+    <string name="CardReplacement">                         Card Replacement                                                                                                </string>
+    <string name="CashTransferSuccessful">                  Cash transfer successful.                                                                                       </string>
+    <string name="YourPaymentHasBeenTransferSuccessful">    your payment has been transfer successful                                                                       </string>
+    <string name="Information">                             Information                                                                                                     </string>
+    <string name="RequestCardBalanceRefund">                Request Card Balance Refund                                                                                     </string>
+    <string name="FindyourNOLTagID">                        Find your NOL Tag ID                                                                                            </string>
+    <string name="string_tofindyourpincode">                To ﬁnd your PIN code, please check the SMS which was sent to you after submitting your NOL Card application.    </string>
+    <string name="IfYouCantLocate">                         If you can’t locate the SMS, please contact RTA call centre on 800 90 90                                        </string>
+    <string name="InvalidNOLCardTagID">                     Invalid NOL Card Tag ID                                                                                         </string>
+    <string name="SorryThePersonalised">                    Sorry, the Personalised NOL Card ID you have entered is not valid.                                              </string>
+    <string name="PleaseEnterTheCorrect10Digits">           Please enter the correct 10 digits Card ID, found at the back of your NOL Card.                                 </string>
+    <string name="Refertothepicturebelow">                  Refer to the picture below:                                                                                     </string>
+    <string name="Cashrefundsuccessfull">                   Cash refund successful.                                                                                        </string>
+    <string name="Pleasegetyourcashindeliveryarea">         Please get your cash in delivery area                                                                           </string>
+
+
+    <!-- joseph nol transfer screens-->
+    <string name="TransferBalance">Transfer Balance</string>
+    <string name="tapnolcardrequiretopup">Please tap NOL card that requires topup</string>
+<string name="NoltransferBal">Transfer Balance</string>
+<!--<string name="pleasesselectamount">PleaseSelectAmount</string>-->
+<!--<string name="fiveaed">5.00AED</string>-->
+<!--<string name="tenaed">7.50AED</string>-->
+<!--<string name="twentyaed">9.01AED</string>-->
+<!--<string name="thirtyaed">10.00AED</string>-->
+<!--<string name="fourtyaed">20.00AED</string>-->
+<!--<string name="fiftyaed">30.00AED</string>-->
+<!--<string name="hundredaed">40.00AED</string>-->
+<!--<string name="hundrednfiftyaed">50.00AED</string>-->
+<!--<string name="twohundredaed">100.00AED</string>-->
+<!--<string name="threehundredaed">150.00AED</string>-->
+<!--<string name="fourhundredaed">200.00AED</string>-->
+<!--<string name="fivehundredaed">300.00AED</string>-->
+<!--<string name="thousandaed">400.00AED</string>-->
+<!--<string name="reset">RESET</string>-->
+<!--<string name="selectedamount">SelectedAmount</string>-->
+<!--<string name="zeroaed">0.00AED</string>-->
+<string name="fiveeaed">500.00AED</string>
+<string name="onethousandaed">1000.00AED</string>
+<string name="tapnolcardtotransfrom">Please tap the NOL Card you want to transfer the amount from </string>
+<string name="tapnolcardrequiretoptup">Please tap the NOL Card that require top up </string>
+
+    <!-- azhar nol topup screens-->
+    <string name="topupamount">Top Up Amount</string>
+    <string name="card">CARD</string>
+    <string name="paymentcategory">Payment Category</string>
+    <string name="pleasetapnolcardrequiredtopup">Please Tap Nol Card Required Topup</string>
+    <string name="pleaseselectyouramount">Please Select Amount</string>
+    <string name="Pleasetapyourcard">please tap your card</string>
+    <string name="redbuttontext">Please Press red button to cancel transaction.</string>
+    <string name="yellowbuttontext">Please Press yellow button to clear text.</string>
+
+
+    <string name="NOLPayment">NOL Payment</string>
+    <string name="mobile971hint">9715</string>
+
+    <string name="cashrefund_success">Your cash refund request has been submitted successfully</string>
+
+    <string name="transfer_nol_balance">Transfer NOL Card Balance</string>
+
+    <string name="note_card_replacement">Your request for card Replacement has been submitted successfully</string>
+
+    <string name="balancetransfersuccess">Balance Transfer is completed successfully</string>
+
+    <string name="transfer_from_nol_card">Transferred from NOL Card</string>
+    
+    <string name="your_requestfortransferingbalnce">Your request for transferring balance to</string>
+
+    <string name="hasbeensubmitted">has been submitted successfully </string>
+
+    <string name="disclaimer">Disclaimer:Service Fees for the cash refund is 5 AED or 2.5% of the refund value whichever is higher </string>
+
+    <string name="nol_payment_completed_successfully">NOL Payment is completed Successfully</string>
+
+    <string name="select_amount">Select Amount</string>
+
+    <string name="added_to_nol_card">Added to NOL Card</string>
+    <string name="nol_silver_card">(nol Silver card)</string>
+
+    <string name="payment_status">Payment Status :</string>
+
+    <string name="enter_mobile_no">Enter Mobile Number</string>
+
+    <string name="enter_valid_mobile_no">Enter Valid Mobile Number</string>
+
+    <string name="enter_valid_emailaddress">enter a valid email address</string>
+
+
+    <string name="please_Select_Card_payment">Please select the card payment</string>
+
+    <string name="error_dialog">There has been an error in connection please try again</string>
+
+    <string name="PaymentisCompleteddtc">Payment is completed successfully!</string>
+    <string name="PaymentisFaileddtc">Payment is Failed</string>
+    <string name="PaymentThankyoudtc">Thank you</string>
+    <string name="PaymentSorrydtc">Sorry</string>
+
+    <string name="progress_titledtc">Please wait</string>
+    <string name="page_is_loadingdtc">Page is loading</string>
+    <string name="secondsdtc">Sec </string>
+
+    <string name="please_provide_validtentagid">Please provide a valid 10 digit TagId</string>
+
+    <string name="Pleaseprovideavaliddigitpin">Please provide a valid 6 digit pin</string>
+
+    <string name="cardreplacementfee">CardReplacementFee</string>
+    <string name="confirm_id">The NOL Tag ID has been validated, kindly confirm the tag ID before proceeding and click on proceed button to continue.</string>
+
+    <string name="sorryfor_inconvenionse">Sorry for the inconvenience caused. Card Replacement not allowed for this Tag ID</string>
+    <string name="cardblockstart">Card is blocked and cannot initialize another service</string>
+
+        <string name="card_transfer_declined">  The balance transfer request to your nol card has been declined</string>
+    <string name="special_card_not_Replaces">This is a special card which is not allowed to be replaced or refunded</string>
+    <string name="transfer_tagid_notenable">Please contact RTA, as your nol Tag ID is not enabled.</string>
+    <string name="card_expired">The entered nol Tag ID is Expired, Please try again.</string>
+
+    <string name="disclaimerIncomplete">An error has occurred while performing transaction, Please note that our customer service will be contacting you shortly to work out accordingly.</string>
+    <string name="disclaimerComplete">Disclaimer: Payment completed successfully. If the transaction status is \'In Progress\', please don\'t initiate the transaction in any other channels. The status of the transaction will be updated accordingly.</string>
+    <string name="email_address">Email address</string>
+    <string name="phone_no_txt">Phone No</string>
+
     <string name="marquee">Kindly check the new services we are providing for RTA and DTC, It will assist you to pay your fines, to explore more have a look at the RTA services.</string>
+    <string name="pobox">P.O.Box:</string>
+
+    <string name="areatxt">Area</string>
+
+    <string name="mlttxt">MLT</string>
+    <string name="yeartxt">2018</string>
+
+
+
+    <string name="copyrighttxt">Copyright</string>
+
+    <string name="relaese_date_txt">Release Date:</string>
+
+    <string name="wind">Wind: </string>
+    <string name="humidity">Humidity: </string>
+
+    <string name="min">Min  :</string>
+
+    <string name="max">Max :</string>
+    <string name="mph">mph</string>
+    <string name="percent">%</string>
+    <string name="back">Back</string>
+    <string name="how_was_your_experience">How was your experience?</string>
+    <string name="_50">50%</string>
+    <string name="todo">TODO</string>
+
+    <string name="buy_this_offer">Buy this offer</string>
+    <string name="u2022">•</string>
+
+    <string name="coordinates">Coordinates:</string>
+    <string name="v">V</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="_60">60</string>
+    <string name="_120_00">120.00</string>
+    <string name="_12_10_30">12:10:30 AM</string>
+    <string name="_31">31</string>
+    <string name="thanks_for_your_feedback">Thanks for your feedback</string>
+    <string name="one_of_our_technical_support_staff_will_get_back_to_you_at_the_earliest">One of our technical support staff will get back to you at the earliest.</string>
+
+
+    <string name="servicenotresponding">Service not responding</string>
+    <string name="sorryfortheinconvinience">Sorry for the inconvenience</string>
+    <string name="ok">ok</string>
+    <string name="PleaseInsertCvv">Please insert cvv</string>
+    <string name="requestSelectProductMessage">The availability of this product has to be confirmed.</string>
+    <string name="car_plate_no">Car Plate No</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="id_no">ID No </string>
+    <string name="shift_end_time">Shift End Time</string>
+    <string name="shift_start_time">Shift Start Time</string>
+
+    <string name="tripdetail">Trip Details</string>
     <string name="choose_service">CHOOSE SERVICE</string>
+
+    <string name="please_enter_pin">Please enter PIN.</string>
+    <string name="swipe_tap_insert">Please insert, tap or swipe card.</string>
+    <string name="insert_swipe_tap">Insert, Swipe or Tap card.</string>
+    <string name="please_swipe_your_card">Please swipe your card</string>
+    <string name="chip_fallback">Please Insert Card.</string>
+    <string name="pleaseenterpin">Please enter PIN.</string>
+    <string name="tripId">TripID: </string>
+    <string name="use_chip">Use Chip.</string>
+    <string name="tap_swipe_insert">Please tap, swipe or insert card.</string>
+    <string name="present_card">Present Card.</string>
+    <string name="tap_insert">Please tap or insert card.</string>
+    <string name="txn_err">Transaction Error.</string>
+    <string name="want_a_reciept">Do you want a receipt ?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="nol_pay_soon">Nol Payment coming soon.</string>
+
+    <string-array name="dialog_single_choice_array">
+        <item>multimedia</item>
+        <item>apk</item>
+    </string-array>
+
+    <string name="network_error_message">Please ensure you\'re connected to a proper network.</string>
+    <string name="autograph">autograph</string>
+    <string name="title_market_place">"  Market Place"</string>
+    <string name="color">Color</string>
+    <string name="size">Size</string>
+    <string name="offer_details">Offer Details</string>
+    <string name="customers_also_viewed">Customers Also Viewed</string>
+    <string name="quantity">Quantity</string>
+    <string name="add_to_cart">Add To Cart</string>
+    <string name="mp_search_hint">search products</string>
+
+    <string-array name="total">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+    </string-array>
+
+    <string name="mp_cardswipe">YOUR PAYMENT IS UNDER PROCESS</string>
+    <string name="mp_cardswipe2">PLEASE SWIPE YOUR CARD</string>
+    <string name="mp_titleCardPayment">Card Payment</string>
+    <string name="mp_entercvv">PLEASE INSERT CVV</string>
+
+
+    <string name="feedback">Feedback</string>
+
+    <string name="about_us">About Us</string>
 </resources>

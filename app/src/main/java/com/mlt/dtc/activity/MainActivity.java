@@ -34,12 +34,15 @@ import static com.mlt.dtc.common.Constant.count;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener {
     public InfiniteBannerView infiniteBannerView;
     public Boolean isSelected=false;
-    private RecyclerView rvBottomMenu;
-
-    int topBannerCount,positionTopBanner,DTCservicesCount,rtaservicesCount,mltbuttonCount;
-
+    private RecyclerView rvBottomMenu, recycler_view_side_offers;
+    private RelativeLayout layout_uparrow,down_arrow;
+    public ArrayList<SideBannerObject> fileList;
+    int topBannerCount,positionTopBanner;
+    public OffersRecyclerViewAdapter adapter_menus = null;
     public static MainActivity mainActivity;
-
+    private GoogleApiClient googleApiClient;
+    public static int restrict_double_click = 0;
+    private int Position, sideoffersCount;
 
     public static MainActivity getInstance(){
 
@@ -72,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void findViewById() {
         rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
         infiniteBannerView = findViewById(R.id.pager);
+        rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
+        recycler_view_side_offers = findViewById(R.id.recycler_view_side_offers);
+        layout_uparrow = findViewById(R.id.layout_uparrow);
+        down_arrow = findViewById(R.id.down_arrow);
 
         findViewById(R.id.relative_left_arrow).setOnClickListener(this);
         findViewById(R.id.relative_right_arrow).setOnClickListener(this);
@@ -83,6 +90,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void HideNavigationBar() {
         SystemUIService.setNaviButtonVisibility(this.getApplicationContext(), SystemUIService.NAVIBUTTON_NAVIBAR, View.GONE);
         SystemUIService.setStatusBarVisibility(this.getApplicationContext(), View.GONE);
+    }
+
+    private void processOffers(){
+        try {
+            fileList = new ArrayList<>();
+            adapter_menus = new OffersRecyclerViewAdapter(fileList, getApplicationContext(),this);
+            recycler_view_side_offers.setAdapter(adapter_menus);
+
+            File dir = new File(multimediaPath+"/adv/");
+            File dirMI = new File(multimediaPath+"/SBMainImage/");
+            File[] files = dir.listFiles();
+            File[] MIFiles = dirMI.listFiles();
+            //fileList = new ArrayList<File>();
+            fileList.clear();
+            for (File file : files) {
+                if(file.getName().toLowerCase().startsWith("baner") || file.getName().toUpperCase().startsWith("BANER")){
+                    // it's a match, call your function
+                    for(File miFile:MIFiles){
+                        if(miFile.getName().equals(file.getName())){
+                            fileList.add(new SideBannerObject(file,miFile));
+                        }
+                    }
+                }
+            }
+
+            recycler_view_side_offers.post(new Runnable() {
+                @Override
+                public void run() {
+                    adapter_menus.notifyDataSetChanged();
+                }
+            });
+        }catch (Exception e){
+
+        }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        googleApiClient = getAPIClientInstance();
+
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
+
+    @Override
+    public void recyclerViewListClicked(View v, int position) {
+        restrict_double_click = restrict_double_click + 1;
+        if (restrict_double_click == 1) {
+            Position = position;
+            sideoffersCount++;
+            PreferenceConnector.writeInteger(getApplicationContext(), Constant.SideBannerCount, sideoffersCount);
+            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameSideAds);
+
+            Constant.ButtonClicked = Constant.nameSideAds;
+            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+
+            try {
+                OffersDialogFragment offersDialogFragment = new OffersDialogFragment();
+                Bundle bundlepos = new Bundle();
+                bundlepos.putInt(Constant.PositionSelectedOffers, position);
+                bundlepos.putSerializable(Constant.ArrayImagesSelectedOffers, fileList);
+                offersDialogFragment.setArguments(bundlepos);
+                offersDialogFragment.show(getSupportFragmentManager(), "");
+
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    private GoogleApiClient getAPIClientInstance() {
+        GoogleApiClient mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API).build();
+        return mGoogleApiClient;
     }
 
     private void setRecyclerViewBottomAdapter() {

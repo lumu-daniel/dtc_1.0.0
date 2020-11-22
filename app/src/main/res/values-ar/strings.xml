@@ -1,0 +1,583 @@
+<resources>
+    <string name="app_name">RTA</string>
+    <string name="progress_title">الرجاء الإنتظار </string>
+    <string name="page_is_loading">يتم تحميل الصفحة </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="interactive_animation">Interactive animation</string>
+    <string name="auto_visibility">Auto visibility</string>
+    <string name="animation_type">Animation type</string>
+    <string name="orientation">Orientation</string>
+    <string name="home">الرئيسية</string>
+    <string name="right_to_left_mode">Right to left mode</string>
+    <string name="Phoneno">+971 (0)2 681 7493</string>
+    <string name="PObox">P.O. Box 47388, Abu Dhabi, U.A.E.</string>
+    <string name="Email">  support@mlt-uae.ae</string>
+    <string name="Fax">Fax</string>
+    <string name="fax">+971 (0)2 681 7499</string>
+    <string name="Area">Office # 5311 and 5312, Addax Tower, Al-Reem Island</string>
+    <string name="Coordinates">24.4989° N 54.4031° E</string>
+    <string name="name">Name*</string>
+    <string name="email">*البريد الالكتروني</string>
+    <string name="mobileno">*رقم الهاتف</string>
+    <string name="issueoccured">Issue Type</string>
+    <string name="message">Message*</string>
+    <string name="google_maps_key">	AIzaSyB0ZCLT-QKhe5S4gdIP5h9MAE9x6w33WuY</string>
+    <string name="hidekeyboard">Hide Keyboard</string>
+    <string name="destend">Kilometers Travelled :</string>
+    <string name="deststartaddress">Start Address:   </string>
+    <string name="destendaddress">End Address:   </string>
+    <string name="duration">Trip Duration : </string>
+    <string name="Country">Country : </string>
+    <string name="fare">Fare : </string>
+    <string name="startfare">Start Fare : </string>
+    <string name="startdatetime">Start Date and Time : </string>
+    <string name="enddatetime">End Date and Time : </string>
+    <!--Time Fragment-->
+    <string name="City">City : </string>
+    <string name="Abbreviations">Abbreviations :  </string>
+    <string name="Capital">Capital : </string>
+    <string name="DialCode">Dial Code : </string>
+    <string name="CurrentTime">Current Time : </string>
+    <string name="CurrentDate">Current Date : </string>
+
+    <string-array name="issues_array">
+        <item>Driver Details</item>
+        <item>Trip Details</item>
+        <item>About us</item>
+        <item>Happy Meter</item>
+        <item>RTA services</item>
+        <item>DTC services</item>
+        <item>Other government Services</item>
+        <item>Utilities and other services</item>
+        <item>E-Commerce online shop</item>
+        <item>Classified Advertisement</item>
+        <item>Offers</item>
+        <item>Banners</item>
+        <item>About Us</item>
+        <item>News</item>
+        <item>Maps</item>
+        <item>Weather</item>
+        <item>Entertainment</item>
+    </string-array>
+
+    <string-array name="animation_type">
+        <item>None</item>
+        <item>Color</item>
+        <item>Scale</item>
+        <item>Worm</item>
+        <item>Slide</item>
+        <item>Fill</item>
+        <item>Thin Worm</item>
+        <item>Drop</item>
+        <item>Swap</item>
+    </string-array>
+
+    <string-array name="orientation">
+        <item>Horizontal</item>
+        <item>Vertical</item>
+    </string-array>
+
+    <string-array name="rtl">
+        <item>On</item>
+        <item>Off</item>
+        <item>Auto</item>
+    </string-array>
+
+    <string name="description_zoom_touch_close">Expanded image (touch to close)</string>
+
+    <!--Regulatory-->
+    <string name="mlt">Multi Level Technology</string>
+    <string name="modelno">Model xCL_E200CP</string>
+    <string name="fccid">FCC ID:MQT-E200CP</string>
+    <string name="pci">PCI 5.0:4-40217</string>
+    <string name="europe">Europe</string>
+    <string name="traid">TRA ID DA65900/17</string>
+    <string name="ta">TA ER60424/18</string>
+    <string name="weee">WEEE Verified</string>
+    <string name="rohs">RoHS Compliance</string>
+    <string name="svhc">SVHC Tested</string>
+    <string name="mltaboutus1"><b>Multi Level Technology “MLT”</b> is a subsidiary of <b>Al Sayegh Group</b> specialized in &amp; providing Payment Solutions. <b>MLT</b> is based in UAE, and it provides its customers withend-to-end payment solutions, spanning from acquiring, payment processing to process automation and back-end services such as automated segregation, reconciliation, posting, ERP integration and more customized.</string>
+    <string name="mltaboutus2">Our solutions can be tailored for any sized business and can either be created from the ground up, or be integrated seamlessly with existing infrastructure. Additionally,<b>MLT</b>can provide its customers with turnkey integrated solution.</string>
+    <string name="mltaboutus3"><b>MLT</b> with coordination of <b>Network Intelligent Payment Solution “NIPS”</b>, a sister company of <b>MLT</b>, provides tailor-made developed platforms to execute services and facilitate payment for all types of payment channels and their associated support infrastructure.</string>
+
+    <!--Happy Screen-->
+    <string name="happyscreenthankyoutext">Thank you for helping make Dubai the happiest city on earth</string>
+
+    <!--RTA Text Common For All Screens -->
+    <string name="Home">القائمة الرئيسية</string>
+    <string name="Info">معلومات</string>
+    <string name="Back"> الرجوع</string>
+
+    <!--<string name="RTAService">(RTA)للاستعلام عن ودفع المخالفات المرورية</string>-->
+    <string name="RTAService">خدمات هيئة الطرق و المواصلات</string>
+    <string name="CompletePayment">تأكيد الدفع</string>
+    <string name="CardPayment">الدفع بالبطاقة</string>
+    <string name="RTACertificates">شهادة</string>
+    <string name="Selectanyoneoption">حدد أحد الخيارات</string>
+    <string name="FineInquiryandPayment">للاستعلام عن ودفع المخالفات المرورية</string>
+    <string name="FineInquiryandPayments">للاستعلام عن ودفع المخالفات المرورية</string>
+    <string name="VehicleRegistrationServices">خدمات المركبات</string>
+    <string name="VehicleRegistrationRenewal">تجديد ملكية مركبة</string>
+    <string name="VehicleRegistrationLossDamage">بدل ملكية ضائع/تالف</string>
+    <string name="DrivingLicenseServices">(RTA)خدمة السائق</string>
+    <string name="DrivingLicenseRenewal">تجديد رخصة القيادة</string>
+    <string name="DrivingLicenseLossDamage">اصدار رخصة بدلتالف / فاقد</string>
+    <string name="ParkingServices">خدمة المواقف</string>
+    <string name="PrintingCertificate">طباعة شهادة</string>
+    <string name="Newseasonalcard">اصدار بطاقة المواقف الموسمية</string>
+    <string name="Seasonalcardrennewal">تجديد بطاقة المواقف الموسمية</string>
+    <string name="seasonalparkingcard">خدمات بطاقة المواقف الموسمية</string>
+    <string name="seasonalparkingcardrenewal">الموسمية تجديد بطاقة المواقف</string>
+    <string name="ApplicantName">اسم المستخدم</string>
+    <string name="EnterCardNumber">Enter Card Number</string>
+    <string name="PleaseEnteryourCVV"> يرجى ادخال رمز الامان المذكور خلف البطاقة</string>
+    <string name="CardType">نوع البطاقة</string>
+    <string name="CardPeriod">مدة البطاقة</string>
+    <string name="MobileNumber">رقم الهاتف المتحرك</string>
+    <string name="ActivationDate">تاريخ التفعيل</string>
+    <string name="TrafficFileNumber">الرمز المروري</string>
+    <string name="DrivingLicense">رخصة القيادة</string>
+    <string name="PlateNumber">رقم اللوحة</string>
+    <string name="FineNumber">رقم المخالفة</string>
+    <string name="FinesByTrafficFileNo">المخالفات برقم الملف المروري</string>
+    <string name="FinesByPlateNo">المخالفات برقم اللوحة</string>
+    <string name="FinesByDrivingLicense">المخالفات برقم رخصة القيادة</string>
+    <string name="FinesByFineNumber">برقم المخالفة</string>
+    <string name="LicenseNo">رقم الرخصة</string>
+    <string name="LicenseSource">مصدر الرخصة</string>
+    <string name="Placeofissue">جهة الإصدار</string>
+    <string name="BirthYear">سنة ميلاد المالك</string>
+    <string name="TicketYear">سنة المخالفة</string>
+    <string name="Plateno">رقم اللوحة</string>
+    <string name="Platecode">فئة اللوحة</string>
+    <string name="Platecategory">نوع اللوحة</string>
+    <string name="ReplacementReason">سبب إعادة الإصدار</string>
+    <string name="Platetype">نوع اللوحة</string>
+    <string name="Fineno">رقم المخالفة</string>
+    <string name="BeneficiaryCode">رمز المستفيد</string>
+    <string name="Search">بحث</string>
+    <string name="Continue">استمرار</string>
+    <string name="Submit">ارسال</string>
+    <string name="AddVehicle">إضافة مركبة</string>
+    <string name="TicketNumber">رقم المخالفة</string>
+    <string name="DrivingLicenseInformation">بيانات رخصة القيادة</string>
+    <string name="FineInformation">المعلومات المخالفة</string>
+    <string name="Date">التاريخ</string>
+    <string name="FineAmount">مبلغ المخالفة</string>
+    <string name="Penalty">الغرامة</string>
+    <string name="KnowledgeFee">رسوم المعرفة</string>
+    <string name="Expirydate">تاريخ الانتهاء</string>
+    <string name="Total">الإجمالي</string>
+    <string name="Details">تفاصيل</string>
+    <string name="UnPayableTickets">مخالفات غير قابلة للدفع</string>
+    <string name="FineCount">عدد المخالفة:</string>
+    <string name="BlackPointsCount">عدد النقاط السوداء:\u0020</string>
+    <string name="SelectedFine">المخالفات المختارة:\u0020</string>
+    <string name="fineAmount">مبلغ المخالفات:\u0020</string>
+    <string name="SelectedFineAmount">مبلغ المخالفات المختارة:\u0020</string>
+    <string name="FineSource">مصدر المخالفة</string>
+    <string name="Time">الوقت</string>
+    <string name="VehicleSpeed">سرعة المركبة</string>
+    <string name="TotalAmount">المبلغ الإجمالي</string>
+    <string name="DueAmount">مبلغ مستحق</string>
+    <string name="Amount">مبلغ</string>
+    <string name="ServiceCharge">مصاريف الدفع</string>
+    <string name="FineYear">سنة المخالفة</string>
+    <string name="Violations">انتهاكات</string>
+    <string name="FineStatus">موقف المخالفة</string>
+    <string name="PlateSource">مصدر اللوحة</string>
+    <string name="ContactDetails">تفاصيل التواصل مع شركة التوصيل</string>
+    <string name="EnteryourEmailAddressor">ادخل البريد الالكتروني</string>
+    <string name="EnteryourEmailAddress">ادخل البريد الالكتروني</string>
+    <string name="EnteryourMobileNumber">رقم الهاتف المتحرك</string>
+    <string name="getdigitalpass">أدخل البريد الإلكتروني و رقم الهاتف المتحرك لتلقي الإيصال و "ديجيتل سمارت باس</string>
+    <string name="getreceipt">أدخل عنوان البريد الإلكتروني لتلقي الإيصال</string>
+    <string name="RTAParkingFines">RTA (Parking Fines) FINE NO. 12345</string>
+    <string name="PaymentConfirmation">بيانات الدفع</string>
+    <string name="Paynow">ادفع الآن</string>
+    <string name="YourPaymentisbeingprocessed">جاري إجراء عملية الدفع</string>
+    <string name="Pleaseswipeyourcard">مرر بطاقتك</string>
+    <string name="ProceedToPayment">دفع</string>
+    <string name="Description">التفاصيل</string>
+    <string name="Birthyearhint">e.g. 1988</string>
+    <string name="seconds">ثانيه</string>
+
+    <!--Courier Detials Screen-->
+    <string name="couriorServices">                 خدمات البريد    </string>
+    <string name="kioskServices">                   خدمة الكشك    </string>
+    <string name="chooseDelivery">                  حدد الخدمة    </string>
+    <string name="contactname">                     *اسم جهة الإتصال    </string>
+    <string name="Preferreddeliverydate">           تاريخ الإستلام المستحب    </string>
+    <string name="address1">                        *العنوان الأول    </string>
+    <string name="address2">                        العنوان الثاني    </string>
+    <string name="selectemirates">                  *حدد الإمارة    </string>
+    <string name="preferredarea">                   *المنطقة المفضلة    </string>
+    <string name="courierdetails">                  تفاصيل البريد    </string>
+    <string name="proceed">                         تابع    </string>
+
+    <!--Payment-->
+    <string name="PaymentisCompleted">تمت العملية بنجاح</string>
+    <string name="PaymentisFailed">لم تتم المعاملة بنجاح</string>
+    <string name="PaymentThankyou">شكرا</string>
+    <string name="PaymentSorry">معذرة</string>
+    <string name="PayemntEReceipt">تم ارسال الوصل بالبريد الالكتروني بنجاح</string>
+    <string name="PayemntEReceiptandDPass">تم ارسال الوصل بالبريد الالكتروني بنجاح</string>
+    <string name="ProgressFinishedReferenceNo">انتهت العملية - رقم المرجع:</string>
+    <string name="VisitSmartTeller">الرجاء زيارة أقرب جهاز الخدمة الذكي وامسح التمرير الرقمي لإتمام العملية</string>
+
+    <!--Driving License-->
+    <string name="replacementreason">سبب إعادة الإصدار</string>
+    <string name="Location">الموقع</string>
+
+    <!--Vehicle Information-->
+    <string name="vehicleinformation">بيانات المركبة</string>
+    <string name="chassisno">رقم الشاسية</string>
+    <string name="doorno">عدد الأبواب</string>
+    <string name="registrationexpiry">تاريخ نهاية الترخيص</string>
+    <string name="insurancecompany">شركة التامين</string>
+    <string name="vehiclebrand">ماركة المركبة</string>
+    <string name="platecode">فئة اللوحة</string>
+    <string name="carmodel">موديل المركبة</string>
+    <string name="platesource">مصدر اللوحة</string>
+    <string name="seatsnumber">عدد المقاعد</string>
+    <string name="insuranceexpiry">تاريخ نهاية التامين</string>
+    <string name="insurancetype">نوع التامين</string>
+    <string name="vehiclecolor">لون المركبة</string>
+
+
+    <!--RTA Driving Services-->
+    <string name="LicenseNumber">رقم الرخصة</string>
+    <string name="LicenseType">نوع الرخصة</string>
+    <string name="IssueDate">تاريخ الإصدار</string>
+    <string name="Name">الاسم</string>
+    <string name="LicenseClass">فئة الرخصة</string>
+    <string name="ExpiryDate">تاريخ الانتهاء</string>
+    <string name="LicenseStatus">حالة الرخصة</string>
+
+    <string name="CertificateTitleOwnership">شهادة امتلاك مركبة</string>
+    <string name="CertificateTitleNonOwnership">شهادة عدم امتلاك مركبة</string>
+    <string name="CertificateTitleInsuranceRefund">شهادة إعادة التامين</string>
+    <string name="CertificateTitleClearance">شهادة براءة ذمة</string>
+    <string name="CertificateTitleDrivingExperience">شهادة خبرة قيادة</string>
+
+    <string name="AddressedDepartment">جهة المخاطبة</string>
+    <string name="InsuranceCompany">شركة التامين</string>
+
+    <string-array name="licensesourcecitiesarray">
+        <item>Dubai</item>
+    </string-array>
+
+    <string-array name="licensesourcecitiesarrayUpperCase">
+        <item>DUBAI</item>
+    </string-array>
+
+
+    <string-array name="insurancecompanies">
+        <item>شركه الشارقه للتامين واعاده التامين</item>
+        <item>شركة العين الاهلية للتأمين (فرع دبي)</item>
+        <item>اكسا للتأمين (الخليج) ش م ب (م) فرع دبي</item>
+        <item>الاتحاد الوطني شركة الضمان العامة للشرق الادنى</item>
+        <item>شركه الاتحاد للتامين فرع دبي</item>
+        <item>شركة البحيرة الوطنية للتأمين (فرع دبي)</item>
+        <item>شركة راس الخيمة الوطنية للتامين</item>
+        <item>شركة عمان للتامين (ش م ع)</item>
+        <item>شركة الظفرة للتأمين (شركة مساهمة عامة) فرع دبي</item>
+        <item>شركة الفجيرة الوطنية للتأمين (فرع دبي) </item>
+        <item>شركة دبي الاسلامية للتامين واعادة التامين (امان )(ش.م.ع )</item>
+        <item>امريكان لايف إنشورانس كومباني    </item>
+        <item>شركة دبي الوطنية للتأمين واعادة التأمين (شركة مساهمة عامة)  </item>
+        <item>شركة ابوظبي الوطنية للتكافل ش م ع تكافل </item>
+        <item>شركة التأمين الاردنية المساهمة المحدودة           </item>
+        <item>شركة ابوظبي الوطنية للتأمين     </item>
+        <item>شركة دبي للتأمين (شركة مساهمة عامة)    </item>
+        <item>الشركة الوطنية للتأمينات العامة (شركة مساهمة عامة)      </item>
+        <item>اللاينس للتأمين (ش . م. ع) فرع     </item>
+        <item>طوكيو مارين أند نيتشيدو فاير انشورانس كومباني ليمتد (فرع دبي)    </item>
+        <item>سيغنا الشرق الاوسط للتأمين (ش . م. ل) فرع دبى         </item>
+        <item>شركة اورينت للتأمين مساهمة عامة         </item>
+        <item>الضمان اللبنانية         </item>
+        <item>شركة الامارات للتامين ( فرع من شركة الامارات للتأمين )(فرع دبي)         </item>
+        <item>شركة قطر للتأمين         </item>
+        <item>شركة الوثبة الوطنية للتامين         </item>
+        <item>نورويتش يونيون إنشورانس جلف دبي         </item>
+        <item>الشركة القطرية العامة للتأمين واعادة التأمين (ش م ق)         </item>
+        <item>الموارد الخليجية لإدارة خدمات التأمين         </item>
+        <item>كونتيننتال للتأمين         </item>
+        <item>الشرق الأوسط للتأمين         </item>
+        <item>وكالة كاستريل للتأمين         </item>
+        <item>ادمجي انشورنس كومباني ليمتد (فرع دبي)         </item>
+        <item>الاسلامية العربية للتأمين         </item>
+        <item>شركة التأمين العربية السعودية (ش . م. ب . م) فرع دبي         </item>
+        <item>الدولية لخدمات التأمين (ش ذ م م)         </item>
+        <item>العربية الاوروبية للضمان وإعادة الضمان         </item>
+        <item>جنرال أكسيدنت فاير أند لايف إنشورانس         </item>
+        <item>نورثون للوساطه التامينيه شركة ذات مسئوليه محدودة         </item>
+        <item>ذي نيو انديا اشورنس كومباني ليمتد         </item>
+        <item>رويال إنترناشيونال إنشورانس         </item>
+        <item>شركة الخزنة للتأمين (شركة مساهمة عامة) فرع دبي         </item>
+        <item>ذي اورينتال انشورنس كومباني ليمتد (فرع دبي)         </item>
+        <item>شركة سهامي بيمه ايران         </item>
+        <item>برونشيال لخدمات التأمين         </item>
+        <item>ذا بلواز انشورانس كومباني ليمتد (فرع دبي)         </item>
+        <item>نوريج يونيون للتأمين الخليج         </item>
+        <item>شركة البحرين للتامين         </item>
+        <item>التأمين العامة الفرنسية         </item>
+        <item>رويال اند صن اللاينس للتامين(الشرق الاوسط) المحدودة (فرع دبى)         </item>
+        <item>شركة الصقر الوطنية للتامين (شركة مساهمة عامة)         </item>
+        <item>الموارد الوطنية لخدمات التأمين         </item>
+        <item>ميتسوي سوميتومو انشورنس كومباني ليمتد فرع دبي         </item>
+        <item>اراب ريسورمز إنشورانس         </item>
+        <item>اسيتاليا لي اسكرازيوني دي ايطاليا         </item>
+        <item>الاردنية الفرنسية للتأمين         </item>
+        <item>الشركة العربية الاسكندنافية للتأمين         </item>
+        <item>شركة التأمين العربية المحدودة         </item>
+        <item>الطاهر للتأمين         </item>
+        <item>دلتا لخدمات التأمين         </item>
+        <item>الشركه الاسلاميه العربيه للتامين         </item>
+        <item>دار التكافل (ش م ع)         </item>
+        <item>نور للتكافل العام (ش م ع)         </item>
+        <item>شركة ميثاق للتأمين التكافلي ش م ع فرع دبي         </item>
+        <item>شركة الهلال للتكافل ش.م.ع         </item>
+        <item>اميريكان هوم اشورانس كومباني (فرع دبي)         </item>
+        <item>دار التامين ش م ع         </item>
+        <item>هذه المركبة غير مؤمنة         </item>
+        <item>الوطنية للتكافل (وطنية) ش م ع فرع دبي         </item>
+        <item>اورينت يو ان بي تكافل (مساهمة عامة)         </item>
+        <item>اورينت يو ان بي تكافل (مساهمة عامة)         </item>
+        <item>         </item>
+        <item>         </item>
+    </string-array>
+
+    <!--Fines by fine number-->
+    <string-array name="beneficiaryCode">
+        <item>شرطة دبي</item>
+        <item>هيئة الطرق (مخالفات المواقف)</item>
+        <item>شرطة أبوظبي</item>
+        <item>شرطة الشارقة</item>
+        <item>شرطة عجمان</item>
+        <item>شرطة أم القيوين</item>
+        <item>شرطة رأس الخيمة</item>
+        <item>شرطة الفجيرة</item>
+        <item>سالك</item>
+        <item>قسم التفتيش و الرقابة (RTA)</item>
+        <item>بلديه ابوظبي</item>
+        <item>بلدية الشارقة</item>
+        <item>سلطنة عمان</item>
+        <item>مملكة البحرين</item>
+        <item>المملكة العربية السعودية</item>
+        <item>دولة الكويت</item>
+        <item>دولة قطر</item>
+        <item>قسم التفتيش و الرقابة (دبي للمواصلات)</item>
+        <item>مواقف مخصصة لمستخدمي القطارات</item>
+        <item>مواصلات الشارقة</item>
+        <item>نظام سلامة المركبات</item>
+    </string-array>
+
+    <!--owner ship and non owner ship-->
+    <string-array name="addresseddepartment">
+        <item>منشات الكويت</item>
+        <item>وزارة العمل</item>
+        <item>شرطة دبي</item>
+        <item>محاكم دبي</item>
+        <item>الاداره العامه للاقامه وشؤون الاجانب - دبي</item>
+        <item>البنوك</item>
+        <item>وكلاء السيارات</item>
+        <item>شركات التامين</item>
+        <item>بلدية دبي</item>
+        <item>اغراض شخصية</item>
+        <item>دائرة السياحة والتسويق التجاري</item>
+        <item>سلطة واحة دبي للسيليكون</item>
+        <item>المنطقة الحرة بمطار دبي</item>
+        <item>المجلس الوطني للإعلام</item>
+        <item>غرفة تجارة وصناعة دبي</item>
+        <item>المنطقة الحره ميدان</item>
+        <item>هيئة تنمية المجتمع</item>
+        <item>واحة دبي للسيليكون</item>
+        <item>دائرة التنمية الاقتصادية ابوظبي</item>
+        <item>دائرة الشؤون الاسلامية</item>
+        <item>دائرة التنمية الاقتصادية الشارقة</item>
+        <item>دائرة التنمية الاقتصادية ام القيوين</item>
+        <item>دائرة التنمية الاقتصادية الفجيرة</item>
+        <item>دائرة التنمية الاقتصادية عجمان</item>
+        <item>دائرة التنمية الاقتصادية رأس الخيمة</item>
+        <item>منشأت السعودية</item>
+        <item>منشات قطر</item>
+        <item>منشات عمان</item>
+        <item>منشات الكويت</item>
+        <item>منشات الكويت</item>
+    </string-array>
+    <string-array name="platecodearray">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+        <item>F</item>
+        <item>G</item>
+        <item>H</item>
+        <item>I</item>
+        <item>J</item>
+        <item>K</item>
+        <item>L</item>
+        <item>M</item>
+        <item>N</item>
+        <item>O</item>
+        <item>P</item>
+        <item>Q</item>
+        <item>R</item>
+        <item>S</item>
+        <item>T</item>
+        <item>U</item>
+        <item>V</item>
+        <item>W</item>
+        <item>X</item>
+        <item>Y</item>
+        <item>Z</item>
+        <item>AA</item>
+    </string-array>
+
+    <string-array name="platecategoryarray">
+        <item>Private</item>
+        <item>Clasic</item>
+        <item>MotorCycle</item>
+    </string-array>
+
+    <string-array name="replacementreason">
+        <item>ضائع</item>
+        <item>تالف</item>
+    </string-array>
+
+    <!--Parking Service-->
+    <!--Card Type-->
+    <string-array name="parkingcardtype">
+        <item>My Parking Areas</item>
+        <item>My Parking General</item>
+    </string-array>
+    <!--Card Period-->
+    <string-array name="parkingcardperiod">
+        <item>90</item>
+        <item>180</item>
+        <item>365</item>
+    </string-array>
+
+    <!--RTA Screens End-->
+
+    <!--firebase-->
+
+    <!--login-->
+
+
+    <string name="cancel">إلغاء</string>
+
+    <string name="enternoltagid">رقم بطاقة نول*</string>
+
+    <string name="pincode">الرمز السري*</string>
+
+    <string name="requestnolbalancerefund">طلب استرداد رصيد بطاقة نول</string>
+
+    <string name="transferbalance">تحويل الرصيد </string>
+
+    <string name="disclaimer">إخلاء مسؤولية: رسوم الخدمة لاسترداد النقود هي 5 دراهم أو 2.5٪ من قيمة الاسترداد أيهما كان أعلي</string>
+    <string name="reasonforrefund">سبب الاسترداد*</string>
+
+    <string name="cashrefund_success">تم إرسال طلب الاسترداد بنجاح</string>
+
+    <string name="note_card_replacement">تم إرسال طلبك لاستبدال البطاقة بنجاح</string>
+
+    <string name="your_requestfortransferingbalnce">تم إرسال طلبك لتحويل الرصيد إلى بطاقة نول رقم</string>
+
+    <string name="hasbeensubmitted">بنجاح</string>
+
+
+    <string name="enter_mobile_no">أدخل رقم الهاتف</string>
+
+    <string name="nolservices">خدمات نول</string>
+
+    <string name="cashrefund"> الاسترداد النقدي</string>
+    <string name="CardReplacement">استبدال البطاقة </string>
+
+    <string name="selectrefundoptions"> اختر طريقة الاسترداد</string>
+
+    <string name="string_tofindyourpincode">إيجاد الرقم السري للبطاقة، الرجاء التحقق من الرسالة النصية المرسلة بعد تقديم الطلب في تطبيق بطاقة نول.</string>
+
+    <string name="IfYouCantLocate"> في حالة عدم العثور على الرسالة النصية، الرجاء الاتصال بمركز خدمة عملاء هيئة الطرق و المواصلات  على الرقم 90 90 800  </string>
+
+    <string name="InvalidNOLCardTagID">             رقم بطاقة نول غير صحيح        </string>
+    <string name="SorryThePersonalised">نأسف، رقم البطاقة نول الشخصية المدخل غير صحيح. </string>
+    <string name="PleaseEnterTheCorrect10Digits">  الرجاء إدخال الأرقام 10 الصحيحة للبطاقة، الموجودة في ظهر بطاقة نول. </string>
+    <string name="Refertothepicturebelow">الرجوع إلى الصورة أدناه:</string>
+
+    <string name="thenolcard">سيتم حظر بطاقة نول خلال يوم واحد من هذا الطلب ولن تتمكن من استخدام بطاقة نول مرة أخرى</string>
+
+    <string name="alloweightdays">                سيتم استرداد المبلغ خلال 8 أيام عمل</string>
+
+    <string name="youcanask"> يمكنك طلب استرداد رصيد بطاقة نول منتهية الصلاحية، المعيبة أو التالفة</string>
+
+    <string name="youcanrequest">يمكنك طلب استبدل بطافة نول الشخصية (سيتم تطبيق رسوم بقيمة 70 د.إ.) </string>
+
+    <string name="thisrequest"> لا يمكن إالغاء هذا الطلب  من بعد الإرسال </string>
+
+    <string name="smswillbe"> بمجرد الموافقة على الاسترداد، سيتم إرسال رسالة نصية و إخطار في التطبيق لإبلاغك.</string>
+
+    <string name="enter_valid_mobile_no">ادخل رقم هاتف صحيح</string>
+
+    <string name="enter_valid_emailaddress">ادخل بريد إلكتروني صحيح</string>
+
+    <string name="enternolid"> ادخل رقم بطاقة نول</string>
+
+    <string name="transferbalancenote">تحويل رصيد بطاقة نول إلى أي بطاقة نول أخرى.</string>
+
+    <string name="sorrythepin">نأسف، الرقم السري المدخل غير صحيح. الرجاء إدخال الرقم السري الصحيح المكون من 6 أرقام.</string>
+
+    <string name="toﬁndyourpin"> لإيجاد الرقم السري للبطاقة، الرجاء التحقق من الرسالة النصية المرسلة بعد تقديم الطلب في تطبيق بطاقة نول.  </string>
+
+    <string name="ifyoucant"> في حالة عدم العثور على الرسالة النصية، الرجاء الاتصال بمركز خدمة عملاء هيئة الطرق و المواصلات  على الرقم 90 90 800  </string>
+
+    <string name="invalidpincode">الرقم السري غير صحيح</string>
+
+    <string name="FindyourNOLTagID">                ابحث عن معرف علامة نول</string>
+
+    <string name="RequestCardBalanceRefund">           طلب استرداد رصيد البطاقة</string>
+
+    <string name="Information">  معلومات</string>
+
+    <string name="CashTransferSuccessful"> تم التحويل النقدي بنجاح.</string>
+
+    <string name="YourPaymentHasBeenTransferSuccessful">  تم تحويل الرصيد بنجاح</string>
+
+    <string name="tryagain"> إعادة المحاولة</string>
+    <string name="transfer_nol_balance">  تحويل رصيد بطاقة نول</string>
+
+    <string name="please_provide_validtentagid">يُرجى تقديم رقم تعريف صالح من 10 أرقام</string>
+
+    <string name="Pleaseprovideavaliddigitpin">يرجى تقديم دبوس صالح من 6 أرقام</string>
+
+    <string name="cardreplacementfee">رسوم استبدال البطاقة</string>
+
+
+    <string name="special_card_not_Replaces">هذه بطاقة خاصة لا يُسمح باستبدالها أو استرجاعها</string>
+
+    <string name="cardblockstart">تم حظر البطاقة ولا يمكنك إجراء خدمة أخرى</string>
+
+    <string name="sorryfor_inconvenionse">عذراً على الإزعاج. استبدال هذه البطاقة غير مسموح</string>
+
+    <string name="card_transfer_declined">تم رفض طلب تحويل الرصيد إلى بطاقة نول الخاصة بك</string>
+
+    <string name="transfer_tagid_notenable">الرجاء الاتصال بـهيئة الطرق والمواصلات، نظرًا لعدم تفعيل رقم بطاقة نول الخاص بك.</string>
+
+    <string name="card_expired">رقم بطاقة نول الذي تم إدخاله منتهي الصلاحية، الرجاء إعادة المحاولة.	</string>
+
+    <string name="Ok">حسنا</string>
+
+    <string name="card">بطاقة</string>
+
+    <string name="paymentcategory">فئة الدفع</string>
+    <string name="nol_pay_soon">نول الدفع قريبا.</string>
+    <string name="NOLPayment">الدفع ببطاقة نول</string>
+
+    <string name="mltaboutus4">Tel. 600 54 55 56, or</string>
+    <string name="mltaboutus5">Email. ask@mlt-uae.ae</string>
+
+</resources>
