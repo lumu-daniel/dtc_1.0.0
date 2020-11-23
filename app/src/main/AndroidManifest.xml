@@ -20,6 +20,24 @@
         android:requiresSmallestWidthDp="720"
         android:xlargeScreens="true" />
 
+    <uses-feature android:name="android.hardware.usb.host" />
+    <permission
+        android:name="example.dtc.permission.MAPS_RECEIVE"
+        android:protectionLevel="signature" />
+    <permission
+        android:name="example.dtc.permission.WRITE_SETTINGS"
+        android:protectionLevel="signature" />
+    <permission
+        android:name="example.dtc.permission.WRITE_EXTERNAL_STORAGE"
+        android:protectionLevel="signature" />
+    <permission
+        android:name="example.dtc.permission.READ_EXTERNAL_STORAGE"
+        android:protectionLevel="signature" />
+    <uses-permission android:name="example.dtc.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="example.dtc.permission.WRITE_SETTINGS" />
+
+    <uses-permission android:name="android.permission.USB_PERMISSION" />
+
     <application
         android:name=".MainApp"
         android:allowBackup="true"
@@ -32,15 +50,43 @@
         android:resizeableActivity="true"
         android:screenOrientation="landscape"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.HOME" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <!-- [START firebase_service] -->
+        <service android:name=".pushnotification.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- [START firebase_iid_service] -->
+        <service android:name=".pushnotification.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <!-- [END firebase_iid_service] -->
+
+        <service
+            android:name=".pushnotification.MyJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+        <!--        <service android:name=".ui.receiver.RestartAppication"></service>-->
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="84a6cb8d7cce37d84f15639d7c239fb1729a663b" />
     </application>
 
 </manifest>
