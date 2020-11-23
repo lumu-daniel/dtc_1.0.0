@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.mlt.dtc.R;
+import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.utility.Constant;
 
@@ -58,13 +59,13 @@ class AdminFragment extends Fragment {
         versiontxt.setText("Version :"+apkversion);
 
 
-//        btn_wifi.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mFragment = WifiFragment.newInstance();
-//                addFragment();
-//            }
-//        });
+        btn_wifi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragment = WifiFragment.newInstance();
+                addFragment();
+            }
+        });
 
         btn_adminlogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,10 +79,10 @@ class AdminFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Constant.count = 0;
+                MainActivity.count = 0;
 
-//                mFragment = MainBannerVideoFragment.newInstance();
-//                addFragment();
+                mFragment = MainBannerVideoFragment.newInstance();
+                addFragment();
 
             }
         });

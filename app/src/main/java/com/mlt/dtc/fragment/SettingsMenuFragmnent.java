@@ -16,7 +16,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import androidx.fragment.app.Fragment;
 import com.mlt.dtc.R;
+import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.common.SystemUIService;
+import com.mlt.dtc.utility.Constant;
+
 import static android.content.Context.AUDIO_SERVICE;
 
 public
@@ -106,6 +109,7 @@ class SettingsMenuFragmnent extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MainActivity.count = 0;
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content, SettingsLoginFragment.newInstance())
                         .addToBackStack(null)

@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mlt.dtc.R;
+import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.Configuration;
 import com.mlt.dtc.interfaces.IncidentManagement;
@@ -85,8 +86,8 @@ class ContactUsViewModel extends AndroidViewModel implements LifecycleObserver, 
     void doClickAction(int id) {
         switch (id){
             case R.id.btnback:
-                 Constant.count = 0;
-//                addFragment(new MainBannerVideoFragment(),fragmentActivity);
+                 MainActivity.count = 0;
+                addFragment(new MainBannerVideoFragment(),fragmentActivity);
                 break;
             case R.id.confirmation_button:
                 addFragment(new ContactUsFragment(),fragmentActivity);

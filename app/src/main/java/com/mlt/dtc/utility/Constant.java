@@ -9,6 +9,10 @@ public class Constant {
 
     public static int count = 0;
 
+    public static final String CONTENT_TYPE = "Content-type";
+
+    public static final String APPLICATION_JSON = "application/json";
+
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
     public static  String multimediaPath = "sdcard/"+ Environment.DIRECTORY_DCIM +"/Multimedia/";

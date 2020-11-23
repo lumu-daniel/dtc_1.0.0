@@ -10,18 +10,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.VideoView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -31,6 +40,8 @@ import com.mlt.dtc.adapter.RecyclerviewBottomAdapter;
 import com.mlt.dtc.fragment.AdminFragment;
 import com.mlt.dtc.fragment.ContactUsFragment;
 import com.mlt.dtc.fragment.DriverFragment;
+import com.mlt.dtc.fragment.MainBannerVideoFragment;
+import com.mlt.dtc.fragment.TimeFragment;
 import com.mlt.dtc.fragment.TopBannerDialogFragment;
 import com.mlt.dtc.adapter.BannerAdapter;
 import com.mlt.dtc.common.Common;
@@ -40,6 +51,7 @@ import com.mlt.dtc.common.SystemUIService;
 import com.mlt.dtc.fragment.TripEndFragment;
 import com.mlt.dtc.fragment.TripStartFragment;
 import com.mlt.dtc.interfaces.FareDialogListener;
+import com.mlt.dtc.interfaces.MainVideoBannerListener;
 import com.mlt.dtc.interfaces.OverwriteTripFragmentListener;
 import com.mlt.dtc.interfaces.TaskListener;
 import com.mlt.dtc.model.SideBannerObject;
@@ -65,7 +77,8 @@ import static com.mlt.dtc.utility.Constant.multimediaPath;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener,
+        FareDialogListener, MainVideoBannerListener {
     public InfiniteBannerView infiniteBannerView;
     public Boolean isSelected=false;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
@@ -74,19 +87,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public OffersRecyclerViewAdapter adapter_menus = null;
     public static MainActivity mainActivity;
     private GoogleApiClient googleApiClient;
-    private int Position, sideOffersCount,DTCServicesCount,mltButtonCount,rtaServicesCount;
+    private int Position, sideOffersCount,DTCServicesCount,mltButtonCount,rtaServicesCount,rlvideoMainBanner,timeCount;
     Fragment mFragment;
     public static CustomKeyboardView keyboard;
 
     public static int restrict_double_click = 0, count = 0;
     private int  sideoffersCount,driverCount,fareCount;
-    private TextView tv_timemainbox,tv_datemainbox;
-    private LinearLayout ll_driverinfo;
+    private TextView tv_timemainbox,tv_datemainbox,tv_VideoBr;
+    private LinearLayout ll_driverinfo,llMenuBottom,llMenuUp,llsideOffers;
+    private RelativeLayout relativeLayoutfragment,rlviewpagerMain;
     private FrameLayout iv_weatherimage,tripdetail;
     private DialogFragment dialogFragment;
     private static OverwriteTripFragmentListener overwriteTripFragmentListener;
     TripStartFragment tripStartFragment = new TripStartFragment();
     TripEndFragment tripEndFragment = new TripEndFragment();
+    MainBannerVideoFragment mainBannerVideoFragment;
+    RelativeLayout rlvideobrbox;
+    VideoView videoviewMainBanner;
+    boolean fullscreen = true;
+    WindowManager mWindowManager;
+
+
+
+
+
+
     public static MainActivity getInstance(){
 
         return mainActivity;
@@ -102,6 +127,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //Keep the screen on
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+
+        mainBannerVideoFragment = new MainBannerVideoFragment();
+
+        //Setting call back method
+        mainBannerVideoFragment.setMethodCallBack(this);
+
+        //To prevent Network on main thread exception
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
 
 
         mainActivity = this;
@@ -124,6 +161,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void findViewById() {
+
+        //this text is moving
+        findViewById(R.id.tv_services).setSelected(true);
+        llsideOffers = findViewById(R.id.llsideoffers);
+        rlviewpagerMain = findViewById(R.id.viewpagermain);
+        llMenuUp = findViewById(R.id.llmenuup);
+        llMenuBottom = findViewById(R.id.llmenubottom);
+        relativeLayoutfragment = findViewById(R.id.rlcontent);
         keyboard = findViewById(R.id.customKeyboardView);
         rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
         infiniteBannerView = findViewById(R.id.pager);
@@ -142,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.pager).setOnClickListener(this);
         ll_driverinfo.setOnClickListener(this);
         tripdetail.setOnClickListener(this);
+        findViewById(R.id.ll_time).setOnClickListener(this);
     }
 
 
@@ -247,11 +293,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public static void reloadPage(Context context){
-        if(count==0){
+        if(Constant.count==0){
             Intent intent = new Intent(context,MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
-            count++;
+            Constant.count++;
         }
     }
 
@@ -331,6 +377,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.down_arrow:
                 recycler_view_side_offers.scrollBy(0, 50);
                 break;
+            case R.id.ll_time:
+            timeCount++;
+            findViewById(R.id.ll_time).setEnabled(false);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            PreferenceConnector.writeInteger(getApplicationContext(), Constant.TimeCount, timeCount);
+            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameTime);
+            Constant.ButtonClicked = Constant.nameTime;
+            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+            getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+            dialogFragment = new TimeFragment();
+            dialogFragment.show(getSupportFragmentManager(), "");
+            break;
 
         }
     }
@@ -389,6 +447,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         overwriteTripFragmentListener = CallBack;
 
     }
+
+
 
     //Call back when get the data open the dialog automatically
     @Override
@@ -462,6 +522,58 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void MainVideoBannerallBackMethod(ImageView imageViev, RelativeLayout relativeLayout, TextView textView, int videobox, VideoView videoView) {
+
+        rlvideobrbox = relativeLayout;
+        tv_VideoBr = textView;
+        rlvideoMainBanner = videobox;
+        videoviewMainBanner = videoView;
+
+
+        if (fullscreen) {
+            // Common.startStopWatch(getApplicationContext());
+            imageViev.setImageResource(0);
+            imageViev.setBackgroundResource(R.drawable.ic_fullscreen_exit_black_36dp);
+            recycler_view_side_offers.setVisibility(View.GONE);
+            llMenuBottom.setVisibility(View.GONE);
+            llMenuUp.setVisibility(View.GONE);
+            rlviewpagerMain.setVisibility(View.GONE);
+            llsideOffers.setVisibility(View.GONE);
+
+
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
+
+            ViewGroup.LayoutParams videoLayout1Params = relativeLayoutfragment.getLayoutParams();
+            videoLayout1Params.width = displayMetrics.widthPixels;
+            videoLayout1Params.height = displayMetrics.heightPixels;
+            fullscreen = false;
+
+            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            relativeLayoutfragment.setLayoutParams(relativeParams);
+
+
+
+        } else {
+
+            relativeLayoutfragment.setBackgroundColor(Color.WHITE);
+            imageViev.setImageResource(0);
+            imageViev.setBackgroundResource(R.drawable.ic_fullscreen_black_36dp);
+            recycler_view_side_offers.setVisibility(View.VISIBLE);
+            llMenuBottom.setVisibility(View.VISIBLE);
+            llMenuUp.setVisibility(View.VISIBLE);
+            rlviewpagerMain.setVisibility(View.VISIBLE);
+            llsideOffers.setVisibility(View.VISIBLE);
+            fullscreen = true;
+
+        }
+    }
+
+
     public void addFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, mFragment)
@@ -476,6 +588,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             super.onBackPressed();
         }
+    }
+
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        mFragment = MainBannerVideoFragment.newInstance();
+        addFragment();
+
+        HideNavigationBar();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mFragment = MainBannerVideoFragment.newInstance();
+        addFragment();
+
+        HideNavigationBar();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+
+//        handler.removeCallbacks(runnable);
+
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try{
+            finish();
+
+
+            rlvideobrbox = null;
+            mFragment = null;
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+
     }
 
 }

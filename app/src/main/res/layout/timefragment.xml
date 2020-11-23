@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/tv_width12"
+            android:background="@drawable/dialog_red_radius">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/tv_width20"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
+
+
+                    <LinearLayout
+                        android:layout_width="250dp"
+                        android:layout_height="@dimen/tv_width80"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/time"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/tv_width20"
+                            android:text="@string/CurrentTime"
+                            android:textColor="@android:color/black"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/currenttime_timefrg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="@dimen/tv_width20"
+                            android:text="@string/CurrentTime"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/black" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent"
+
+                        />
+
+                    <LinearLayout
+                        android:layout_width="250dp"
+                        android:layout_height="@dimen/tv_width80"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:background="@drawable/date"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textSize="14sp"
+                            android:layout_marginEnd="@dimen/tv_width20"
+                            android:text="@string/CurrentDate"
+                            android:textColor="@android:color/black"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/currentdate_timefrg"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="@dimen/tv_width20"
+                            android:text="@string/CurrentTime"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/black" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp" />
+
+                <LinearLayout
+                    android:layout_width="500dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+
+                    android:background="@drawable/drawable_without_border"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/tv_width15">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/Country"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/City"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/Capital"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/Abbreviations"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="@string/DialCode"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="United Arab Emirates"
+                            android:textColor="@color/darkgreytxt"
+                            android:textSize="@dimen/text_size_n"/>
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="Dubai"
+                            android:textColor="@color/darkgreytxt"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="Abu Dhabi"
+                            android:textColor="@color/darkgreytxt"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text=" AE"
+                            android:textColor="@color/darkgreytxt"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                        <androidx.legacy.widget.Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/space_time" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="3dp"
+                            android:text="+971"
+                            android:textColor="@color/darkgreytxt"
+                            android:textSize="@dimen/text_size_n"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_closefarefragment"
+            android:layout_width="@dimen/tv_width30"
+            android:layout_height="@dimen/tv_width30"
+            android:layout_alignParentRight="true"
+            android:contentDescription="TODO"
+            android:src="@drawable/close" />
+
+    </RelativeLayout>
+
+</LinearLayout>
+
+
