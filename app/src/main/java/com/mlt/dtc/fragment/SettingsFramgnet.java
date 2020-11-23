@@ -16,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
@@ -80,7 +82,7 @@ class SettingsFramgnet  extends DialogFragment {
         ClassName = getClass().getCanonicalName();
 
         //Get Token, this token is the device ID that will be placed at the server level
-//        String getDevicetoken = FirebaseInstanceId.getInstance().getToken();
+        String getDevicetoken = FirebaseInstanceId.getInstance().getToken();
 
         customDialogMain.setView(view);
 
@@ -104,7 +106,7 @@ class SettingsFramgnet  extends DialogFragment {
                         TaxiMeterInfoService taxiMeterInfoService = new TaxiMeterInfoService(getContext());
                         taxiMeterInfoService.CallTaxiMeterInfoService(Constant.ServiceId, uuidInString, Constant.SourceApplication,
                                 Constant.RequestType, Constant.RequestCategory, Common.getdateTime(), Constant.LoginID, Constant.Password,
-                                "getDevicetoken", AndroidSerialNo, getDeviceSerialNo,
+                                getDevicetoken, AndroidSerialNo, getDeviceSerialNo,
                                 getTaxiPlateNo, getTaxiCode, Common.getdateTime(), new ServiceCallback() {
                                     @Override
                                     public void onSuccess(JSONObject obj) throws JSONException {

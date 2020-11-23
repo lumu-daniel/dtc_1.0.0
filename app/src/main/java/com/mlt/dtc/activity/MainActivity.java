@@ -11,17 +11,22 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -39,11 +44,13 @@ import com.mlt.dtc.common.SystemUIService;
 
 import com.mlt.dtc.fragment.TripEndFragment;
 import com.mlt.dtc.fragment.TripStartFragment;
+import com.mlt.dtc.interfaces.DriverImageListener;
 import com.mlt.dtc.interfaces.FareDialogListener;
 import com.mlt.dtc.interfaces.OverwriteTripFragmentListener;
 import com.mlt.dtc.interfaces.TaskListener;
 import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.model.TopBannerObject;
+import com.mlt.dtc.pushnotification.MyFirebaseMessagingService;
 import com.mlt.dtc.utility.Constant;
 import com.mlt.dtc.utility.Constant;
 
@@ -65,7 +72,7 @@ import static com.mlt.dtc.utility.Constant.multimediaPath;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener, DriverImageListener {
     public InfiniteBannerView infiniteBannerView;
     public Boolean isSelected=false;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout ll_driverinfo;
     private FrameLayout iv_weatherimage,tripdetail;
     private DialogFragment dialogFragment;
+    private ImageView iv_Driver_Image;
     private static OverwriteTripFragmentListener overwriteTripFragmentListener;
     TripStartFragment tripStartFragment = new TripStartFragment();
     TripEndFragment tripEndFragment = new TripEndFragment();
@@ -195,8 +203,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             googleApiClient.connect();
         }
 
+        //To prevent Network on main thread exception
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        //        fareFragment.setMethodcallbackmultipleViewClick(this);
+        MyFirebaseMessagingService.setcardValuesCallBackMethod(this);
+        MyFirebaseMessagingService.setDriverImageCallBackMethod(this);
+
         tv_datemainbox.setText(getDateHome());
         Common.DateTimeRunning(tv_timemainbox);
+
     }
 
     @Override
@@ -478,4 +495,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void DriverImageCallBackMethod(String driverImage, Context context) {
+        String DriverImage = driverImage;
+        //Setting the image of the driver
+        iv_Driver_Image = findViewById(R.id.iv_driver_image);
+        runOnUiThread(() -> {
+            // Can call RequestCreator.into here
+            //Picasso.with(Context).load(DriverImage).placeholder(R.drawable.dtcdriverphoto).into(iv_Driver_Image);
+            Glide.with(context).asBitmap().load(DriverImage).apply(new RequestOptions().placeholder(R.drawable.dtcdriverphoto)).dontAnimate().into(iv_Driver_Image);
+        });
+        PreferenceConnector.writeString(getApplicationContext(), Constant.DriverImage, driverImage);
+
+    }
 }
