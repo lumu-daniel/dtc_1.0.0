@@ -83,9 +83,7 @@ import static com.mlt.dtc.utility.Constant.multimediaPath;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener,
-        FareDialogListener, MainVideoBannerListener {
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener, DriverImageListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener, DriverImageListener,MainVideoBannerListener {
     public InfiniteBannerView infiniteBannerView;
     public Boolean isSelected=false;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
