@@ -4,16 +4,27 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.bumptech.glide.Glide;
 import com.github.infinitebanner.InfiniteBannerView;
@@ -25,14 +36,30 @@ import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.utility.Constant;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.UUID;
+import java.util.Vector;
 import java.util.Locale;
 import java.util.UUID;
+
+import static android.content.ContentValues.TAG;
+import static android.os.Looper.getMainLooper;
+import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
@@ -45,6 +72,7 @@ class Common {
     public static String path;
     public static File file;
     public static File directory;
+    private static String result;
 
     /**
      * topBannerListOfImage
@@ -171,6 +199,12 @@ class Common {
         }
     }
 
+    public static int getRandomNo() {
+        //get Randomly generated value
+        final int min = 1;
+        final int max = 100000000;
+        return new Random().nextInt((max - min) + 1) + min;
+    }
     public static void showDialog(final String msg, final Context context,
                                   final String permission) {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
@@ -252,11 +286,7 @@ class Common {
         return format;*/
     }
 
-    public static String getUUID() {
-        //get Randomly generated value
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString();
-    }
+
 
 
     public static void TimeoutAlertDialog(Context context) {
@@ -269,5 +299,348 @@ class Common {
     }
 
 
+    public static void DateTimeRunning(TextView tv_Time) {
+        final Handler someHandler = new Handler(getMainLooper());
+        someHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DateFormat dateFormat = new SimpleDateFormat("hh.mm:ss aa");
+                String dateString = dateFormat.format(new Date()).toString();
+                tv_Time.setText(dateString);
+//                tv_Time.setText(new SimpleDateFormat("HH:mm:ss a", Locale.US).format(new Date()));
+                someHandler.postDelayed(this, 1000);
+            }
+        }, 10);
+    }
+    //Get formatted date
+    public static String getDateHome() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH);
+
+
+        return sdf.format(new Date());
+    }
+
+    public static Object readObject(Context context, String key) throws IOException,
+            ClassNotFoundException {
+        FileInputStream fis = context.openFileInput(key);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        Object object = ois.readObject();
+        return object;
+    }
+
+    public static String getAddressFromLocation(final double latitude, final double longitude,
+                                                final Context context, final Handler handler) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+
+                try {
+                    List<Address> addressList = geocoder.getFromLocation(
+                            latitude, longitude, 1);
+                    if (addressList != null && addressList.size() > 0) {
+                        Address address = addressList.get(0);
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                            sb.append(address.getAddressLine(i)).append("\n");
+                        }
+                        sb.append(address.getLocality()).append("\n");
+                        sb.append(address.getPostalCode()).append("\n");
+                        sb.append(address.getCountryName());
+                        result = sb.toString();
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Unable connect to Geocoder", e);
+                } finally {
+                    Message message = Message.obtain();
+                    message.setTarget(handler);
+                    if (result != null) {
+                        message.what = 1;
+                        Bundle bundle = new Bundle();
+                        //result = result; //"Latitude: " + latitude + " Longitude: " + longitude + "\n\nAddress:\n" + result;
+                        bundle.putString("address", result);
+                        message.setData(bundle);
+                    } else {
+                        message.what = 1;
+                        Bundle bundle = new Bundle();
+                        result = "Unable to get address for this lat-long."; //"Latitude: " + latitude + " Longitude: " + longitude +"\n Unable to get address for this lat-long.";
+                        bundle.putString("address", result);
+                        message.setData(bundle);
+                    }
+                    message.sendToTarget();
+                }
+            }
+        };
+
+        thread.start();
+        return result;
+    }
+
+
+    //Write Object to Cache
+    public static void writeObject(Context context, String key, Object object) throws IOException {
+        FileOutputStream fos = context.openFileOutput(key, Context.MODE_WORLD_READABLE);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(object);
+        oos.close();
+        fos.close();
+    }
+
+    //Get Time difference from start to end
+    public static String GetTimeDifference(String datestart, String dateend) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("mm/dd/yyyy hh:mm:ss",Locale.ENGLISH);
+        String taketime = null;
+        try {
+            Date date1 = simpleDateFormat.parse(datestart);
+            Date date2 = simpleDateFormat.parse(dateend);
+
+            taketime = printDifference(date1, date2);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return taketime;
+    }
+
+    //1 minute = 60 seconds
+    //1 hour = 60 x 60 = 3600
+    //1 day = 3600 x 24 = 86400
+    public static String printDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        System.out.println("startDate : " + startDate);
+        System.out.println("endDate : " + endDate);
+        System.out.println("different : " + different);
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        String completeTime = String.format(Locale.ENGLISH,"%d days, %d hours, %d minutes, %d seconds",
+                elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
+
+        System.out.printf(
+                "%d days, %d hours, %d minutes, %d seconds%n",
+                elapsedDays, elapsedHours, elapsedMinutes, elapsedSeconds);
+        return completeTime;
+    }
+
+    public static String getUUID() {
+        //get Randomly generated value
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
+    }
+    //Trip Details log
+    public static String DriverName;
+    public static String DoubleLine;
+    public static String SingleLineorEmpty;
+
+    //Shift Details log
+    public static String DoubleLineorTripleLine;
+    public static void WriteTextInTextFileForShift(File file, String ShiftId, String ShiftStatus, String GivenName, String FinalName) {
+        try {
+            FileWriter fw = new FileWriter(file, true); //the true will append the new data
+            //if((Helper.isAppRunning(MainActivity.this, "example.dtc")))
+
+            if (ShiftStatus.equals(Constant.SSEventDescriptionKey))
+                DoubleLineorTripleLine = Constant.SEP_DOUBLENEWLINE;
+            else {
+                DoubleLineorTripleLine = Constant.SEP_TRIPLENEWLINE;
+            }
+
+            DriverName = GivenName + FinalName;
+            fw.write(DoubleLineorTripleLine + Constant.SEP_NEWLINE + Constant.TextShiftStatus
+                    + ShiftStatus + Constant.SEP_NEWLINE + Constant.TextShiftID + ShiftId
+                    + Constant.SEP_NEWLINE + Constant.TextDriverName + DriverName + Constant.SEP_NEWLINE + Constant.DateAndTime + getdateTime() + Constant.SEP_NEWLINE);//appends the string to the file
+            fw.close();
+        } catch (IOException ex) {
+            Log.e("Tag", ex.getMessage(), ex);
+        }
+    }
+
+    public static void WriteTextInTextFileForTrip(File file, String TripID, String TripStatus, String GivenName, String FinalName) {
+        try {
+            FileWriter fw = new FileWriter(file, true); //the true will append the new data
+            //if((Helper.isAppRunning(MainActivity.this, "example.dtc")))
+            if (TripStatus.equals(Constant.TSEventDescriptionValue)) {
+                SingleLineorEmpty = Constant.SEP_NEWLINE;
+            } else {
+                SingleLineorEmpty = "";
+            }
+
+            DriverName = GivenName + FinalName;
+            fw.write(DoubleLine + Constant.TripDetails + Constant.SEP_NEWLINE + Constant.TextTripID + TripID
+                    + Constant.SEP_NEWLINE + Constant.TextTripStatus
+                    + TripStatus + Constant.SEP_NEWLINE + Constant.TextDriverName + DriverName + Constant.SEP_NEWLINE + Constant.DateAndTime + getdateTime() + SingleLineorEmpty);//appends the string to the file
+            fw.close();
+        } catch (IOException ex) {
+            Log.e("Tag", ex.getMessage(), ex);
+        }
+    }
+
+    public static float DistanceBetween(float parseFloat, float parseFloat1, float parseFloat2, float parseFloat3) {
+        float[] result = new float[1];
+        Location.distanceBetween(parseFloat, parseFloat1,parseFloat2,parseFloat3, result);
+        return result[0]/1000;
+    }
+
+
+    //Get Formatted ExpiryDate RTA     09-2021
+    public static String getFormattedExpiryDateRTA(String expiryDate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+        String currentYear = sdf.format(new Date());
+        String Century = currentYear.substring(0, 2);
+        expiryDate = expiryDate.substring(0, 2) + "-" + Century + expiryDate.substring(2, 4);
+        return expiryDate;
+    }
+
+    //Get formatted date time with milli seconds
+    public static String getdateTimeInMilli() {
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+
+        return (String) android.text.format.DateFormat.format("yyyy-MM-dd HH:mm:ss:sss", new Date());
+    }
+
+    /**
+     * Generate 24 Character Random UUID
+     *
+     * @return
+     */
+    public static String shortUUID() {
+        char[] chars = "abcdefghijklmnopqrstuvwxyz123456789".toCharArray();
+        StringBuilder sb = new StringBuilder(24);
+        Random random = new Random();
+        for (int i = 0; i < 24; i++) {
+            char c = chars[random.nextInt(chars.length)];
+            sb.append(c);
+        }
+        String output = sb.toString();
+        System.out.println(output);
+        return output;
+    }
+
+    /**
+     * Get the Current date time format
+     *
+     * @return
+     */
+    public static String currentDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy HH:mm:ss", Locale.ENGLISH);
+        String currentDateandTime = sdf.format(new Date());
+        return currentDateandTime;
+    }
+
+    //Get date time for payment for vehicle and
+    public static String getdateTimeUpdatePay() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss a", Locale.ENGLISH);
+        return sdf.format(new Date());
+      /*  android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String format = (String) df.format("dd-MM-yyyy HH:mm", new Date());
+
+        return format;*/
+    }
+
+    public static String RemoveEscapeSequence(String text) {
+        //Removing the escape sequences from tshe string
+        String a = text.replaceAll("\r\n", "");
+        String b = a.replaceAll("\r", "");
+        String c = b.replaceAll("\n", "");
+        String d = c.replaceAll("\n\r", "");
+        String e = d.replaceAll("\t", "");
+        String f = e.replaceAll("\f", "");
+        String g = f.replaceAll("\b", "");
+        return g;
+    }
+
+    public static CountDownTimer SetCountDownTimer(long millisInFuture, long countDownInterval, TextView textView, DialogFragment dialog) {
+        // adjust the milli seconds here
+        //Set timer in seconds seconds
+
+        return new CountDownTimer(millisInFuture, countDownInterval) { // adjust the milli seconds here
+
+            public void onTick(long millisUntilFinished) {
+
+                int seconds = (int) (millisUntilFinished / 1000);
+
+                int hours = seconds / (60 * 60);
+                int tempMint = (seconds - (hours * 60 * 60));
+                int minutes = tempMint / 60;
+                seconds = tempMint - (minutes * 60);
+
+                //Set timer in seconds seconds
+                textView.setText(String.format("%02d Secs", seconds));
+
+            }
+
+            public void onFinish() {
+                dialog.dismiss();
+            }
+        }.start();
+    }
+
+    public static String[] MySplit(String original, String separator) {
+        Vector<String> nodes = new Vector<>();
+        int index = original.indexOf(separator);
+        while (index >= 0) {
+            nodes.addElement(original.substring(0, index));
+            original = original.substring(index + separator.length());
+            index = original.indexOf(separator);
+        }
+        // Get the last node
+        nodes.addElement(original);
+        // Create splitted string array
+        String[] result = new String[nodes.size()];
+        if (nodes.size() > 0) {
+            for (int loop = 0; loop < nodes.size(); loop++) {
+                result[loop] = nodes.elementAt(loop);
+                System.out.println(result[loop]);
+            }
+        }
+        return result;
+    }
+
+    public static CountDownTimer SetCountDownTimerDtc(long millisInFuture, long countDownInterval, TextView textView,
+                                                      Class aClass, Context context) {
+        // adjust the milli seconds here
+        //Set timer in seconds seconds
+
+        return new CountDownTimer(millisInFuture, countDownInterval) { // adjust the milli seconds here
+
+            public void onTick(long millisUntilFinished) {
+
+                int seconds = (int) (millisUntilFinished / 1000);
+
+                int hours = seconds / (60 * 60);
+                int tempMint = (seconds - (hours * 60 * 60));
+                int minutes = tempMint / 60;
+                seconds = tempMint - (minutes * 60);
+
+                //Set timer in seconds seconds
+                textView.setText(String.format(Locale.ENGLISH, "%02d", seconds));
+
+            }
+
+            public void onFinish() {
+                Intent intent = new Intent(context,aClass);
+                ((AppCompatActivity)context).finish();
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        }.start();
+    }
 
 }

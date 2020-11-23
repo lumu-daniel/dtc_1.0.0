@@ -1,20 +1,16 @@
-package com.mlt.dtc.model.response;
+package com.mlt.dtc.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.mlt.dtc.model.CustomerUniqueNo;
-import com.mlt.dtc.model.ServiceAttributesList;
-import java.io.Serializable;
 
-public
-class UserLoginDetailsResponse implements Serializable {
 
+public class ConfigurationServiceResponseArray {
     @SerializedName("xmlns")
     @Expose
     private String xmlns;
     @SerializedName("CustomerUniqueNo")
     @Expose
-    private CustomerUniqueNo customerUniqueNo;
+    private TripCustomerUniqueNoArray customerUniqueNo;
     @SerializedName("ServiceAttributesList")
     @Expose
     private ServiceAttributesList serviceAttributesList;
@@ -27,11 +23,11 @@ class UserLoginDetailsResponse implements Serializable {
         this.xmlns = xmlns;
     }
 
-    public CustomerUniqueNo getCustomerUniqueNo() {
+    public TripCustomerUniqueNoArray getCustomerUniqueNo() {
         return customerUniqueNo;
     }
 
-    public void setCustomerUniqueNo(CustomerUniqueNo customerUniqueNo) {
+    public void setCustomerUniqueNo(TripCustomerUniqueNoArray customerUniqueNo) {
         this.customerUniqueNo = customerUniqueNo;
     }
 
@@ -42,4 +38,6 @@ class UserLoginDetailsResponse implements Serializable {
     public void setServiceAttributesList(ServiceAttributesList serviceAttributesList) {
         this.serviceAttributesList = serviceAttributesList;
     }
+
 }
+

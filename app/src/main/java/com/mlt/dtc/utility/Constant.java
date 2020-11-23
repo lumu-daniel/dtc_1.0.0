@@ -1,5 +1,8 @@
 package com.mlt.dtc.utility;
 
+import android.app.ProgressDialog;
+import android.os.Environment;
+
 import android.os.Environment;
 
 public class Constant {
@@ -532,6 +535,8 @@ public class Constant {
     public static final String TripStartAddress = "tripstart";
     public static String PaymentStatus = "paymentStatus";
     public static final String TripEndAddress = "tripend";
+
+    public static ProgressDialog paymentDialog = null;
 
     public static final String LOGIN_FLAG = "Login Flag";
 
