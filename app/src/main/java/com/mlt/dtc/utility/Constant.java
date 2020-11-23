@@ -3,8 +3,15 @@ package com.mlt.dtc.utility;
 import android.app.ProgressDialog;
 import android.os.Environment;
 
+import android.os.Environment;
+
 public class Constant {
 
+    public static int count = 0;
+
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
+
+    public static  String multimediaPath = "sdcard/"+ Environment.DIRECTORY_DCIM +"/Multimedia/";
 
     public static final String ERROR = "Error";
     public static final String HELP = "Help";
@@ -534,5 +541,7 @@ public class Constant {
     public static int count = 0;
 
     public static ProgressDialog paymentDialog = null;
+
+    public static final String LOGIN_FLAG = "Login Flag";
 
 }

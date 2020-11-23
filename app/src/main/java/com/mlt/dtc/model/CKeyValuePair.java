@@ -3,7 +3,8 @@ package com.mlt.dtc.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class CKeyValuePair {
+public
+class CKeyValuePair {
     @SerializedName("a:Key")
     @Expose
     private String key;

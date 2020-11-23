@@ -4,24 +4,22 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Environment;
+import android.view.View;
+import android.widget.ImageView;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.DialogFragment;
 
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.gson.Gson;
@@ -32,7 +30,6 @@ import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.utility.Constant;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -41,6 +38,7 @@ import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,9 +46,14 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.Locale;
+import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
 import static android.os.Looper.getMainLooper;
+import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static com.mlt.dtc.utility.Constant.multimediaPath;
+
 import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
@@ -62,7 +65,7 @@ class Common {
     public static String path;
     public static File file;
     public static File directory;
-    static String result = null;
+
     /**
      * topBannerListOfImage
      * @return
@@ -130,6 +133,13 @@ class Common {
         }
     }
 
+    //Get formatted date
+    public static String getDate() {
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+
+
+        return (String) android.text.format.DateFormat.format("dd-MM-yyyy", new Date());
+    }
 
 
     //Get formatted date time
@@ -246,6 +256,44 @@ class Common {
             e.printStackTrace();
         }
     }
+
+    public static AlertDialog setAvi(AlertDialog dialog, Activity activity){
+
+        View view = View.inflate(activity, R.layout.custom_loader,null);
+        ImageView avi = view.findViewById(R.id.avi);
+        Glide.with((AppCompatActivity) activity).asGif().load(R.raw.i_counter_loader).into(avi);
+        dialog.setView(view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.show();
+        return dialog;
+
+    }
+
+    public static String getYear() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+        return sdf.format(new Date());
+        /*android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String format = (String) df.format("yyyy", new Date());
+        return format;*/
+    }
+
+    public static String getUUID() {
+        //get Randomly generated value
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
+    }
+
+
+    public static void TimeoutAlertDialog(Context context) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        builder.setMessage(context.getResources().getString(R.string.error_dialog))
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+        androidx.appcompat.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
     public static void DateTimeRunning(TextView tv_Time) {
         final Handler someHandler = new Handler(getMainLooper());
