@@ -17,4 +17,6 @@ class ServicesUrls {
     //SOAP Action
     public static final String URLSOAPAction = "http://tempuri.org/IDTCPushService/Inquiry";
 
+    public static final String URL_WETHER = "http://dtcwbsvc.networkips.com/ServiceModule/DTCService.svc/"; //UAT
+
 }

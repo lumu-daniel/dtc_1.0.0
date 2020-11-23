@@ -32,8 +32,10 @@ import com.google.gson.Gson;
 import com.mlt.dtc.R;
 import com.mlt.dtc.model.BottomMenu;
 import com.mlt.dtc.model.ClickObject;
+import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
 import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.utility.Constant;
+import com.mlt.dtc.utility.EncryptDecrpt;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +44,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,13 +59,22 @@ import java.util.Vector;
 import java.util.Locale;
 import java.util.UUID;
 
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.POST;
+
 import static android.content.ContentValues.TAG;
 import static android.os.Looper.getMainLooper;
-import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
-import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
+
 
 
 public
@@ -642,5 +654,30 @@ class Common {
             }
         }.start();
     }
+
+    //Function to encrypt datetime with the security key
+    public static String getencryptedsecureHash(String dateTime, String securityKey) {
+
+        String encryptedsecureHash = null;
+        try {
+            encryptedsecureHash = EncryptDecrpt.Encrypt(dateTime, securityKey);
+
+        } catch (InvalidKeySpecException e) {
+
+
+        }
+        return encryptedsecureHash;
+    }
+
+
+//
+//    @Headers({
+//            Constant.CONTENT_TYPE + ": " +  Constant.APPLICATION_JSON
+//    })
+//    @POST("fetchCurrentWeatherInfrormation")
+//    Call<List<FetchCurrentWeatherResponse>> GetFetchWeatherResponse(@Body String body);
+//
+//
+//
 
 }
