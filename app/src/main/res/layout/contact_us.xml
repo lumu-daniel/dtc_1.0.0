@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llcontactus"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="#ffffff"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.4"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/iv_aboutus"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:clickable="true"
+                android:textAllCaps="false"
+                android:textColor="@color/mdtp_white"
+                android:text="@string/about_us"
+                android:background="@drawable/btn_background_blue"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:focusable="true" />
+
+
+            <ImageView
+                android:id="@+id/iv_complaints"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:focusable="true" />
+
+            <ImageView
+                android:id="@+id/iv_regulatory"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/iv_feedback"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/mdtp_white"
+                android:adjustViewBounds="true"
+                android:text="@string/feedback"
+                android:background="@drawable/btn_background_blue"
+                android:clickable="true"
+                android:textAllCaps="false"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/iv_contactus"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="10dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:textAllCaps="false"
+                android:textColor="@color/mdtp_white"
+                android:text="@string/ContactUs"
+                android:layout_gravity="center"
+                android:background="@drawable/btn_background_blue"
+                android:contentDescription="@null"
+                android:focusable="true" />
+
+            <Button
+                android:id="@+id/btnback"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="30dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:textAllCaps="false"
+                android:background="@drawable/bg_grey"
+                android:textColor="@color/colorwhite"
+                android:text="@string/back"
+                android:contentDescription="@null"
+                android:focusable="true" />
+
+            <ImageView
+                android:id="@+id/iv_admin"
+                android:layout_width="120dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="3dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                android:contentDescription="@null"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!--                <Button-->
+            <!--                    android:id="@+id/btnback"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="30dp"-->
+            <!--                    android:layout_gravity="end"-->
+            <!--                    android:background="@drawable/btn_background_blue"-->
+            <!--                    android:clickable="true"-->
+            <!--                    android:textColor="@color/colorwhite"-->
+            <!--                    android:text="@string/Back"-->
+            <!--                    android:textAllCaps="false"-->
+            <!--                    android:focusable="true" />-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/tv_width2"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="22dp"
+                    android:weightSum="6"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tv_width20"
+                        android:background="@drawable/roundcornerviewred"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/tv_title"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.5"
+                        android:textSize="18sp"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/ContactUs"
+                        android:textColor="@color/colorblack"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/tv_width20"
+                        android:background="@drawable/roundcornerviewredright"
+                        android:layout_weight="3.5"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="275dp"
+                    android:background="@drawable/border_background"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:id="@+id/ll_aboutus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/tv_width3"
+                        android:visibility="visible">
+
+                        <include
+                            layout="@layout/aboutus"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_feedback"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/border_background"
+                        android:visibility="gone">
+
+                        <include
+                            layout="@layout/feedback"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_regulatory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+<!--                        <include-->
+<!--                            layout="@layout/regulatory"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="match_parent" />-->
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_confirmation"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:visibility="gone">
+
+                        <include
+                            layout="@layout/incident_management_confirmation"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ll_contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:orientation="vertical"
+                        android:padding="@dimen/tv_width20"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/tv_width8"
+                            android:gravity="left"
+                            android:text="@string/mltaboutus3"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_n" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/tv_width8"
+                            android:gravity="left"
+                            android:text="@string/mltaboutus4"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_nm" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/tv_width8"
+                            android:gravity="left"
+                            android:text="@string/mltaboutus5"
+                            android:textColor="@color/colorblack"
+                            android:textSize="@dimen/text_size_nm" />
+
+                        <ImageView
+                            android:layout_width="@dimen/tv_width150"
+                            android:layout_height="@dimen/tv_width150"
+                            android:layout_marginTop="@dimen/tv_width8"
+                            android:src="@drawable/ic_mlt_new_logo" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/description_zoom_touch_close"
+        android:visibility="invisible" />
+
+
+</LinearLayout>

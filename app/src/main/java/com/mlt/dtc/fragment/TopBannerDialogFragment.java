@@ -19,8 +19,9 @@ import com.bumptech.glide.Glide;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.adapter.TopBannerAdapter;
-import com.mlt.dtc.common.Constant;
 import com.mlt.dtc.model.TopBannerObject;
+import com.mlt.dtc.utility.Constant;
+
 import java.util.ArrayList;
 
 public

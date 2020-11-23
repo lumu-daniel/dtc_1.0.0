@@ -9,8 +9,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.infinitebanner.AbsBannerAdapter;
 import com.github.infinitebanner.InfiniteBannerView;
-import com.mlt.dtc.common.RoundRectCornerImageView;
 import com.mlt.dtc.model.TopBannerObject;
+import com.mlt.dtc.utility.RoundRectCornerImageView;
+
 import java.util.ArrayList;
 
 

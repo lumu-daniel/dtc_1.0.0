@@ -1,4 +1,4 @@
-package com.mlt.dtc.modal;
+package com.mlt.dtc.model;
 
 import java.io.File;
 

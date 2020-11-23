@@ -5,28 +5,38 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Environment;
+import android.view.View;
+import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.gson.Gson;
 import com.mlt.dtc.R;
 import com.mlt.dtc.model.BottomMenu;
 import com.mlt.dtc.model.ClickObject;
 import com.mlt.dtc.model.TopBannerObject;
+import com.mlt.dtc.utility.Constant;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
 
-import static com.mlt.dtc.common.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
-import static com.mlt.dtc.common.Constant.multimediaPath;
+import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
+import static com.mlt.dtc.utility.Constant.multimediaPath;
+
 
 public
 class Common {
@@ -103,6 +113,13 @@ class Common {
         }
     }
 
+    //Get formatted date
+    public static String getDate() {
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+
+
+        return (String) android.text.format.DateFormat.format("dd-MM-yyyy", new Date());
+    }
 
 
     //Get formatted date time
@@ -213,6 +230,44 @@ class Common {
             e.printStackTrace();
         }
     }
+
+    public static AlertDialog setAvi(AlertDialog dialog, Activity activity){
+
+        View view = View.inflate(activity, R.layout.custom_loader,null);
+        ImageView avi = view.findViewById(R.id.avi);
+        Glide.with((AppCompatActivity) activity).asGif().load(R.raw.i_counter_loader).into(avi);
+        dialog.setView(view);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        dialog.setCancelable(false);
+        dialog.show();
+        return dialog;
+
+    }
+
+    public static String getYear() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.ENGLISH);
+        return sdf.format(new Date());
+        /*android.text.format.DateFormat df = new android.text.format.DateFormat();
+        String format = (String) df.format("yyyy", new Date());
+        return format;*/
+    }
+
+    public static String getUUID() {
+        //get Randomly generated value
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
+    }
+
+
+    public static void TimeoutAlertDialog(Context context) {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
+        builder.setMessage(context.getResources().getString(R.string.error_dialog))
+                .setCancelable(false)
+                .setPositiveButton("OK", (dialog, id) -> dialog.dismiss());
+        androidx.appcompat.app.AlertDialog alert = builder.create();
+        alert.show();
+    }
+
 
 
 }
