@@ -12,7 +12,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.mlt.dtc.R;
-import com.mlt.dtc.modal.SideBannerObject;
+import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.utility.RoundRectCornerImageView;
 
 import java.util.ArrayList;

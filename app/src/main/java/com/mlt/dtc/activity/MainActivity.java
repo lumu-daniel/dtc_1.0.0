@@ -1,17 +1,23 @@
 package com.mlt.dtc.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.RelativeLayout;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -19,41 +25,53 @@ import com.google.android.gms.location.LocationServices;
 import com.mlt.dtc.R;
 import com.mlt.dtc.adapter.OffersRecyclerViewAdapter;
 import com.mlt.dtc.adapter.RecyclerviewBottomAdapter;
+import com.mlt.dtc.fragment.DriverFragment;
 import com.mlt.dtc.fragment.TopBannerDialogFragment;
 import com.mlt.dtc.adapter.BannerAdapter;
 import com.mlt.dtc.common.Common;
-import com.mlt.dtc.common.Constant;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.common.SystemUIService;
-import com.mlt.dtc.fragments.OffersDialogFragment;
+import com.mlt.dtc.fragment.OffersDialogFragment;
+import com.mlt.dtc.fragment.TripEndFragment;
+import com.mlt.dtc.fragment.TripStartFragment;
+import com.mlt.dtc.interfaces.FareDialogListener;
+import com.mlt.dtc.interfaces.OverwriteTripFragmentListener;
 import com.mlt.dtc.interfaces.TaskListener;
-import com.mlt.dtc.modal.SideBannerObject;
+import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.model.TopBannerObject;
+import com.mlt.dtc.utility.Constant;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
+
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
-import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
+import static com.mlt.dtc.common.Common.getDateHome;
 import static com.mlt.dtc.common.Common.getFilePath;
 import static com.mlt.dtc.common.Common.getdateTime;
+import static com.mlt.dtc.common.Common.getlistofclickLog;
 import static com.mlt.dtc.common.Common.prepareMenuData;
 import static com.mlt.dtc.common.Common.topBannerList;
-import static com.mlt.dtc.common.Constant.count;
-import static com.mlt.dtc.common.Constant.multimediaPath;
+import static com.mlt.dtc.utility.Constant.multimediaPath;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener {
     public InfiniteBannerView infiniteBannerView;
     public Boolean isSelected=false;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
-    private RelativeLayout layout_uparrow,down_arrow;
     public ArrayList<SideBannerObject> fileList;
-    int topBannerCount,positionTopBanner;
+    int topBannerCount,positionTopBanner,multipletripviewClick;
     public OffersRecyclerViewAdapter adapter_menus = null;
     public static MainActivity mainActivity;
     private GoogleApiClient googleApiClient;
-    public static int restrict_double_click = 0;
-    private int Position, sideoffersCount;
-
+    public static int restrict_double_click = 0, count = 0;
+    private int Position, sideoffersCount,driverCount,fareCount;
+    private TextView tv_timemainbox,tv_datemainbox;
+    private LinearLayout ll_driverinfo;
+    private FrameLayout iv_weatherimage,tripdetail;
+    private DialogFragment dialogFragment;
+    private static OverwriteTripFragmentListener overwriteTripFragmentListener;
+    TripStartFragment tripStartFragment = new TripStartFragment();
+    TripEndFragment tripEndFragment = new TripEndFragment();
     public static MainActivity getInstance(){
 
         return mainActivity;
@@ -83,14 +101,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mainActivity = this;
         infiniteBannerView = findViewById(R.id.pager);
         rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
+        tv_timemainbox = findViewById(R.id.tv_timemainbox);
+        ll_driverinfo = findViewById(R.id.ll_driverinfo);
+        tv_datemainbox  = findViewById(R.id.tv_datemainbox);
+        tripdetail=findViewById(R.id.tripdetail);
         recycler_view_side_offers = findViewById(R.id.recycler_view_side_offers);
-        layout_uparrow = findViewById(R.id.layout_uparrow);
-        down_arrow = findViewById(R.id.down_arrow);
-
         findViewById(R.id.relative_left_arrow).setOnClickListener(this);
         findViewById(R.id.relative_right_arrow).setOnClickListener(this);
-
+        findViewById(R.id.layout_uparrow).setOnClickListener(this);
+        findViewById(R.id.down_arrow).setOnClickListener(this);
         findViewById(R.id.pager).setOnClickListener(this);
+        ll_driverinfo.setOnClickListener(this);
+        tripdetail.setOnClickListener(this);
     }
 
 
@@ -143,6 +165,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (googleApiClient != null) {
             googleApiClient.connect();
         }
+
+        tv_datemainbox.setText(getDateHome());
+        Common.DateTimeRunning(tv_timemainbox);
     }
 
     @Override
@@ -234,15 +259,52 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 }
                 break;
+            case R.id.ll_driverinfo:
+                driverCount++;
+
+                ll_driverinfo.setEnabled(false);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                PreferenceConnector.writeInteger(getApplicationContext(), Constant.DriverCount, driverCount);
+                PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameDriver);
+                Constant.ButtonClicked = Constant.nameDriver;
+                WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+                getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+                DriverFragment driverFragment = new DriverFragment();
+                driverFragment.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.tripdetail:
+                fareCount++;
+                tripdetail.setEnabled(false);
+
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                PreferenceConnector.writeInteger(getApplicationContext(), Constant.FareCount, fareCount);
+                PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameFare);
+                Constant.ButtonClicked = Constant.nameFare;
+                WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+                getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+                dialogFragment = new TripEndFragment();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean(Constant.TripEndServiceCall, true);
+                dialogFragment.setArguments(bundle);
+                dialogFragment.show(getSupportFragmentManager(), "");
+                multipletripviewClick = 1;
+                break;
+            case R.id.layout_uparrow:
+                recycler_view_side_offers.scrollBy(0, -50);
+                break;
+            case R.id.down_arrow:
+                recycler_view_side_offers.scrollBy(0, 50);
+                break;
+
         }
     }
 
     @Override
     public void onFinished(String result) {
-        findViewById(R.id.ll_driverinfo).setEnabled(true);
+        ll_driverinfo.setEnabled(true);
         findViewById(R.id.ll_time).setEnabled(true);
         findViewById(R.id.weatherimage).setEnabled(true);
-        findViewById(R.id.tripdetail).setEnabled(true);
+        tripdetail.setEnabled(true);
     }
 
     @Override
@@ -283,6 +345,84 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
 //            Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
 
+        }
+    }
+
+    //Set Call back to close the opened dialog
+    public static void dialogdismissCallBackMethod(OverwriteTripFragmentListener CallBack) {
+        overwriteTripFragmentListener = CallBack;
+
+    }
+
+    //Call back when get the data open the dialog automatically
+    @Override
+    public void FareCallBackMethod(String Eventcode, boolean TripEndCallService, String TripCode) {
+        //TripEndCallService is true if the notification end comes
+        Bundle bundle = new Bundle();
+        try {
+            if (Constant.TripStartEventCode.equalsIgnoreCase(TripCode)) {
+
+                Fragment fragmentA = getSupportFragmentManager().findFragmentByTag("tripstartfragment");
+                if (fragmentA == null) {
+                    //tripStartTime = new Date();
+                    //Close the dialog
+                    if (overwriteTripFragmentListener != null) {
+                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
+                    }
+                    // DialogFragment.show() will take care of adding the fragment
+                    // in a transaction.  We also want to remove any currently showing
+                    // dialog, so make our own transaction and take care of that here.
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+                    if (prev != null) {
+                        ft.remove(prev);
+                    }
+                    ft.addToBackStack(null);
+                    bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
+                    tripStartFragment.setArguments(bundle);
+                    tripStartFragment.show(getSupportFragmentManager(), "tripstartfragment");
+                } else {
+                    Date tripStartTime = new Date();
+                    //Close the dialog
+                    if (overwriteTripFragmentListener != null) {
+                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
+                        Thread.sleep(1000);
+                        bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
+                        tripStartFragment.setArguments(bundle);
+                        tripStartFragment.show(getSupportFragmentManager(), "tripstartfragment");
+                        Toast.makeText(getApplicationContext(), "Trip Start Fragment already exists", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+            } else if
+            (Constant.TripEndEventCode.equalsIgnoreCase(TripCode)) {
+
+                Fragment fragmentB = getSupportFragmentManager().findFragmentByTag("tripendfragment");
+                if (fragmentB == null) {
+                    //Close the dialog
+                    if (overwriteTripFragmentListener != null) {
+                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
+                    }
+                    bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
+                    tripEndFragment.setArguments(bundle);
+                    tripEndFragment.show(getSupportFragmentManager(), "tripendfragment");
+
+                } else {
+                    if (overwriteTripFragmentListener != null) {
+                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
+                        Thread.sleep(1000);
+                        bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
+                        tripEndFragment.setArguments(bundle);
+                        tripEndFragment.show(getSupportFragmentManager(), "tripendfragment");
+                        Toast.makeText(getApplicationContext(), "Trip End Fragment already exists", Toast.LENGTH_SHORT).show();
+
+                    }
+                }
+                //}
+            }
+        } catch (Exception ex) {
+            Log.e("TTTT", ex.getLocalizedMessage() + "");
         }
     }
 }

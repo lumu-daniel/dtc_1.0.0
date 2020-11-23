@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:layoutDirection="ltr"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/tv_width5"
+                    android:layout_margin="@dimen/tv_width15"
+                    android:background="@drawable/dialog_red_radius">
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/tv_width10">
+
+                        <Button
+                            android:id="@+id/btn_paynow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/tv_width30"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentBottom="true"
+                            android:background="@drawable/paynowm"
+                            android:visibility="gone" />
+                    </RelativeLayout>
+
+<!--                    <RelativeLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content">-->
+
+<!--                        <ImageView-->
+<!--                            android:id="@+id/iv_closefarefragment"-->
+<!--                            android:layout_width="@dimen/tv_width40"-->
+<!--                            android:layout_height="@dimen/tv_width40"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:contentDescription="@null"-->
+<!--                            android:src="@drawable/close" />-->
+<!--                    </RelativeLayout>-->
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="50dp"
+                            android:layout_marginEnd="10dp"
+                            android:gravity="center"
+                            android:layout_centerInParent="true"
+                            android:orientation="horizontal">
+
+
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+
+
+                                    <LinearLayout
+                                        android:layout_width="250dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:orientation="horizontal"
+                                        android:padding="@dimen/tv_width10">
+
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:background="@drawable/startaddress" />
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/deststartaddress"
+                                                android:textColor="@color/darkgreytxt"
+                                                android:textSize="@dimen/text_size_m"
+                                                android:layout_marginStart="@dimen/tv_width10"
+                                                android:textStyle="bold" />
+
+                                            <TextView
+                                                android:id="@+id/tv_dest_start_address"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="30dp"
+                                                android:layout_marginStart="@dimen/tv_width10"
+                                                android:text=""
+                                                android:textColor="@color/darkgreytxt"
+                                                android:textSize="@dimen/text_size_s" />
+                                        </LinearLayout>
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="250dp"
+                                        android:layout_height="@dimen/tv_width80"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:background="@drawable/tripduration"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="start"
+                                            android:gravity="start"
+                                            android:layout_marginStart="@dimen/tv_width20"
+                                            android:text="@string/duration"
+                                            android:textAllCaps="true"
+                                            android:textColor="@color/darkgreytxt"
+                                            android:textSize="@dimen/text_size_m"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_duration"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="start"
+                                            android:layout_marginStart="30dp"
+                                            android:text=""
+                                            android:textColor="@color/darkgreytxt"
+                                            android:textSize="@dimen/text_size_s" />
+                                    </LinearLayout>
+
+
+
+                                    <Space
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="10dp" />
+
+                                    <LinearLayout
+                                        android:layout_width="250dp"
+                                        android:layout_height="@dimen/tv_width80"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:background="@drawable/kilometertravelled"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="start"
+                                            android:layout_marginStart="@dimen/tv_width20"
+                                            android:text="@string/destend"
+                                            android:textColor="@color/darkgreytxt"
+                                            android:textSize="@dimen/text_size_m"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/tv_kilometers"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="start"
+                                            android:gravity="start"
+                                            android:layout_marginStart="30dp"
+                                            android:text=""
+                                            android:textColor="@color/darkgreytxt"
+                                            android:textSize="@dimen/text_size_s" />
+
+                                    </LinearLayout>
+
+
+                                    <Space
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="10dp" />
+                                    <LinearLayout
+                                        android:layout_width="250dp"
+                                        android:layout_height="@dimen/tv_width80"
+                                        android:layout_gravity="center"
+                                        android:gravity="center"
+                                        android:background="@drawable/startdateandtime"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="center"
+                                            android:layout_marginStart="@dimen/tv_width20"
+                                            android:text="@string/startdatetime"
+                                            android:textAllCaps="true"
+                                            android:textColor="@color/darkgreytxt"
+                                            android:textSize="@dimen/text_size_m"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/start_datetime"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="10dp"
+                                            android:text=""
+                                            android:textColor="@color/darkgreytxt"
+                                            android:textSize="@dimen/text_size_s" />
+
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+                            <Space
+                                android:layout_width="10dp"
+                                android:layout_height="match_parent" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <LinearLayout
+                                    android:layout_width="250dp"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/tv_width10"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="@drawable/endaddress"/>
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="@string/destendaddress"
+                                            android:layout_marginStart="@dimen/tv_width10"
+                                            android:textStyle="bold"
+                                            android:textSize="@dimen/text_size_m"
+                                            android:textColor="@color/darkgreytxt"/>
+
+                                        <TextView
+                                            android:id="@+id/tv_dest_end_address"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginStart="@dimen/tv_width10"
+                                            android:text=""
+                                            android:textColor="@color/darkgreytxt"
+                                            android:textSize="@dimen/text_size_s" />
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:layout_width="250dp"
+                                    android:layout_height="@dimen/tv_width80"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:background="@drawable/startfare"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="start"
+                                        android:layout_marginStart="@dimen/tv_width20"
+                                        android:text="@string/startfare"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/darkgreytxt"
+                                        android:textSize="@dimen/text_size_m"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/start_fare"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="start"
+                                        android:layout_marginStart="30dp"
+                                        android:text=""
+                                        android:textColor="@color/darkgreytxt"
+                                        android:textSize="@dimen/text_size_s" />
+
+                                </LinearLayout>
+
+
+
+
+
+
+                                <Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="10dp" />
+
+
+                                <LinearLayout
+                                    android:layout_width="250dp"
+                                    android:layout_height="@dimen/tv_width80"
+
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:background="@drawable/fare"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="start"
+                                        android:layout_marginStart="@dimen/tv_width20"
+                                        android:text="@string/fare"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/darkgreytxt"
+                                        android:textSize="@dimen/text_size_m"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tv_fare"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="30dp"
+                                        android:layout_gravity="start"
+                                        android:text=""
+                                        android:textColor="@color/darkgreytxt"
+                                        android:textSize="@dimen/text_size_s" />
+
+                                </LinearLayout>
+
+
+                                <Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="10dp" />
+
+                                <LinearLayout
+                                    android:layout_width="250dp"
+                                    android:layout_height="@dimen/tv_width80"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:background="@drawable/enddateandtime"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/enddatetime"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/darkgreytxt"
+                                        android:textSize="@dimen/text_size_m"
+                                        android:textStyle="bold" />
+                                    <TextView
+                                        android:id="@+id/end_datetime"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginStart="10dp"
+                                        android:text=""
+                                        android:textColor="@color/darkgreytxt"
+                                        android:textSize="@dimen/text_size_s"/>
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/iv_closefarefragment"
+            android:layout_width="@dimen/tv_width30"
+            android:layout_height="@dimen/tv_width30"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@null"
+            android:src="@drawable/close" />
+    </RelativeLayout>
+            </LinearLayout>
+
