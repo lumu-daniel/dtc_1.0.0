@@ -535,10 +535,6 @@ public class Constant {
     public static final String TripStartAddress = "tripstart";
     public static String PaymentStatus = "paymentStatus";
     public static final String TripEndAddress = "tripend";
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
-    //path
-    public static  String multimediaPath = "sdcard/"+ Environment.DIRECTORY_DCIM +"/Multimedia/";
-    public static int count = 0;
 
     public static ProgressDialog paymentDialog = null;
 

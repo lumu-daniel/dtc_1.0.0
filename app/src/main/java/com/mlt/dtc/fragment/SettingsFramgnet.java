@@ -21,7 +21,7 @@ import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.interfaces.ServiceCallback;
-import com.mlt.dtc.model.Response.UserLoginDetailsResponse;
+import com.mlt.dtc.model.response.UserLoginDetailsResponse;
 import com.mlt.dtc.services.TaxiMeterInfoService;
 import com.mlt.dtc.utility.Constant;
 import org.json.JSONException;

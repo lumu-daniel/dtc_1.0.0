@@ -18,7 +18,7 @@ import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.common.SystemUIService;
 import com.mlt.dtc.interfaces.ServiceCallback;
-import com.mlt.dtc.model.Response.UserLoginDetailsResponse;
+import com.mlt.dtc.model.response.UserLoginDetailsResponse;
 import com.mlt.dtc.services.UserLoginService;
 import com.mlt.dtc.utility.Constant;
 import org.json.JSONException;

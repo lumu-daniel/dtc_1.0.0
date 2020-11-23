@@ -36,8 +36,7 @@ import com.mlt.dtc.adapter.BannerAdapter;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.common.SystemUIService;
-import com.mlt.dtc.fragment.OffersDialogFragment;
-import com.mlt.dtc.fragment.OffersDialogFragment;
+
 import com.mlt.dtc.fragment.TripEndFragment;
 import com.mlt.dtc.fragment.TripStartFragment;
 import com.mlt.dtc.interfaces.FareDialogListener;
@@ -54,6 +53,7 @@ import example.CustomKeyboard.Components.CustomKeyboardView;
 import java.util.Date;
 
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
+import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
 import static com.mlt.dtc.common.Common.getDateHome;
 import static com.mlt.dtc.common.Common.getFilePath;
 import static com.mlt.dtc.common.Common.getdateTime;
@@ -64,8 +64,7 @@ import static com.mlt.dtc.utility.Constant.count;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener,
-        OffersRecyclerViewAdapter.RecyclerViewClickListener{
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener {
     public InfiniteBannerView infiniteBannerView;
     public Boolean isSelected=false;
@@ -75,13 +74,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public OffersRecyclerViewAdapter adapter_menus = null;
     public static MainActivity mainActivity;
     private GoogleApiClient googleApiClient;
-    public static int restrict_double_click = 0;
     private int Position, sideOffersCount,DTCServicesCount,mltButtonCount,rtaServicesCount;
     Fragment mFragment;
     public static CustomKeyboardView keyboard;
 
     public static int restrict_double_click = 0, count = 0;
-    private int Position, sideoffersCount,driverCount,fareCount;
+    private int  sideoffersCount,driverCount,fareCount;
     private TextView tv_timemainbox,tv_datemainbox;
     private LinearLayout ll_driverinfo;
     private FrameLayout iv_weatherimage,tripdetail;
@@ -214,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
 
             try {
-                OffersDialogFragment offersDialogFragment = new OffersDialogFragment();
+                com.mlt.dtc.fragments.OffersDialogFragment offersDialogFragment = new com.mlt.dtc.fragments.OffersDialogFragment();
                 Bundle bundlepos = new Bundle();
                 bundlepos.putInt(Constant.PositionSelectedOffers, position);
                 bundlepos.putSerializable(Constant.ArrayImagesSelectedOffers, fileList);
@@ -235,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setRecyclerViewBottomAdapter() {
         RecyclerviewBottomAdapter bottomAdapter = new RecyclerviewBottomAdapter(getApplicationContext(),prepareMenuData());
-
+        bottomAdapter.setOnItemClickListener(this);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false);
         rvBottomMenu.setLayoutManager(horizontalLayoutManager);
         rvBottomMenu.setAdapter(bottomAdapter);
@@ -295,8 +293,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (count == 10) {
                     mFragment = AdminFragment.newInstance();
                     addFragment();
-                    break;
                 }
+                break;
             case R.id.ll_driverinfo:
                 driverCount++;
 

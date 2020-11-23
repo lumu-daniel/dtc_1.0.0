@@ -4,12 +4,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
+import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,9 +21,12 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 
+import com.bumptech.glide.Glide;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.gson.Gson;
 import com.mlt.dtc.R;
@@ -30,6 +36,7 @@ import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.utility.Constant;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -65,6 +72,7 @@ class Common {
     public static String path;
     public static File file;
     public static File directory;
+    private static String result;
 
     /**
      * topBannerListOfImage
@@ -278,11 +286,7 @@ class Common {
         return format;*/
     }
 
-    public static String getUUID() {
-        //get Randomly generated value
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString();
-    }
+
 
 
     public static void TimeoutAlertDialog(Context context) {
