@@ -56,9 +56,9 @@ public class PayNowFragmnent extends DialogFragment {
         bundle = getArguments();
 //        iv_Card = view.findViewById(R.id.iv_card);
         //iv_DigitalPass = (ImageView) view.findViewById(R.id.iv_digitalpass);
-        //paynow_btn = view.findViewById(R.id.paynow_btn);
+        paynow_btn = view.findViewById(R.id.paynow_btn);
         btnBack = view.findViewById(R.id.cancel_action);
-        //tv_Fare = view.findViewById(R.id.actionType);
+        tv_Fare = view.findViewById(R.id.actionType);
 //        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 //        params.setMargins(200,10,200,10);
 //        tv_Fare.setLayoutParams(params);
