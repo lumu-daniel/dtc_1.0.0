@@ -1,4 +1,4 @@
-package com.mlt.dtc.model.response;
+package com.mlt.dtc.model.Response;
 
 
 import com.google.android.material.internal.ParcelableSparseArray;

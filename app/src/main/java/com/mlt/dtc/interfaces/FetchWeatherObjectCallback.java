@@ -6,7 +6,6 @@ import java.util.List;
 
 public
 interface FetchWeatherObjectCallback {
-    void successful( List<FetchCurrentWeatherResponse> productList );
     void successful( FetchCurrentWeatherResponse fetchCurrentWeatherResponse );
     void failure( String errorMessage );
 }
