@@ -16,14 +16,11 @@ import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.adapter.WeatherListViewAdapter;
 import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-
-import static com.mlt.dtc.activity.MainActivity.weatherDetailsListviewAList;
+import static com.mlt.dtc.utility.Constant.weatherDetailsListviewAList;
 
 
 public
@@ -145,7 +142,6 @@ class WeatherFragment extends DialogFragment {
             hmweatherimagedayForecast.put("mist", R.drawable.wmist);
             hmweatherimagedayForecast.put("haze", R.drawable.wmist);
 
-//            getweatherUpdate("fetchCurrentWeatherInfrormation");
 
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -158,12 +154,16 @@ class WeatherFragment extends DialogFragment {
 //            weatherRecyclerViewAdapter = new WeatherRecyclerViewAdapter(weatherDetailsRecylerviewAlist, getContext());
 //            recyclerView.setAdapter(weatherRecyclerViewAdapter);
 
+            listView.setOnItemClickListener((parent, view, position, id) -> {
+
+                objfetchWeatherResponse = weatherDetailsListviewAList.get(position);
+//                getweatherForecastUpdate("fetchWeatherForecast", 2039);
+                setWeatherbyCity(position);
+
+            });
+
 
             btnBack.setOnClickListener(view1 -> {
-            /*getFragmentManager().beginTransaction()
-                    .replace(R.id.content, AdvertiseFramgnent.newInstance())
-                    .addToBackStack(null)
-                    .commit();*/
 
                 if (getFragmentManager()!=null){
                     getFragmentManager().beginTransaction()
@@ -174,84 +174,11 @@ class WeatherFragment extends DialogFragment {
 
             });
         } catch (Exception e) {
-
         }
 
     }
 
-//    private void getweatherUpdate(String functionname) {
-//
-//        String DateTime = getdateTime();
-//        AuthenticateRequest authenticateRequest = new AuthenticateRequest();
-//        authenticateRequest.setUsername("nips_inventory");
-//        authenticateRequest.setPassword("nips@2016");
-//        authenticateRequest.setSecureHash(Common.getencryptedsecureHash(DateTime, "B15m1L2ah"));
-//        authenticateRequest.setTimestamp(DateTime);
-//
-//        gson = new GsonBuilder().create();
-//        final JSONObject req = new JSONObject();
-//        try {
-//            req.put("username", authenticateRequest.getUsername());
-//            req.put("password", authenticateRequest.getPassword());
-//            req.put("timestamp", authenticateRequest.getTimestamp());
-//            req.put("secureHash", authenticateRequest.getSecureHash());
-//
-//        } catch (JSONException e) {
-//
-//        }
-//
-//        final JSONObject object = new JSONObject();
-//        try {
-//            object.put("request", req);
-//
-//        } catch (JSONException e) {
-//
-//        }
-//        JSON_RESULT = functionname;
-//
-//        Context context = getContext();
-//        ServiceWrapper.serviceCall(NetworkURL.URL + functionname, object, context, new ServiceCallback() {//NetworkURL.URL
-//            @Override
-//            public void onSuccess(JSONObject obj) throws JSONException {
-//                FetchWeatherResponse res = gson.fromJson(obj.getJSONObject(JSON_RESULT + "Result").toString(), FetchWeatherResponse.class);
-//                try {
-//                    //Method call to get weather details
-//                    fetchweather = res.response;
-//
-//                    for (int i = 0; i < fetchweather.size(); i++) {
-//                        weatherDetailsList = new FetchWeatherResponse.FetchWeather();
-//                        weatherDetailsList.setTemperature(Math.round(fetchweather.get(i).getTemperature()));
-//                        weatherDetailsList.setWeather(fetchweather.get(i).getWeather());
-//                        weatherDetailsList.setCity(fetchweather.get(i).getCity());
-//                        weatherDetailsList.setHumidity(Math.round(fetchweather.get(i).getHumidity()));
-//                        weatherDetailsList.setCountry(fetchweather.get(i).getCountry());
-//                        weatherDetailsList.setTempMax(Math.round(fetchweather.get(i).getTempMax()));
-//                        weatherDetailsList.setTempMin(Math.round(fetchweather.get(i).getTempMin()));
-//                        weatherDetailsList.setWindSpeed(Math.round(fetchweather.get(i).getWindSpeed()));
-//                        //weatherDetailsList.setWeatherImage(hmweatherimagedayForecast.get(fetchweather.get(i).getWeather()));
-//                        weatherDetailsListviewAList.add(weatherDetailsList);
-//                    }
-//                    getweatherForecastUpdate("fetchWeatherForecast", 2039);
-//                    setWeatherbyCity(0);
-//
-//                } catch (Exception e) {
-//
-//                }
-//                listView.setOnItemClickListener((parent, view, position, id) -> {
-//
-//                    objfetchWeatherResponse = weatherDetailsListviewAList.get(position);
-//                    getweatherForecastUpdate("fetchWeatherForecast", 2039);
-//                    setWeatherbyCity(position);
-//
-//                });
-//            }
-//
-//            @Override
-//            public void onFailure(String obj) {
-//
-//            }
-//        });
-//    }
+
 
     private void setWeatherbyCity(int Position) {
         objfetchWeatherResponse = weatherDetailsListviewAList.get(Position);
@@ -377,7 +304,7 @@ class WeatherFragment extends DialogFragment {
 //            listView = null;
             recyclerView = null;
 
-//            weatherDetailsListviewAList.clear();
+            weatherDetailsListviewAList.clear();
 //            weatherDetailsRecylerviewAlist.clear();
 //            fetchweather.clear();
 //            fetchweatherforecast.clear();

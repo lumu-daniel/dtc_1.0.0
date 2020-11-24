@@ -5,7 +5,15 @@ import android.os.Environment;
 
 import android.os.Environment;
 
+import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
+
+import java.util.List;
+
 public class Constant {
+
+
+    public static List<FetchCurrentWeatherResponse.Response> weatherDetailsListviewAList;
+
 
     public static int count = 0;
 

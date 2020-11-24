@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Gson gson = new Gson();
     private String DriverImage;
 
-    public static List<FetchCurrentWeatherResponse.Response> weatherDetailsListviewAList;
+
 
 
     public static MainActivity getInstance() {
@@ -453,14 +453,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 dialogFragment.show(getSupportFragmentManager(), "");
                 break;
             case R.id.weatherimage:
-                weathermainCount++;
-                PreferenceConnector.writeInteger(getApplicationContext(), Constant.WeatherCount, weathermainCount);
-                PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameWeather);
-                Constant.ButtonClicked = Constant.nameWeatherinfo;
-                WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
-                getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
-                mFragment = WeatherFragment.newInstance();
-                addFragment();
+                try {
+                    weathermainCount++;
+                    PreferenceConnector.writeInteger(getApplicationContext(), Constant.WeatherCount, weathermainCount);
+                    PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameWeather);
+                    Constant.ButtonClicked = Constant.nameWeatherinfo;
+                    WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+                    getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+                    mFragment = WeatherFragment.newInstance();
+                    addFragment();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 break;
 
         }
@@ -751,12 +756,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getFetchWeatherResponse(object.toString(), getApplicationContext(), new FetchWeatherObjectCallback() {
             @Override
             public void successful(FetchCurrentWeatherResponse fetchCurrentWeatherResponse) {
-                weatherDetailsListviewAList = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse();
+                Constant.weatherDetailsListviewAList = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse();
                 Weather = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse().get(0).getTemperature();
                 runOnUiThread(() -> {
                     tv_degree.setText(String.valueOf(Math.round(Weather) + " \u2103"));
                 });
-                handler.postDelayed(runnable, 10000);
+                handler.postDelayed(runnable, 5000);
             }
 
             @Override
