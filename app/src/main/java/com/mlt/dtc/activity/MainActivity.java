@@ -1,15 +1,20 @@
 package com.mlt.dtc.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -25,10 +30,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import android.widget.VideoView;
@@ -111,6 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout rlvideobrbox;
     VideoView videoviewMainBanner;
     boolean fullscreen = true;
+    private String DriverImage;
     WindowManager mWindowManager;
 
 
@@ -166,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         keyboard = findViewById(R.id.customKeyboardView);
         rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
         infiniteBannerView = findViewById(R.id.pager);
+        iv_Driver_Image = findViewById(R.id.iv_driver_image);
         rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
         tv_timemainbox = findViewById(R.id.tv_timemainbox);
         ll_driverinfo = findViewById(R.id.ll_driverinfo);
@@ -234,6 +239,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (googleApiClient != null) {
             googleApiClient.connect();
         }
+
+        try {
+            DriverImage = "";//PreferenceConnector.readString(getApplicationContext(), Constant.DriverImage, "");
+            if (DriverImage != null || DriverImage.equals("")) {
+                //Picasso.with(getApplicationContext()).load(DriverImage).placeholder(R.drawable.dtcdriverphoto).into(iv_Driver_Image);
+                Glide.with(getApplicationContext()).asBitmap().load(DriverImage).apply(new RequestOptions().placeholder(R.drawable.dtcdriverphoto)).into(iv_Driver_Image);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        grantPermission();
 
         //To prevent Network on main thread exception
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -655,6 +672,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
+    }
+
+    private void grantPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            //Toast.makeText(this, "Location Permissions not granted yet", Toast.LENGTH_SHORT).show();
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                Toast.makeText(this, "Please Grant these permissions", Toast.LENGTH_SHORT).show();
+            }else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            }
+        }
+        else {
+//            Toast.makeText(this, "You have all the permissions you need to get Locations", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
