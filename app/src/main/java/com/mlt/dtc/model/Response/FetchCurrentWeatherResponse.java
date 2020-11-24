@@ -7,7 +7,6 @@ import java.util.List;
 
 public
 class FetchCurrentWeatherResponse {
-
     @SerializedName("fetchCurrentWeatherInfrormationResult")
     @Expose
     private FetchCurrentWeatherInfrormationResult fetchCurrentWeatherInfrormationResult;
@@ -95,7 +94,7 @@ class FetchCurrentWeatherResponse {
         private Double tempMin;
         @SerializedName("Temperature")
         @Expose
-        private Integer temperature;
+        private Double temperature;
         @SerializedName("Weather")
         @Expose
         private String weather;
@@ -159,11 +158,11 @@ class FetchCurrentWeatherResponse {
             this.tempMin = tempMin;
         }
 
-        public Integer getTemperature() {
+        public Double getTemperature() {
             return temperature;
         }
 
-        public void setTemperature(Integer temperature) {
+        public void setTemperature(Double temperature) {
             this.temperature = temperature;
         }
 
@@ -184,4 +183,6 @@ class FetchCurrentWeatherResponse {
         }
 
     }
+
+
 }

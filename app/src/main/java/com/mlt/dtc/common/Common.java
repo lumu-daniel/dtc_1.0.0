@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.NetworkRequest;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -34,6 +35,7 @@ import com.mlt.dtc.model.BottomMenu;
 import com.mlt.dtc.model.ClickObject;
 import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
 import com.mlt.dtc.model.TopBannerObject;
+import com.mlt.dtc.networking.NetWorkRequest;
 import com.mlt.dtc.utility.Constant;
 import com.mlt.dtc.utility.EncryptDecrpt;
 
@@ -670,14 +672,10 @@ class Common {
     }
 
 
-//
-//    @Headers({
-//            Constant.CONTENT_TYPE + ": " +  Constant.APPLICATION_JSON
-//    })
-//    @POST("fetchCurrentWeatherInfrormation")
-//    Call<List<FetchCurrentWeatherResponse>> GetFetchWeatherResponse(@Body String body);
-//
-//
-//
+
+
+
+
+
 
 }

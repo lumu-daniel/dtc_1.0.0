@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,7 +16,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,6 +41,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mlt.dtc.R;
 import com.mlt.dtc.adapter.OffersRecyclerViewAdapter;
 import com.mlt.dtc.adapter.RecyclerviewBottomAdapter;
@@ -59,18 +61,33 @@ import com.mlt.dtc.fragment.TripEndFragment;
 import com.mlt.dtc.fragment.TripStartFragment;
 import com.mlt.dtc.interfaces.DriverImageListener;
 import com.mlt.dtc.interfaces.FareDialogListener;
+import com.mlt.dtc.interfaces.FetchWeatherObjectCallback;
 import com.mlt.dtc.interfaces.MainVideoBannerListener;
 import com.mlt.dtc.interfaces.OverwriteTripFragmentListener;
 import com.mlt.dtc.interfaces.TaskListener;
+import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
 import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.model.TopBannerObject;
+import com.mlt.dtc.model.request.AuthenticateRequest;
+import com.mlt.dtc.networking.NetWorkRequest;
 import com.mlt.dtc.pushnotification.MyFirebaseMessagingService;
 import com.mlt.dtc.utility.Constant;
 import com.mlt.dtc.utility.Constant;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.util.ArrayList;
 import example.CustomKeyboard.Components.CustomKeyboardView;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
 import java.util.Date;
 
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
@@ -81,9 +98,9 @@ import static com.mlt.dtc.common.Common.getdateTime;
 import static com.mlt.dtc.common.Common.getlistofclickLog;
 import static com.mlt.dtc.common.Common.prepareMenuData;
 import static com.mlt.dtc.common.Common.topBannerList;
-import static com.mlt.dtc.utility.Constant.count;
+import static com.mlt.dtc.utility.Constant.TAG;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
-import static com.mlt.dtc.utility.Constant.multimediaPath;
+
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener, DriverImageListener,MainVideoBannerListener {
@@ -101,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public static int restrict_double_click = 0, count = 0;
     private int  sideoffersCount,driverCount,fareCount;
-    private TextView tv_timemainbox,tv_datemainbox,tv_VideoBr;
+    private TextView tv_timemainbox,tv_datemainbox,tv_VideoBr,tv_degree;
     private LinearLayout ll_driverinfo,llMenuBottom,llMenuUp,llsideOffers;
     private RelativeLayout relativeLayoutfragment,rlviewpagerMain;
     private FrameLayout iv_weatherimage,tripdetail;
@@ -114,10 +131,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     RelativeLayout rlvideobrbox;
     VideoView videoviewMainBanner;
     boolean fullscreen = true;
-    private String DriverImage;
     WindowManager mWindowManager;
-
-
+    private Double Weather;
+    HandlerThread handlerThread;
+    private JSONObject object;
+    private Handler handler;
+    Gson gson = new Gson();
 
 
 
@@ -134,9 +153,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
 
+        mWindowManager = (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+
         //Keep the screen on
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        handlerThread = new HandlerThread("weather");
+        handlerThread.start();
+
+        handler =new Handler(handlerThread.getLooper());
+
+
+        mainBannerVideoFragment = new MainBannerVideoFragment();
+
+        //Setting call back method
+        mainBannerVideoFragment.setMethodCallBack(this);
 
 
         mainActivity = this;
@@ -156,11 +188,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         processOffers();
 
+
+        getFetchWeather();
+
     }
 
     private void findViewById() {
 
         //this text is moving
+        tv_degree=findViewById(R.id.tv_Degree);
         findViewById(R.id.tv_services).setSelected(true);
         llsideOffers = findViewById(R.id.llsideoffers);
         rlviewpagerMain = findViewById(R.id.viewpagermain);
@@ -170,7 +206,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         keyboard = findViewById(R.id.customKeyboardView);
         rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
         infiniteBannerView = findViewById(R.id.pager);
-        iv_Driver_Image = findViewById(R.id.iv_driver_image);
         rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
         tv_timemainbox = findViewById(R.id.tv_timemainbox);
         ll_driverinfo = findViewById(R.id.ll_driverinfo);
@@ -670,9 +705,139 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }catch (Exception ex){
             ex.printStackTrace();
         }
-
-
     }
+
+    @Override
+    public void MainVideoBannerallBackMethod(ImageView imageview, RelativeLayout relativeLayout, TextView textView, int videobox, VideoView videoView) {
+        rlvideobrbox = relativeLayout;
+        tv_VideoBr = textView;
+        rlvideoMainBanner = videobox;
+        videoviewMainBanner = videoView;
+
+        if (fullscreen) {
+            // Common.startStopWatch(getApplicationContext());
+            imageview.setImageResource(0);
+            imageview.setBackgroundResource(R.drawable.ic_fullscreen_exit_black_36dp);
+            recycler_view_side_offers.setVisibility(View.GONE);
+            llMenuBottom.setVisibility(View.GONE);
+            llMenuUp.setVisibility(View.GONE);
+            rlviewpagerMain.setVisibility(View.GONE);
+            llsideOffers.setVisibility(View.GONE);
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
+
+            ViewGroup.LayoutParams videoLayout1Params = relativeLayoutfragment.getLayoutParams();
+            videoLayout1Params.width = displayMetrics.widthPixels;
+            videoLayout1Params.height = displayMetrics.heightPixels;
+            fullscreen = false;
+
+            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            relativeLayoutfragment.setLayoutParams(relativeParams);
+        } else {
+            relativeLayoutfragment.setBackgroundColor(Color.WHITE);
+            imageview.setImageResource(0);
+            imageview.setBackgroundResource(R.drawable.ic_fullscreen_black_36dp);
+            recycler_view_side_offers.setVisibility(View.VISIBLE);
+            llMenuBottom.setVisibility(View.VISIBLE);
+            llMenuUp.setVisibility(View.VISIBLE);
+            rlviewpagerMain.setVisibility(View.VISIBLE);
+            llsideOffers.setVisibility(View.VISIBLE);
+            fullscreen = true;
+        }
+    }
+
+    private void getFetchWeather() {
+
+
+        String DateTime = getdateTime();
+        AuthenticateRequest authenticateRequest = new AuthenticateRequest();
+        authenticateRequest.setUsername("nips_inventory");
+        authenticateRequest.setPassword("nips@2016");
+        authenticateRequest.setSecureHash(Common.getencryptedsecureHash(DateTime, "B15m1L2ah"));
+        authenticateRequest.setTimestamp(DateTime);
+
+        gson = new GsonBuilder().create();
+        final JSONObject req = new JSONObject();
+        try {
+            req.put("username", authenticateRequest.getUsername());
+            req.put("password", authenticateRequest.getPassword());
+            req.put("timestamp", authenticateRequest.getTimestamp());
+            req.put("secureHash", authenticateRequest.getSecureHash());
+
+        } catch (JSONException e) {
+
+        }
+
+        object  = new JSONObject();
+        try {
+            object.put("request", req);
+
+        } catch (JSONException e) {
+
+        }
+
+        handler.post(runnable);
+    }
+
+
+
+    private final Runnable runnable = ()->{
+
+        getFetchWeatherResponse(object.toString(), getApplicationContext(), new FetchWeatherObjectCallback() {
+            @Override
+            public void successful(FetchCurrentWeatherResponse fetchCurrentWeatherResponse) {
+                Weather =fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse().get(0).getTemperature();
+                runOnUiThread(()->{
+                    tv_degree.setText(String.valueOf(Math.round(Weather)+ " \u2103"));
+                });
+                handler.postDelayed(runnable,10000);
+            }
+
+            @Override
+            public void failure(String errorMessage) {
+                Log.d(TAG, "failure: "+errorMessage);
+            }
+        });
+    };
+
+    private void getFetchWeatherResponse( String body, Context context, FetchWeatherObjectCallback fetchWeatherObjectCallback ){
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://dtcwbsvc.networkips.com/ServiceModule/DTCService.svc/")
+                .client(new OkHttpClient())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        NetWorkRequest netWorkRequest =     retrofit.create(NetWorkRequest .class);
+
+        Call<FetchCurrentWeatherResponse> categoryProductCall = netWorkRequest.GetFetchWeatherResponse( body );
+        categoryProductCall.enqueue(new Callback<FetchCurrentWeatherResponse>() {
+            @Override
+            public void onResponse(Call<FetchCurrentWeatherResponse> call, Response<FetchCurrentWeatherResponse> response) {
+                if( response.isSuccessful() ){
+                    fetchWeatherObjectCallback.successful( response.body() );
+                }else{
+                    fetchWeatherObjectCallback.successful( response.body() );
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<FetchCurrentWeatherResponse> call, Throwable t) {
+                String errorMessage = t.getLocalizedMessage();
+                if( errorMessage == null || errorMessage.equals("timeout") ) {
+
+                }else if( errorMessage.contains("Unable to resolve host") ) {
+
+                }else{
+
+                }
+            }
+        });
+    }
+
 
     private void grantPermission(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED

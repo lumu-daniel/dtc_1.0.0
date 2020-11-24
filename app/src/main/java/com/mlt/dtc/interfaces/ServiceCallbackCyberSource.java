@@ -1,6 +1,8 @@
 package com.mlt.dtc.interfaces;
 
-import com.mlt.dtc.model.response.PaymentResponse;
+
+
+import com.mlt.dtc.model.Response.PaymentResponse;
 
 import org.json.JSONException;
 

@@ -30,14 +30,16 @@ public class EncryptDecrpt {
     }
 
     /**
-     * Algorithm is used For Encryption of the String*
-     *
+     * Algorithm is used For Encryption of the String      *
      * @param sPlainText -> plain text to be encrypted
+     *
      * @param sSecretKey -> Key which is used in the encryption
+     *
      * @return -> Encrypted Values
+     *
      * @throws InvalidKeySpecException
      */
-    public static String Encrypt(String sPlainText, String sSecretKey) throws InvalidKeySpecException {
+    public static String Encrypt( String sPlainText, String sSecretKey ) throws InvalidKeySpecException {
         try {
 
             // Initiaize the key byte array
@@ -45,11 +47,11 @@ public class EncryptDecrpt {
             byte[] toEncryptArray = sPlainText.getBytes(StandardCharsets.UTF_8);
 
             // Convert the secret key in to MD5 hashing
-            MessageDigest hashMD5 = MessageDigest.getInstance("MD5");
+            java.security.MessageDigest hashMD5 = java.security.MessageDigest.getInstance("MD5");
             keyArray = hashMD5.digest(sSecretKey.getBytes(StandardCharsets.UTF_8));
 
             // Check if the key is less than 16 byte
-            if (keyArray.length == 16) {
+            if ( keyArray.length == 16 ) {
                 byte[] tmpKey = new byte[24];
                 System.arraycopy(keyArray, 0, tmpKey, 0, 16);
                 System.arraycopy(keyArray, 0, tmpKey, 16, 8);
@@ -67,8 +69,9 @@ public class EncryptDecrpt {
             String encodedCipherText;
 
             // Convert the text into base 64 string
-            encodedCipherText = Base64.encodeToString(cipherText, Base64.DEFAULT);
-
+            //encodedCipherText =  DatatypeConverter.printBase64Binary(cipherText);
+            encodedCipherText = android.util.Base64.encodeToString(cipherText,android.util.Base64.DEFAULT);
+            encodedCipherText = encodedCipherText.substring(0,encodedCipherText.length()-1);
             // Return the base 64 encrypted string
             return encodedCipherText;
 
@@ -78,6 +81,7 @@ public class EncryptDecrpt {
 
         }
     }
+
 
     /**
      * Algorithm is used for the decryption of the text
