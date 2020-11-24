@@ -137,8 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private JSONObject object;
     private Handler handler;
     Gson gson = new Gson();
-
-
+    private String DriverImage;
 
 
     public static MainActivity getInstance(){
@@ -215,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.relative_left_arrow).setOnClickListener(this);
         findViewById(R.id.relative_right_arrow).setOnClickListener(this);
         findViewById(R.id.img_choose_service).setOnClickListener(this);
-
+        //Setting the image of the driver
+        iv_Driver_Image = findViewById(R.id.iv_driver_image);
         findViewById(R.id.layout_uparrow).setOnClickListener(this);
         findViewById(R.id.down_arrow).setOnClickListener(this);
         findViewById(R.id.pager).setOnClickListener(this);
@@ -577,58 +577,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void MainVideoBannerallBackMethod(ImageView imageViev, RelativeLayout relativeLayout, TextView textView, int videobox, VideoView videoView) {
-
-        rlvideobrbox = relativeLayout;
-        tv_VideoBr = textView;
-        rlvideoMainBanner = videobox;
-        videoviewMainBanner = videoView;
-
-
-        if (fullscreen) {
-            // Common.startStopWatch(getApplicationContext());
-            imageViev.setImageResource(0);
-            imageViev.setBackgroundResource(R.drawable.ic_fullscreen_exit_black_36dp);
-            recycler_view_side_offers.setVisibility(View.GONE);
-            llMenuBottom.setVisibility(View.GONE);
-            llMenuUp.setVisibility(View.GONE);
-            rlviewpagerMain.setVisibility(View.GONE);
-            llsideOffers.setVisibility(View.GONE);
-
-
-
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            mWindowManager.getDefaultDisplay().getMetrics(displayMetrics);
-
-            ViewGroup.LayoutParams videoLayout1Params = relativeLayoutfragment.getLayoutParams();
-            videoLayout1Params.width = displayMetrics.widthPixels;
-            videoLayout1Params.height = displayMetrics.heightPixels;
-            fullscreen = false;
-
-            RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            relativeLayoutfragment.setLayoutParams(relativeParams);
-
-
-
-        } else {
-
-            relativeLayoutfragment.setBackgroundColor(Color.WHITE);
-            imageViev.setImageResource(0);
-            imageViev.setBackgroundResource(R.drawable.ic_fullscreen_black_36dp);
-            recycler_view_side_offers.setVisibility(View.VISIBLE);
-            llMenuBottom.setVisibility(View.VISIBLE);
-            llMenuUp.setVisibility(View.VISIBLE);
-            rlviewpagerMain.setVisibility(View.VISIBLE);
-            llsideOffers.setVisibility(View.VISIBLE);
-            fullscreen = true;
-
-        }
-    }
-
-
     public void addFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, mFragment)
@@ -648,8 +596,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void DriverImageCallBackMethod(String driverImage, Context context) {
         String DriverImage = driverImage;
-        //Setting the image of the driver
-        iv_Driver_Image = findViewById(R.id.iv_driver_image);
         runOnUiThread(() -> {
             // Can call RequestCreator.into here
             //Picasso.with(Context).load(DriverImage).placeholder(R.drawable.dtcdriverphoto).into(iv_Driver_Image);
