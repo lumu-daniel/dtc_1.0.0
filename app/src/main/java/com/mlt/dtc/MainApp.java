@@ -17,7 +17,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.interfaces.FetchWeatherObjectCallback;
 import com.mlt.dtc.interfaces.ResultsCallback;
-import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
 import com.mlt.dtc.model.request.AuthenticateRequest;
 import com.mlt.dtc.networking.NetWorkRequest;
 

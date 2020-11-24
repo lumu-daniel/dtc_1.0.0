@@ -92,6 +92,7 @@ class WifiFragment extends Fragment {
         listOfNetworks = new ArrayList<>();
 
         arrayAdapter = new ArrayAdapter<String>(context,R.layout.row,R.id.list_value,listOfNetworks);
+
         listView.setAdapter(arrayAdapter);
 
 
@@ -267,7 +268,8 @@ class WifiFragment extends Fragment {
         int networkId =  wifiManager.addNetwork(conf);
         boolean ConnectionValue = false;
         if(networkId==-1){
-            @SuppressLint("MissingPermission") List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
+            //@SuppressLint("MissingPermission")
+            List<WifiConfiguration> networks = wifiManager.getConfiguredNetworks();
             for(WifiConfiguration c : networks) {
                 if (conf.SSID.equals(c.SSID)) {
                     wifiManager.enableNetwork(c.networkId, true);

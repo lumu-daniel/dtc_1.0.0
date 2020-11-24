@@ -1,14 +1,19 @@
 package com.mlt.dtc.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,7 +30,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -48,6 +56,7 @@ import com.mlt.dtc.adapter.BannerAdapter;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.common.SystemUIService;
+
 import com.mlt.dtc.fragment.TripEndFragment;
 import com.mlt.dtc.fragment.TripStartFragment;
 import com.mlt.dtc.interfaces.DriverImageListener;
@@ -80,6 +89,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.util.Date;
+
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
 import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
 import static com.mlt.dtc.common.Common.getDateHome;
@@ -127,8 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private JSONObject object;
     private Handler handler;
     Gson gson = new Gson();
-
-
+    private String DriverImage;
 
 
     public static MainActivity getInstance(){
@@ -205,7 +214,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.relative_left_arrow).setOnClickListener(this);
         findViewById(R.id.relative_right_arrow).setOnClickListener(this);
         findViewById(R.id.img_choose_service).setOnClickListener(this);
-
+        //Setting the image of the driver
+        iv_Driver_Image = findViewById(R.id.iv_driver_image);
         findViewById(R.id.layout_uparrow).setOnClickListener(this);
         findViewById(R.id.down_arrow).setOnClickListener(this);
         findViewById(R.id.pager).setOnClickListener(this);
@@ -264,6 +274,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (googleApiClient != null) {
             googleApiClient.connect();
         }
+
+        try {
+            DriverImage = "";//PreferenceConnector.readString(getApplicationContext(), Constant.DriverImage, "");
+            if (DriverImage != null || DriverImage.equals("")) {
+                //Picasso.with(getApplicationContext()).load(DriverImage).placeholder(R.drawable.dtcdriverphoto).into(iv_Driver_Image);
+                Glide.with(getApplicationContext()).asBitmap().load(DriverImage).apply(new RequestOptions().placeholder(R.drawable.dtcdriverphoto)).into(iv_Driver_Image);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        grantPermission();
 
         //To prevent Network on main thread exception
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -555,8 +577,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
-
     public void addFragment() {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, mFragment)
@@ -576,8 +596,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void DriverImageCallBackMethod(String driverImage, Context context) {
         String DriverImage = driverImage;
-        //Setting the image of the driver
-        iv_Driver_Image = findViewById(R.id.iv_driver_image);
         runOnUiThread(() -> {
             // Can call RequestCreator.into here
             //Picasso.with(Context).load(DriverImage).placeholder(R.drawable.dtcdriverphoto).into(iv_Driver_Image);
@@ -608,12 +626,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onPause() {
         super.onPause();
+
+
 //        handler.removeCallbacks(runnable);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
+
     }
 
     @Override
@@ -621,6 +644,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         try{
             finish();
+
+
             rlvideobrbox = null;
             mFragment = null;
         }catch (Exception ex){
@@ -759,5 +784,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
+
+    private void grantPermission(){
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            //Toast.makeText(this, "Location Permissions not granted yet", Toast.LENGTH_SHORT).show();
+            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+                Toast.makeText(this, "Please Grant these permissions", Toast.LENGTH_SHORT).show();
+            }else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            }
+        }
+        else {
+//            Toast.makeText(this, "You have all the permissions you need to get Locations", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 }
