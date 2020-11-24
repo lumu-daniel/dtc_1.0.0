@@ -32,8 +32,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+
 import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
@@ -59,6 +61,7 @@ import com.mlt.dtc.common.SystemUIService;
 
 import com.mlt.dtc.fragment.TripEndFragment;
 import com.mlt.dtc.fragment.TripStartFragment;
+import com.mlt.dtc.fragment.WeatherFragment;
 import com.mlt.dtc.interfaces.DriverImageListener;
 import com.mlt.dtc.interfaces.FareDialogListener;
 import com.mlt.dtc.interfaces.FetchWeatherObjectCallback;
@@ -79,6 +82,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+
 import example.CustomKeyboard.Components.CustomKeyboardView;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -89,6 +93,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
 import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
@@ -102,26 +107,25 @@ import static com.mlt.dtc.utility.Constant.TAG;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener,RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener, DriverImageListener,MainVideoBannerListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener, RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener, DriverImageListener, MainVideoBannerListener {
     public InfiniteBannerView infiniteBannerView;
-    public Boolean isSelected=false;
+    public Boolean isSelected = false;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
     public ArrayList<SideBannerObject> fileList;
-    int topBannerCount,positionTopBanner,multipletripviewClick;
+    int topBannerCount, positionTopBanner, multipletripviewClick;
     public OffersRecyclerViewAdapter adapter_menus = null;
     public static MainActivity mainActivity;
     private GoogleApiClient googleApiClient;
-    private int Position, sideOffersCount,DTCServicesCount,mltButtonCount,rtaServicesCount,rlvideoMainBanner,timeCount;
+    private int Position, sideOffersCount, DTCServicesCount, mltButtonCount, rtaServicesCount, rlvideoMainBanner, timeCount;
     Fragment mFragment;
     public static CustomKeyboardView keyboard;
 
     public static int restrict_double_click = 0, count = 0;
-    private int  sideoffersCount,driverCount,fareCount;
-    private TextView tv_timemainbox,tv_datemainbox,tv_VideoBr,tv_degree;
-    private LinearLayout ll_driverinfo,llMenuBottom,llMenuUp,llsideOffers;
-    private RelativeLayout relativeLayoutfragment,rlviewpagerMain;
-    private FrameLayout iv_weatherimage,tripdetail;
+    private int driverCount, fareCount, weathermainCount;
+    private TextView tv_timemainbox, tv_datemainbox, tv_VideoBr, tv_degree;
+    private LinearLayout ll_driverinfo, llMenuBottom, llMenuUp, llsideOffers;
+    private RelativeLayout relativeLayoutfragment, rlviewpagerMain;
+    private FrameLayout iv_weatherimage, tripdetail;
     private DialogFragment dialogFragment;
     private ImageView iv_Driver_Image;
     private static OverwriteTripFragmentListener overwriteTripFragmentListener;
@@ -139,8 +143,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Gson gson = new Gson();
     private String DriverImage;
 
+    public static List<FetchCurrentWeatherResponse.Response> weatherDetailsListviewAList;
 
-    public static MainActivity getInstance(){
+
+    public static MainActivity getInstance() {
 
         return mainActivity;
     }
@@ -161,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         handlerThread = new HandlerThread("weather");
         handlerThread.start();
 
-        handler =new Handler(handlerThread.getLooper());
+        handler = new Handler(handlerThread.getLooper());
 
 
         mainBannerVideoFragment = new MainBannerVideoFragment();
@@ -195,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void findViewById() {
 
         //this text is moving
-        tv_degree=findViewById(R.id.tv_Degree);
+        tv_degree = findViewById(R.id.tv_Degree);
         findViewById(R.id.tv_services).setSelected(true);
         llsideOffers = findViewById(R.id.llsideoffers);
         rlviewpagerMain = findViewById(R.id.viewpagermain);
@@ -203,13 +209,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         llMenuBottom = findViewById(R.id.llmenubottom);
         relativeLayoutfragment = findViewById(R.id.rlcontent);
         keyboard = findViewById(R.id.customKeyboardView);
-        rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
+        rvBottomMenu = findViewById(R.id.recycler_bottom_menu);
         infiniteBannerView = findViewById(R.id.pager);
-        rvBottomMenu=findViewById(R.id.recycler_bottom_menu);
+        rvBottomMenu = findViewById(R.id.recycler_bottom_menu);
         tv_timemainbox = findViewById(R.id.tv_timemainbox);
         ll_driverinfo = findViewById(R.id.ll_driverinfo);
-        tv_datemainbox  = findViewById(R.id.tv_datemainbox);
-        tripdetail=findViewById(R.id.tripdetail);
+        tv_datemainbox = findViewById(R.id.tv_datemainbox);
+        tripdetail = findViewById(R.id.tripdetail);
         recycler_view_side_offers = findViewById(R.id.recycler_view_side_offers);
         findViewById(R.id.relative_left_arrow).setOnClickListener(this);
         findViewById(R.id.relative_right_arrow).setOnClickListener(this);
@@ -222,6 +228,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ll_driverinfo.setOnClickListener(this);
         tripdetail.setOnClickListener(this);
         findViewById(R.id.ll_time).setOnClickListener(this);
+        findViewById(R.id.weatherimage).setOnClickListener(this);
+
     }
 
 
@@ -230,24 +238,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SystemUIService.setStatusBarVisibility(this.getApplicationContext(), View.GONE);
     }
 
-    private void processOffers(){
+    private void processOffers() {
         try {
             fileList = new ArrayList<>();
-            adapter_menus = new OffersRecyclerViewAdapter(fileList, getApplicationContext(),this);
+            adapter_menus = new OffersRecyclerViewAdapter(fileList, getApplicationContext(), this);
             recycler_view_side_offers.setAdapter(adapter_menus);
 
-            File dir = new File(multimediaPath+"/adv/");
-            File dirMI = new File(multimediaPath+"/SBMainImage/");
+            File dir = new File(multimediaPath + "/adv/");
+            File dirMI = new File(multimediaPath + "/SBMainImage/");
             File[] files = dir.listFiles();
             File[] MIFiles = dirMI.listFiles();
             //fileList = new ArrayList<File>();
             fileList.clear();
             for (File file : files) {
-                if(file.getName().toLowerCase().startsWith("baner") || file.getName().toUpperCase().startsWith("BANER")){
+                if (file.getName().toLowerCase().startsWith("baner") || file.getName().toUpperCase().startsWith("BANER")) {
                     // it's a match, call your function
-                    for(File miFile:MIFiles){
-                        if(miFile.getName().equals(file.getName())){
-                            fileList.add(new SideBannerObject(file,miFile));
+                    for (File miFile : MIFiles) {
+                        if (miFile.getName().equals(file.getName())) {
+                            fileList.add(new SideBannerObject(file, miFile));
                         }
                     }
                 }
@@ -259,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     adapter_menus.notifyDataSetChanged();
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
 
@@ -333,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setRecyclerViewBottomAdapter() {
-        RecyclerviewBottomAdapter bottomAdapter = new RecyclerviewBottomAdapter(getApplicationContext(),prepareMenuData());
+        RecyclerviewBottomAdapter bottomAdapter = new RecyclerviewBottomAdapter(getApplicationContext(), prepareMenuData());
         bottomAdapter.setOnItemClickListener(this);
         LinearLayoutManager horizontalLayoutManager = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false);
         rvBottomMenu.setLayoutManager(horizontalLayoutManager);
@@ -343,13 +351,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void topBannerViews(ArrayList<TopBannerObject> topBannerList) {
-        BannerAdapter bannerAdapter= new BannerAdapter(topBannerList,getApplicationContext(),true );
-        infiniteBannerView.setAdapter( bannerAdapter );
+        BannerAdapter bannerAdapter = new BannerAdapter(topBannerList, getApplicationContext(), true);
+        infiniteBannerView.setAdapter(bannerAdapter);
     }
 
-    public static void reloadPage(Context context){
-        if(Constant.count==0){
-            Intent intent = new Intent(context,MainActivity.class);
+    public static void reloadPage(Context context) {
+        if (Constant.count == 0) {
+            Intent intent = new Intent(context, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
             Constant.count++;
@@ -359,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        switch(view.getId()){
+        switch (view.getId()) {
             case R.id.relative_left_arrow:
                 Common.leftArrow(infiniteBannerView);
                 break;
@@ -367,8 +375,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Common.rightArrow(infiniteBannerView);
                 break;
             case R.id.pager:
-                if (!isSelected){
-                    isSelected =true;
+                if (!isSelected) {
+                    isSelected = true;
                     topBannerCount++;
 
                     PreferenceConnector.writeInteger(getApplicationContext(), Constant.TopBannerCount, topBannerCount);
@@ -433,17 +441,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 recycler_view_side_offers.scrollBy(0, 50);
                 break;
             case R.id.ll_time:
-            timeCount++;
-            findViewById(R.id.ll_time).setEnabled(false);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-            PreferenceConnector.writeInteger(getApplicationContext(), Constant.TimeCount, timeCount);
-            PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameTime);
-            Constant.ButtonClicked = Constant.nameTime;
-            WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
-            getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
-            dialogFragment = new TimeFragment();
-            dialogFragment.show(getSupportFragmentManager(), "");
-            break;
+                timeCount++;
+                findViewById(R.id.ll_time).setEnabled(false);
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE, WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                PreferenceConnector.writeInteger(getApplicationContext(), Constant.TimeCount, timeCount);
+                PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameTime);
+                Constant.ButtonClicked = Constant.nameTime;
+                WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+                getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+                dialogFragment = new TimeFragment();
+                dialogFragment.show(getSupportFragmentManager(), "");
+                break;
+            case R.id.weatherimage:
+                weathermainCount++;
+                PreferenceConnector.writeInteger(getApplicationContext(), Constant.WeatherCount, weathermainCount);
+                PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameWeather);
+                Constant.ButtonClicked = Constant.nameWeatherinfo;
+                WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+                getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
+                mFragment = WeatherFragment.newInstance();
+                addFragment();
+                break;
 
         }
     }
@@ -459,7 +477,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onItemClick(int position, View v) {
         Intent i;
-        if (position==0){
+        if (position == 0) {
             mltButtonCount++;
 
             PreferenceConnector.writeInteger(getApplicationContext(), Constant.MLTButtonCount, mltButtonCount);
@@ -469,7 +487,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Common.getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
             mFragment = new ContactUsFragment();
             addFragment();
-        }else if (position==1){
+        } else if (position == 1) {
             rtaServicesCount++;
             PreferenceConnector.writeInteger(getApplicationContext(), Constant.RTAServicesCount, rtaServicesCount);
             PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameRTAServices);
@@ -481,11 +499,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             i = new Intent(Intent.ACTION_MAIN);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            i.putExtra("isFromDTC",true);
-            i.setComponent(new ComponentName("example.rta","rtaservices.RTAMainActivity"));
+            i.putExtra("isFromDTC", true);
+            i.setComponent(new ComponentName("example.rta", "rtaservices.RTAMainActivity"));
             startActivity(i);
 
-        }else if (position==2){
+        } else if (position == 2) {
             DTCServicesCount++;
             PreferenceConnector.writeInteger(getApplicationContext(), Constant.RTAServicesCount, DTCServicesCount);
             PreferenceConnector.writeString(getApplicationContext(), Constant.ButtonClicked, Constant.nameDTCServices);
@@ -502,7 +520,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         overwriteTripFragmentListener = CallBack;
 
     }
-
 
 
     //Call back when get the data open the dialog automatically
@@ -642,13 +659,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try{
+        try {
             finish();
 
 
             rlvideobrbox = null;
             mFragment = null;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -717,7 +734,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
 
-        object  = new JSONObject();
+        object = new JSONObject();
         try {
             object.put("request", req);
 
@@ -729,43 +746,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-
-    private final Runnable runnable = ()->{
+    private final Runnable runnable = () -> {
 
         getFetchWeatherResponse(object.toString(), getApplicationContext(), new FetchWeatherObjectCallback() {
             @Override
             public void successful(FetchCurrentWeatherResponse fetchCurrentWeatherResponse) {
-                Weather =fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse().get(0).getTemperature();
-                runOnUiThread(()->{
-                    tv_degree.setText(String.valueOf(Math.round(Weather)+ " \u2103"));
+                weatherDetailsListviewAList = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse();
+                Weather = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse().get(0).getTemperature();
+                runOnUiThread(() -> {
+                    tv_degree.setText(String.valueOf(Math.round(Weather) + " \u2103"));
                 });
-                handler.postDelayed(runnable,10000);
+                handler.postDelayed(runnable, 10000);
             }
 
             @Override
             public void failure(String errorMessage) {
-                Log.d(TAG, "failure: "+errorMessage);
+                Log.d(TAG, "failure: " + errorMessage);
             }
         });
     };
 
-    private void getFetchWeatherResponse( String body, Context context, FetchWeatherObjectCallback fetchWeatherObjectCallback ){
+    private void getFetchWeatherResponse(String body, Context context, FetchWeatherObjectCallback fetchWeatherObjectCallback) {
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://dtcwbsvc.networkips.com/ServiceModule/DTCService.svc/")
                 .client(new OkHttpClient())
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        NetWorkRequest netWorkRequest =     retrofit.create(NetWorkRequest .class);
+        NetWorkRequest netWorkRequest = retrofit.create(NetWorkRequest.class);
 
-        Call<FetchCurrentWeatherResponse> categoryProductCall = netWorkRequest.GetFetchWeatherResponse( body );
+        Call<FetchCurrentWeatherResponse> categoryProductCall = netWorkRequest.GetFetchWeatherResponse(body);
         categoryProductCall.enqueue(new Callback<FetchCurrentWeatherResponse>() {
             @Override
             public void onResponse(Call<FetchCurrentWeatherResponse> call, Response<FetchCurrentWeatherResponse> response) {
-                if( response.isSuccessful() ){
-                    fetchWeatherObjectCallback.successful( response.body() );
-                }else{
-                    fetchWeatherObjectCallback.successful( response.body() );
+                if (response.isSuccessful()) {
+                    fetchWeatherObjectCallback.successful(response.body());
+                } else {
+                    fetchWeatherObjectCallback.successful(response.body());
                 }
             }
 
@@ -773,11 +790,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onFailure(Call<FetchCurrentWeatherResponse> call, Throwable t) {
                 String errorMessage = t.getLocalizedMessage();
-                if( errorMessage == null || errorMessage.equals("timeout") ) {
+                if (errorMessage == null || errorMessage.equals("timeout")) {
 
-                }else if( errorMessage.contains("Unable to resolve host") ) {
+                } else if (errorMessage.contains("Unable to resolve host")) {
 
-                }else{
+                } else {
 
                 }
             }
@@ -785,17 +802,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void grantPermission(){
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)!= PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+    private void grantPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //Toast.makeText(this, "Location Permissions not granted yet", Toast.LENGTH_SHORT).show();
-            if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 Toast.makeText(this, "Please Grant these permissions", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION}, 0);
             }
-        }
-        else {
+        } else {
 //            Toast.makeText(this, "You have all the permissions you need to get Locations", Toast.LENGTH_SHORT).show();
         }
     }
