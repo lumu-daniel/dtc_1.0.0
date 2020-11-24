@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,16 +29,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.WindowManager;
 import android.widget.RelativeLayout;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-
 import android.widget.VideoView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -75,14 +68,10 @@ import com.mlt.dtc.model.request.AuthenticateRequest;
 import com.mlt.dtc.networking.NetWorkRequest;
 import com.mlt.dtc.pushnotification.MyFirebaseMessagingService;
 import com.mlt.dtc.utility.Constant;
-import com.mlt.dtc.utility.Constant;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.File;
 import java.util.ArrayList;
-
 import example.CustomKeyboard.Components.CustomKeyboardView;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -91,10 +80,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-
+import java.util.HashMap;
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
 import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
 import static com.mlt.dtc.common.Common.getDateHome;
@@ -104,6 +92,7 @@ import static com.mlt.dtc.common.Common.getlistofclickLog;
 import static com.mlt.dtc.common.Common.prepareMenuData;
 import static com.mlt.dtc.common.Common.topBannerList;
 import static com.mlt.dtc.utility.Constant.TAG;
+import static com.mlt.dtc.utility.Constant.WeatherTime;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 
@@ -127,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RelativeLayout relativeLayoutfragment, rlviewpagerMain;
     private FrameLayout iv_weatherimage, tripdetail;
     private DialogFragment dialogFragment;
-    private ImageView iv_Driver_Image;
+    private ImageView iv_Driver_Image,weatherimg;
     private static OverwriteTripFragmentListener overwriteTripFragmentListener;
     TripStartFragment tripStartFragment = new TripStartFragment();
     TripEndFragment tripEndFragment = new TripEndFragment();
@@ -142,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Handler handler;
     Gson gson = new Gson();
     private String DriverImage;
+    private HashMap<String, Integer> hmweatherimageDay;
 
 
 
@@ -201,6 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void findViewById() {
 
         //this text is moving
+        weatherimg=findViewById(R.id.weathertypeimg);
         tv_degree = findViewById(R.id.tv_Degree);
         findViewById(R.id.tv_services).setSelected(true);
         llsideOffers = findViewById(R.id.llsideoffers);
@@ -758,10 +749,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void successful(FetchCurrentWeatherResponse fetchCurrentWeatherResponse) {
                 Constant.weatherDetailsListviewAList = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse();
                 Weather = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse().get(0).getTemperature();
+
+
                 runOnUiThread(() -> {
                     tv_degree.setText(String.valueOf(Math.round(Weather) + " \u2103"));
+
+                    Calendar cal = Calendar.getInstance();
+                    int hour = cal.get(Calendar.HOUR_OF_DAY);
+                    Boolean  isNight = hour < 6 || hour > 18;
+                    try {
+                        hmweatherimageDay = new HashMap<>();
+                        if (isNight == false) {
+                            hmweatherimageDay.put("clear sky", R.drawable.sunny);
+                            hmweatherimageDay.put("few clouds", R.drawable.sunny);
+                            weatherimg.setImageResource(R.drawable.wnightclear);
+                        } else {
+                            hmweatherimageDay.put("clear sky", R.drawable.wnightclear);
+                            hmweatherimageDay.put("few clouds", R.drawable.wnightclear);
+                            weatherimg.setImageResource(R.drawable.sunny);
+                        }
+
+                    }
+                    catch (Exception e) {
+
+                    }
                 });
-                handler.postDelayed(runnable, 5000);
+                handler.postDelayed(runnable, WeatherTime);
             }
 
             @Override

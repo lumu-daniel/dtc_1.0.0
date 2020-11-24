@@ -1,6 +1,8 @@
 package com.mlt.dtc.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,6 +93,7 @@ class WeatherFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+
 
 
         //get Class Name
@@ -281,8 +284,8 @@ class WeatherFragment extends DialogFragment {
 
 
             iv_weatherImage = null;
-            tv_DeviceTime = null;
-            tv_Devicemdd = null;
+//            tv_DeviceTime = null;
+//            tv_Devicemdd = null;
             tv_Degree = null;
             tv_Humid = null;
             tv_Weather = null;
@@ -304,7 +307,7 @@ class WeatherFragment extends DialogFragment {
 //            listView = null;
             recyclerView = null;
 
-            weatherDetailsListviewAList.clear();
+//            weatherDetailsListviewAList.clear();
 //            weatherDetailsRecylerviewAlist.clear();
 //            fetchweather.clear();
 //            fetchweatherforecast.clear();
@@ -327,8 +330,8 @@ class WeatherFragment extends DialogFragment {
 
 
             iv_weatherImage = null;
-            tv_DeviceTime = null;
-            tv_Devicemdd = null;
+//            tv_DeviceTime = null;
+//            tv_Devicemdd = null;
             tv_Degree = null;
             tv_Humid = null;
             tv_Weather = null;

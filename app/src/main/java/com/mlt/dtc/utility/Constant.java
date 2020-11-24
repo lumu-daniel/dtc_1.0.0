@@ -14,6 +14,7 @@ public class Constant {
 
     public static List<FetchCurrentWeatherResponse.Response> weatherDetailsListviewAList;
 
+    public static long WeatherTime = 10000;
 
     public static int count = 0;
 
