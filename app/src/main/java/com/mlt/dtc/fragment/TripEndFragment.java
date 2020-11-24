@@ -5,6 +5,7 @@ import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
@@ -93,6 +94,9 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
     static private Dialogdismisslistener dialogdismisslistener;
     static private TripStartedForPaymentListener tripStartedForPaymentListener;
 
+    HandlerThread handlerThread;
+    private Handler handler;
+
 
     @Override
     public void onAttach(Context context) {
@@ -112,6 +116,11 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
         View view = inflater.inflate(R.layout.farefragment, null);
         //set the view to the dialog
         customDialogMain.setView(view);
+
+        handlerThread = new HandlerThread("endlocation");
+        handlerThread.start();
+
+        handler = new Handler(handlerThread.getLooper());
 
         iv_close = view.findViewById(R.id.iv_closefarefragment);
 
@@ -441,14 +450,13 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
                             btn_Pay.setClickable(true);
                         }
 //                        btn_Pay.setVisibility(View.GONE);
-
-
-                        reverseGeoCoding.getAddress(Double.parseDouble(TripEndLat), Double.parseDouble(TripEndLong));
-                        getTripEndAddress = reverseGeoCoding.getAddress1();
-
-
                         tv_dest_start_Address.setText(getTripStartAddress);
-                        tv_dest_end_Address.setText(getTripEndAddress);
+//                        reverseGeoCoding.getAddress(Double.parseDouble(TripEndLat), Double.parseDouble(TripEndLong));
+//                        getTripEndAddress = reverseGeoCoding.getAddress1();
+                        handler.post(runnable);
+
+//                        tv_dest_start_Address.setText(getTripStartAddress);
+//                        tv_dest_end_Address.setText(getTripEndAddress);
 
 
                         float myKilometers = Common.DistanceBetween(Float.parseFloat(TripStartLatitude), Float.parseFloat(TripStartLongitude), Float.parseFloat(TripEndLat), Float.parseFloat(TripEndLong));
@@ -638,6 +646,21 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
             }*/
         });
     }
+
+    private final Runnable runnable = () -> {
+
+        reverseGeoCoding.getAddress(Double.parseDouble(TripEndLat), Double.parseDouble(TripEndLong));
+        getTripEndAddress = reverseGeoCoding.getAddress1();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tv_dest_end_Address.setText(getTripEndAddress);
+
+            }
+        });
+
+    };
+
 
     @Override
     public void onResume() {

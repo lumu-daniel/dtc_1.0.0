@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
@@ -54,7 +55,7 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
     Context context;
     Fragment mFragment;
     TextView tv_duration, tv_fare,
-            tv_start_fare, tv_start_DateTime, tv_end_DateTime, tv_dest_start_Address, tv_dest_end_Address,paymentstaus;
+            tv_start_fare, tv_start_DateTime, tv_end_DateTime, tv_dest_start_Address, tv_dest_end_Address, paymentstaus;
     PushDetails pushDetails = new PushDetails();
     PushDetails pushDetailsTripStart = new PushDetails();
     PushDetails pushDetailsTripEnd = new PushDetails();
@@ -71,6 +72,9 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
     public static boolean tripStarted = false;
     getStartReverseGeoCoding reverseGeoCoding;
     ImageView iv_close;
+    HandlerThread handlerThread;
+    private Handler handler;
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -78,6 +82,7 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
         context = getContext();
         customDialogMain = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
         customDialogMainTripStart = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
@@ -88,6 +93,11 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
 
         //set the view to the dialog
         customDialogMain.setView(view);
+
+        handlerThread = new HandlerThread("location");
+        handlerThread.start();
+
+        handler = new Handler(handlerThread.getLooper());
 
 
         //get class name
@@ -106,7 +116,6 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
         btn_Pay = view.findViewById(R.id.btn_paynow);
 
 
-
         //Show the dialog
         dialog = customDialogMain.show();
         dialog.setCanceledOnTouchOutside(false);
@@ -114,8 +123,6 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
 
         return dialog;
     }
-
-
 
 
     private void EmptyString(String emptyString) {
@@ -274,16 +281,17 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
                     }
                     //Trip Start
                     if (hashMap.get(Constant.TSEventCodeKey).equals(Constant.TripStartEventCode)) {
-                        reverseGeoCoding.getAddress(Double.parseDouble(pushDetails.getStartlatitude()), Double.parseDouble(pushDetails.getStartlongitude()));
-                        getTripStartAddress = reverseGeoCoding.getAddress1();
-                        //getTripStartAddress = Common.getAddressFromLocation(Double.parseDouble(pushDetails.getStartlatitude()), Double.parseDouble(pushDetails.getStartlongitude()), getContext(), new GeocoderHandler());
-                        tv_dest_start_Address.setText(getTripStartAddress);
+                        handler.post(runnable);
+//                        reverseGeoCoding.getAddress(Double.parseDouble(pushDetails.getStartlatitude()), Double.parseDouble(pushDetails.getStartlongitude()));
+//                        getTripStartAddress = reverseGeoCoding.getAddress1();
+//                        //getTripStartAddress = Common.getAddressFromLocation(Double.parseDouble(pushDetails.getStartlatitude()), Double.parseDouble(pushDetails.getStartlongitude()), getContext(), new GeocoderHandler());
+//                        tv_dest_start_Address.setText(getTripStartAddress);
 
-                        PreferenceConnector.writeBoolean(getContext(),Constant.PaymentStatus,false);
+                        PreferenceConnector.writeBoolean(getContext(), Constant.PaymentStatus, false);
 
                         tv_duration.setText("");
 
-                        tv_fare.setText("0"+" AED");
+                        tv_fare.setText("0" + " AED");
 
 
                         tv_start_fare.setText(pushDetails.getFlagfall() + " AED");
@@ -313,7 +321,6 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
                         tv_dest_end_Address.setText(getTripEndAddress);
 
 
-
                         tv_fare.setText(Fare + " AED");
                         tv_start_DateTime.setText(StartDate);
                         tv_end_DateTime.setText(pushDetails.getEnddatetime());
@@ -340,9 +347,9 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
         ServiceCallLogService serviceCallLogService = new ServiceCallLogService(getContext());
         serviceCallLogService.CallServiceCallLogService(Constant.nameFare, Constant.name_Fare_details_desc);
 
-        try{
+        try {
             if (TripEndServiceCall) {
-                if(hashMap!=null){
+                if (hashMap != null) {
                     if (hashMap.get(Constant.EventCodeLog).equals(Constant.TripEndEventCode)) {
                         try {
                             ArrayList<CKeyValuePair> clickLogDetailsList = (ArrayList<CKeyValuePair>) Common.readObject(getContext(), Constant.GetListClickLog);
@@ -374,20 +381,16 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
                         }
 
                     }
-                }else{
-                    getActivity().runOnUiThread(()->{
-                        Toast.makeText(getContext(),"Technical service error. Trip not started.",Toast.LENGTH_LONG).show();
+                } else {
+                    getActivity().runOnUiThread(() -> {
+                        Toast.makeText(getContext(), "Technical service error. Trip not started.", Toast.LENGTH_LONG).show();
                     });
                 }
             }
 
-        }catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
-
 
 
         iv_close.setOnClickListener(v -> {
@@ -395,6 +398,20 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
 
         });
     }
+
+    private final Runnable runnable = () -> {
+
+        reverseGeoCoding.getAddress(Double.parseDouble(pushDetails.getStartlatitude()), Double.parseDouble(pushDetails.getStartlongitude()));
+        getTripStartAddress = reverseGeoCoding.getAddress1();
+        PreferenceConnector.writeString(getContext(), Constant.TripStartAddress, getTripStartAddress);
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tv_dest_start_Address.setText(getTripStartAddress);
+            }
+        });
+
+    };
 
     @Override
     public void onResume() {
@@ -408,7 +425,14 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
     @Override
     public void onPause() {
         super.onPause();
-        dialog.dismiss();
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        });
+
     }
 
     @Override

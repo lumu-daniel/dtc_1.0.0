@@ -10,17 +10,17 @@
         android:layout_height="30dp" />
 
     <LinearLayout
-        style="@style/CusomDialogStyleWhite"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:padding="@dimen/tv_width30"
+        android:background="@drawable/dialog_red_radius"
+        >
 
         <LinearLayout
-            style="@style/CusomDialogStyle"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
-                style="@style/CusomDialogStyleWhite"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">

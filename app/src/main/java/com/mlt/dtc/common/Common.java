@@ -16,29 +16,29 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-
 import com.bumptech.glide.Glide;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.gson.Gson;
 import com.mlt.dtc.R;
+import com.mlt.dtc.interfaces.FetchWeatherObjectCallback;
 import com.mlt.dtc.model.BottomMenu;
 import com.mlt.dtc.model.ClickObject;
 import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
+import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.networking.NetWorkRequest;
 import com.mlt.dtc.utility.Constant;
 import com.mlt.dtc.utility.EncryptDecrpt;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -50,7 +50,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -58,22 +57,19 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
 import java.util.Vector;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.POST;
 
 import static android.content.ContentValues.TAG;
 import static android.os.Looper.getMainLooper;
-
 import static com.mlt.dtc.utility.Constant.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE;
 import static com.mlt.dtc.utility.Constant.multimediaPath;
 
@@ -118,6 +114,38 @@ class Common {
         }
         return topBannerList;
     }
+
+    /**
+     * sideOfferImage
+     * @return
+     */
+    public static ArrayList<SideBannerObject> sideOfferList(){
+        ArrayList<SideBannerObject> sideBannerObjects=new ArrayList<>();
+        try {
+            File dir = new File(multimediaPath + "/adv/");
+            File dirMI = new File(multimediaPath + "/SBMainImage/");
+            File[] files = dir.listFiles();
+            File[] MIFiles = dirMI.listFiles();
+            //fileList = new ArrayList<File>();
+            sideBannerObjects.clear();
+            for (File file : files) {
+                if (file.getName().toLowerCase().startsWith("baner") || file.getName().toUpperCase().startsWith("BANER")) {
+                    // it's a match, call your function
+                    for (File miFile : MIFiles) {
+                        if (miFile.getName().equals(file.getName())) {
+                            sideBannerObjects.add(new SideBannerObject(file, miFile));
+                        }
+                    }
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();;
+        }
+        return sideBannerObjects;
+    }
+
+
 
     /**
      * left arrow action topBanner
@@ -671,8 +699,88 @@ class Common {
         return encryptedsecureHash;
     }
 
+    public static void ScreenBrightness(Context context, Activity activity) {
+        try {
+            String br = PreferenceConnector.readString(context, "br", "");
+            if (br != null) {
+                if (br.equals("1") || br.equals("1.0")) {
+                    activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+                    params.screenBrightness = Float.parseFloat(br);
+                    activity.getWindow().setAttributes(params);
+                } else {
+                    activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                    WindowManager.LayoutParams params = activity.getWindow().getAttributes();
+                    //params.screenBrightness = WindowManager.LayoutParams.BRIGHTNESS_OVERRIDE_NONE;
+                    params.screenBrightness = Float.parseFloat(br);
+                    activity.getWindow().setAttributes(params);
+                }
+            } else {
+            }
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+    }
+
+    public static boolean isEmailValid(String email)
+    {
+        String regExpn =
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
+                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
+                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
+
+        CharSequence inputStr = email;
+
+        Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(inputStr);
+
+        return matcher.matches();
+    }
 
 
+    /**
+     * get Weather List
+     * @param body
+     * @param context
+     * @param fetchWeatherObjectCallback
+     */
+    public static void getFetchWeatherResponse(String body, Context context, FetchWeatherObjectCallback fetchWeatherObjectCallback) {
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://dtcwbsvc.networkips.com/ServiceModule/DTCService.svc/")
+                .client(new OkHttpClient())
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        NetWorkRequest netWorkRequest = retrofit.create(NetWorkRequest.class);
+
+        Call<FetchCurrentWeatherResponse> categoryProductCall = netWorkRequest.GetFetchWeatherResponse(body);
+        categoryProductCall.enqueue(new Callback<FetchCurrentWeatherResponse>() {
+            @Override
+            public void onResponse(Call<FetchCurrentWeatherResponse> call, Response<FetchCurrentWeatherResponse> response) {
+                if (response.isSuccessful()) {
+                    fetchWeatherObjectCallback.successful(response.body());
+                } else {
+                    fetchWeatherObjectCallback.successful(response.body());
+                }
+            }
+
+
+            @Override
+            public void onFailure(Call<FetchCurrentWeatherResponse> call, Throwable t) {
+                String errorMessage = t.getLocalizedMessage();
+                if (errorMessage == null || errorMessage.equals("timeout")) {
+
+                } else if (errorMessage.contains("Unable to resolve host")) {
+
+                } else {
+
+                }
+            }
+        });
+    }
 
 
 

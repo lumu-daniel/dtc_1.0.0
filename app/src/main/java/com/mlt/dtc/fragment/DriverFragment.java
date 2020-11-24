@@ -16,13 +16,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.model.PushDetails;
 import com.mlt.dtc.utility.Constant;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -207,8 +209,8 @@ public class DriverFragment extends DialogFragment {
                     tv_shift_Start.setText(ShiftStartDateTime);
                     tv_shift_End.setText(ShiftEndDateTime);
                     //Picasso.with(getContext()).load(pushDetails.getPicture()).placeholder(R.drawable.dtcdriverphoto).into(iv_driverImage);
-                    Picasso.with(getContext()).load(pushDetails.getPicture()).into(iv_driverImage);
-//                    Glide.with(getContext()).asBitmap().load(pushDetails.getPicture()).apply( new RequestOptions().placeholder(R.drawable.dtcdriverphoto)).into(iv_driverImage);
+//                    Picasso.with(getContext()).load(pushDetails.getPicture()).into(iv_driverImage);
+                    Glide.with(getContext()).asBitmap().load(pushDetails.getPicture()).into(iv_driverImage);
 
 
                 }

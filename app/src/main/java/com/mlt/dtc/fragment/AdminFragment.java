@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.common.PreferenceConnector;
+import com.mlt.dtc.utility.ConfigrationDTC;
 import com.mlt.dtc.utility.Constant;
 
 import java.util.Objects;
@@ -55,6 +56,7 @@ class AdminFragment extends Fragment {
 
         versiontxt=view.findViewById(R.id.versiontxt);
 
+        apkversion= PreferenceConnector.readString(getContext(), ConfigrationDTC.APK_VERSION,"");
 
         versiontxt.setText("Version :"+apkversion);
 

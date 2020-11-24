@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,26 +33,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import example.CustomKeyboard.Components.CustomKeyboardView;
 import static com.mlt.dtc.MainApp.internetCheck;
+import static com.mlt.dtc.common.Common.isEmailValid;
 
 public
 class ContactUsFragment extends DialogFragment  implements View.OnClickListener, Observer<Object> {
-    private ImageView iv_Complaints;
-    private ImageView iv_regulatory;
+    private ImageView iv_Complaints,iv_regulatory;
     private Button iv_Aboutus,iv_Contactus,iv_Feedback,ivSend;
-    private ImageView iv_Admin;
     private LinearLayout layout_Contact, layout_Feedback, layout_Regulatory, ll_hideKeyboard, layout_Aboutus, layoutConfirmation,linear_feedback;
-    private EditText edtName, edtEmail, edtMobileno;
-    private EditText edtMessage;
-    private TextView tv_title;
-    private TextView tv_Fcc;
-    private TextView confirmationText;
-    private TextView tv_Copyright;
-    private TextView tv_copyright_Symbol;
-    private TextView tv_copyright_Year;
-    private TextView tv_copyright_mlt_Allrightsreserved;
-    private TextView tv_copyright_Version;
-    private TextView tv_ReleaseDate;
-    private TextView confirmationMessage;
+    private EditText edtName, edtEmail, edtMobileno,edtMessage;
+    private TextView confirmationText,tv_title,confirmationMessage;
+
     private Animation zoomin, zoomout;
     private String buttonPressed = null;
     int count;
@@ -94,7 +83,6 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
         iv_Complaints = view.findViewById(R.id.iv_complaints);
         iv_regulatory = view.findViewById(R.id.iv_regulatory);
         iv_Aboutus = view.findViewById(R.id.iv_aboutus);
-        iv_Admin = view.findViewById(R.id.iv_admin);
         layout_Contact = view.findViewById(R.id.ll_contact);
         layout_Feedback = view.findViewById(R.id.ll_feedback);
         layout_Regulatory = view.findViewById(R.id.ll_regulatory);
@@ -135,23 +123,6 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
             iv_Aboutus.startAnimation(zoomout);
     }
 
-    public boolean isEmailValid(String email)
-    {
-        String regExpn =
-                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]{1}|[\\w-]{2,}))@"
-                        +"((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
-                        +"([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                        +"[0-9]{1,2}|25[0-5]|2[0-4][0-9])){1}|"
-                        +"([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$";
-
-        CharSequence inputStr = email;
-
-        Pattern pattern = Pattern.compile(regExpn,Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(inputStr);
-
-        return matcher.matches();
-    }
 
     private void postIncident(){
         alertDialog = Common.setAvi(new AlertDialog.Builder(getActivity()).create(),getActivity());
@@ -223,13 +194,6 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
 
         zoomin = AnimationUtils.loadAnimation(getContext(), R.anim.zoom_in_contactus);
         zoomout = AnimationUtils.loadAnimation(getContext(), R.anim.zoom_out_contactus);
-
-//        tv_Copyright.setText(resources.getString(R.string.Copyright) + " ");
-//        tv_copyright_Symbol.setText(resources.getString(R.string.CopyrightSymbol));
-//        tv_copyright_Year.setText(getYear() + " ");
-//        tv_copyright_mlt_Allrightsreserved.setText(resources.getString(R.string.MLTAllRightsReserved) + " ");
-//        tv_copyright_Version.setText(resources.getString(R.string.Version));
-//        tv_ReleaseDate.setText("");
 
         tv_title.setText(Constant.Aboutus);
 
@@ -351,7 +315,6 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
                 layout_Aboutus.setVisibility(View.GONE);
                 layoutConfirmation.setVisibility(View.GONE);
                 tv_title.setText(Constant.Regulatory);
-                tv_Fcc.setGravity(Gravity.CENTER);
                 ZoomOut();
                 iv_regulatory.startAnimation(zoomin);
                 buttonPressed = Constant.Regulatory;
@@ -359,9 +322,6 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
             }
         });
 
-//        iv_Admin.setOnClickListener(v -> {
-//            addFragment(new AdminFragment());
-//        });
 
         ivSend.setOnClickListener(v -> {
             if(!internetCheck){

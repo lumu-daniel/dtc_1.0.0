@@ -1,4 +1,4 @@
-package com.mlt.dtc.fragments;
+package com.mlt.dtc.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -10,23 +10,17 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentController;
 import androidx.viewpager.widget.ViewPager;
-
 import com.bumptech.glide.Glide;
-import com.facebook.shimmer.ShimmerFrameLayout;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.adapter.OffersAdapter;
+import com.mlt.dtc.common.Common;
 import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.utility.Constant;
-
-
 import java.util.ArrayList;
 
 
@@ -35,15 +29,13 @@ public class OffersDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     Context context;
     Fragment mFragment;
-
     ArrayList<SideBannerObject> getListofImages = new ArrayList<>();
-
     ImageView iv_close,iv_arrowleft_offers_Dialog,iv_arrowright_offers_Dialog;
     ViewPager AdsAiewPagerOffers;
     Button btnBuy;
     int position;
     String ClassName;
-    private ShimmerFrameLayout mShimmerViewContainer;
+
     View view;
 
     @Override
@@ -60,6 +52,7 @@ public class OffersDialogFragment extends DialogFragment {
 
             LayoutInflater inflater = getActivity().getLayoutInflater();
             view = inflater.inflate(R.layout.custom_dialog_offers, null);
+
 
             iv_close = view.findViewById(R.id.iv_close);
             iv_arrowleft_offers_Dialog = view.findViewById(R.id.iv_arrowleft_offers_dialog);

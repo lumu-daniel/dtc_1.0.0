@@ -92,6 +92,7 @@ class MainBannerVideoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.mainbannervideofragment, container, false);
+
         video_view = view.findViewById(R.id.videoviewmainbanner);
         relativeLayout = view.findViewById(R.id.rl_videoviewmainbanner);
         rl_Video_Brightness_Box = view.findViewById(R.id.rl_video_brightness_box);

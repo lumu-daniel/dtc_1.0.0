@@ -67,8 +67,8 @@
 
                             <ImageView
                                 android:id="@+id/iv_arrowleft_topbanner"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/tv_width25"
+                                android:layout_height="@dimen/tv_width25"
                                 android:contentDescription="@null"
                                 android:src="@drawable/left_arrow" />
                         </RelativeLayout>
@@ -82,8 +82,8 @@
 
                             <ImageView
                                 android:id="@+id/iv_arrowright_topbanner"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/tv_width25"
+                                android:layout_height="@dimen/tv_width25"
                                 android:contentDescription="@null"
                                 android:src="@drawable/right_arrow" />
 
@@ -531,6 +531,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:orientation="vertical"
+                        android:layout_marginEnd="@dimen/tv_width4"
                         android:background="@drawable/whitebackground"
                         android:layout_weight="3.5">
 

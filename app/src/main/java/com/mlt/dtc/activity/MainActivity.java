@@ -38,6 +38,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mlt.dtc.BuildConfig;
 import com.mlt.dtc.R;
 import com.mlt.dtc.adapter.OffersRecyclerViewAdapter;
 import com.mlt.dtc.adapter.RecyclerviewBottomAdapter;
@@ -45,13 +46,13 @@ import com.mlt.dtc.fragment.AdminFragment;
 import com.mlt.dtc.fragment.ContactUsFragment;
 import com.mlt.dtc.fragment.DriverFragment;
 import com.mlt.dtc.fragment.MainBannerVideoFragment;
+import com.mlt.dtc.fragment.OffersDialogFragment;
 import com.mlt.dtc.fragment.TimeFragment;
 import com.mlt.dtc.fragment.TopBannerDialogFragment;
 import com.mlt.dtc.adapter.BannerAdapter;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.common.SystemUIService;
-
 import com.mlt.dtc.fragment.TripEndFragment;
 import com.mlt.dtc.fragment.TripStartFragment;
 import com.mlt.dtc.fragment.WeatherFragment;
@@ -62,30 +63,23 @@ import com.mlt.dtc.interfaces.MainVideoBannerListener;
 import com.mlt.dtc.interfaces.OverwriteTripFragmentListener;
 import com.mlt.dtc.interfaces.TaskListener;
 import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
-import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.model.request.AuthenticateRequest;
-import com.mlt.dtc.networking.NetWorkRequest;
 import com.mlt.dtc.pushnotification.MyFirebaseMessagingService;
+import com.mlt.dtc.utility.ConfigrationDTC;
 import com.mlt.dtc.utility.Constant;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.File;
 import java.util.ArrayList;
 import example.CustomKeyboard.Components.CustomKeyboardView;
-import okhttp3.OkHttpClient;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import static com.mlt.dtc.common.Common.ScreenBrightness;
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
 import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
 import static com.mlt.dtc.common.Common.getDateHome;
+import static com.mlt.dtc.common.Common.getFetchWeatherResponse;
 import static com.mlt.dtc.common.Common.getFilePath;
 import static com.mlt.dtc.common.Common.getdateTime;
 import static com.mlt.dtc.common.Common.getlistofclickLog;
@@ -93,36 +87,35 @@ import static com.mlt.dtc.common.Common.prepareMenuData;
 import static com.mlt.dtc.common.Common.topBannerList;
 import static com.mlt.dtc.utility.Constant.TAG;
 import static com.mlt.dtc.utility.Constant.WeatherTime;
-import static com.mlt.dtc.utility.Constant.multimediaPath;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, TaskListener, RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener, FareDialogListener, DriverImageListener, MainVideoBannerListener {
-    public InfiniteBannerView infiniteBannerView;
-    public Boolean isSelected = false;
+    private TextView tv_timemainbox, tv_datemainbox, tv_VideoBr, tv_degree;
+    private LinearLayout ll_driverinfo, llMenuBottom, llMenuUp, llsideOffers;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
-    public ArrayList<SideBannerObject> fileList;
+    public static CustomKeyboardView keyboard;
+    private ImageView iv_Driver_Image, weatherimg;
+    RelativeLayout rlvideobrbox,relativeLayoutfragment, rlviewpagerMain;
+    VideoView videoviewMainBanner;
+    private FrameLayout  tripdetail;
+    public InfiniteBannerView infiniteBannerView;
+
+    public Boolean isSelected = false;
+
     int topBannerCount, positionTopBanner, multipletripviewClick;
     public OffersRecyclerViewAdapter adapter_menus = null;
     public static MainActivity mainActivity;
     private GoogleApiClient googleApiClient;
     private int Position, sideOffersCount, DTCServicesCount, mltButtonCount, rtaServicesCount, rlvideoMainBanner, timeCount;
     Fragment mFragment;
-    public static CustomKeyboardView keyboard;
-
     public static int restrict_double_click = 0, count = 0;
     private int driverCount, fareCount, weathermainCount;
-    private TextView tv_timemainbox, tv_datemainbox, tv_VideoBr, tv_degree;
-    private LinearLayout ll_driverinfo, llMenuBottom, llMenuUp, llsideOffers;
-    private RelativeLayout relativeLayoutfragment, rlviewpagerMain;
-    private FrameLayout iv_weatherimage, tripdetail;
     private DialogFragment dialogFragment;
-    private ImageView iv_Driver_Image,weatherimg;
     private static OverwriteTripFragmentListener overwriteTripFragmentListener;
     TripStartFragment tripStartFragment = new TripStartFragment();
     TripEndFragment tripEndFragment = new TripEndFragment();
     MainBannerVideoFragment mainBannerVideoFragment;
-    RelativeLayout rlvideobrbox;
-    VideoView videoviewMainBanner;
+
     boolean fullscreen = true;
     WindowManager mWindowManager;
     private Double Weather;
@@ -132,8 +125,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Gson gson = new Gson();
     private String DriverImage;
     private HashMap<String, Integer> hmweatherimageDay;
-
-
 
 
     public static MainActivity getInstance() {
@@ -181,17 +172,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         setRecyclerViewBottomAdapter();
 
-        processOffers();
-
 
         getFetchWeather();
+
 
     }
 
     private void findViewById() {
 
         //this text is moving
-        weatherimg=findViewById(R.id.weathertypeimg);
+        weatherimg = findViewById(R.id.weathertypeimg);
         tv_degree = findViewById(R.id.tv_Degree);
         findViewById(R.id.tv_services).setSelected(true);
         llsideOffers = findViewById(R.id.llsideoffers);
@@ -231,26 +221,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void processOffers() {
         try {
-            fileList = new ArrayList<>();
-            adapter_menus = new OffersRecyclerViewAdapter(fileList, getApplicationContext(), this);
+            adapter_menus = new OffersRecyclerViewAdapter(Common.sideOfferList(), getApplicationContext(), this);
             recycler_view_side_offers.setAdapter(adapter_menus);
-
-            File dir = new File(multimediaPath + "/adv/");
-            File dirMI = new File(multimediaPath + "/SBMainImage/");
-            File[] files = dir.listFiles();
-            File[] MIFiles = dirMI.listFiles();
-            //fileList = new ArrayList<File>();
-            fileList.clear();
-            for (File file : files) {
-                if (file.getName().toLowerCase().startsWith("baner") || file.getName().toUpperCase().startsWith("BANER")) {
-                    // it's a match, call your function
-                    for (File miFile : MIFiles) {
-                        if (miFile.getName().equals(file.getName())) {
-                            fileList.add(new SideBannerObject(file, miFile));
-                        }
-                    }
-                }
-            }
 
             recycler_view_side_offers.post(new Runnable() {
                 @Override
@@ -297,6 +269,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_datemainbox.setText(getDateHome());
         Common.DateTimeRunning(tv_timemainbox);
 
+        String versionName = String.valueOf(BuildConfig.VERSION_NAME);
+
+
+        PreferenceConnector.writeString(getApplicationContext(), ConfigrationDTC.APK_VERSION, versionName);
+
+        PreferenceConnector.RemoveItem(getApplicationContext(), Constant.Language);
+
     }
 
     @Override
@@ -312,10 +291,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
 
             try {
-                com.mlt.dtc.fragments.OffersDialogFragment offersDialogFragment = new com.mlt.dtc.fragments.OffersDialogFragment();
+                OffersDialogFragment offersDialogFragment = new OffersDialogFragment();
                 Bundle bundlepos = new Bundle();
                 bundlepos.putInt(Constant.PositionSelectedOffers, position);
-                bundlepos.putSerializable(Constant.ArrayImagesSelectedOffers, fileList);
+                bundlepos.putSerializable(Constant.ArrayImagesSelectedOffers, Common.sideOfferList());
                 offersDialogFragment.setArguments(bundlepos);
                 offersDialogFragment.show(getSupportFragmentManager(), "");
 
@@ -453,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     getlistofclickLog(getApplicationContext(), Constant.ButtonClicked, getdateTime());
                     mFragment = WeatherFragment.newInstance();
                     addFragment();
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -624,6 +603,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mFragment = MainBannerVideoFragment.newInstance();
         addFragment();
 
+
+        try {
+            //Set the screen brightness what is currently set
+            ScreenBrightness(getApplicationContext(), MainActivity.this);
+
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+
         HideNavigationBar();
     }
 
@@ -639,17 +627,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onPause() {
         super.onPause();
-
-
 //        handler.removeCallbacks(runnable);
-
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-
     }
 
     @Override
@@ -657,8 +640,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         try {
             finish();
-
-
             rlvideobrbox = null;
             mFragment = null;
         } catch (Exception ex) {
@@ -756,21 +737,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     Calendar cal = Calendar.getInstance();
                     int hour = cal.get(Calendar.HOUR_OF_DAY);
-                    Boolean  isNight = hour < 6 || hour > 18;
+                    Boolean isNight = hour < 6 || hour > 18;
                     try {
                         hmweatherimageDay = new HashMap<>();
                         if (isNight == false) {
                             hmweatherimageDay.put("clear sky", R.drawable.sunny);
                             hmweatherimageDay.put("few clouds", R.drawable.sunny);
-                            weatherimg.setImageResource(R.drawable.wnightclear);
+                            weatherimg.setImageResource(R.drawable.sunny);
                         } else {
                             hmweatherimageDay.put("clear sky", R.drawable.wnightclear);
                             hmweatherimageDay.put("few clouds", R.drawable.wnightclear);
-                            weatherimg.setImageResource(R.drawable.sunny);
+                            weatherimg.setImageResource(R.drawable.wnightclear);
                         }
 
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
 
                     }
                 });
@@ -783,41 +763,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     };
-
-    private void getFetchWeatherResponse(String body, Context context, FetchWeatherObjectCallback fetchWeatherObjectCallback) {
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("http://dtcwbsvc.networkips.com/ServiceModule/DTCService.svc/")
-                .client(new OkHttpClient())
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        NetWorkRequest netWorkRequest = retrofit.create(NetWorkRequest.class);
-
-        Call<FetchCurrentWeatherResponse> categoryProductCall = netWorkRequest.GetFetchWeatherResponse(body);
-        categoryProductCall.enqueue(new Callback<FetchCurrentWeatherResponse>() {
-            @Override
-            public void onResponse(Call<FetchCurrentWeatherResponse> call, Response<FetchCurrentWeatherResponse> response) {
-                if (response.isSuccessful()) {
-                    fetchWeatherObjectCallback.successful(response.body());
-                } else {
-                    fetchWeatherObjectCallback.successful(response.body());
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<FetchCurrentWeatherResponse> call, Throwable t) {
-                String errorMessage = t.getLocalizedMessage();
-                if (errorMessage == null || errorMessage.equals("timeout")) {
-
-                } else if (errorMessage.contains("Unable to resolve host")) {
-
-                } else {
-
-                }
-            }
-        });
-    }
 
 
     private void grantPermission() {
