@@ -635,6 +635,9 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
                                     Log.d("FragmentSuccess","Fragment Success");
 
                                     addFragment(new PaymentSuccessfull(), "PayNowFragmnent");
+
+                                    PreferenceConnector.writeBoolean(getContext(),Constant.PaymentStatus,true);
+
                                 }
 
                                 if(response.getTransactionDetailsData().getResponseCode().equals("104") || response.getTransactionDetailsData().getResponseCode().equals("91"))
@@ -644,6 +647,7 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
                                 }
                                 else
                                 {
+                                    PreferenceConnector.writeBoolean(getContext(),Constant.PaymentStatus,false);
                                     //Error
                                     Log.d("ISO_Payment",response.getTransactionDetailsData().getResponseCode());
 

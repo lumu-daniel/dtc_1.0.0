@@ -315,7 +315,6 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
             ex.printStackTrace();
             appendLog(ex.getLocalizedMessage());
         }
-
     }
 
     public void addFragment(Fragment fragment, String name) {
