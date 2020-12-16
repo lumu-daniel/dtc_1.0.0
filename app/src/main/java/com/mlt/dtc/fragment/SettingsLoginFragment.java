@@ -14,7 +14,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.common.SystemUIService;
@@ -108,7 +108,7 @@ class SettingsLoginFragment extends Fragment {
         });
 
         btnBack.setOnClickListener(view1 ->{
-            MainActivity.count = 0;
+            MainFragment.count = 0;
             Objects.requireNonNull(getFragmentManager()).beginTransaction()
                     .replace(R.id.content, AdminFragment.newInstance())
                     .addToBackStack(null)

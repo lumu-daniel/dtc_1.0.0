@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,17 +17,17 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
 import com.google.gson.Gson;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.interfaces.FareAfterPaymentListener;
@@ -41,24 +42,20 @@ import com.mlt.dtc.model.request.PaymentRequest;
 import com.mlt.dtc.services.ServiceCallLogService;
 import com.mlt.dtc.services.UpdatePaymentService;
 import com.mlt.dtc.utility.ConfigrationDTC;
-import com.mlt.dtc.utility.ConfigurationClass;
 import com.mlt.dtc.utility.Constant;
 import com.mlt.dtc.utility.EncryptDecrpt;
-
+import com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-
-
 import java.io.IOException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
-
 import static android.content.ContentValues.TAG;
 import static com.mlt.dtc.MainApp.AndroidSerialNo;
 import static com.mlt.dtc.common.Common.RemoveEscapeSequence;
@@ -70,29 +67,27 @@ import static com.mlt.dtc.common.Common.shortUUID;
 public class FarePaymentDone extends Fragment {
 
     Fragment mFragment;
-    private String CardType;
-    private String Amount;
-    private String DashDTC;
-    private String getEncryptedCardNumber;
-    private String getEncryptedCardType;
-    private String getEncryptedCardCVV;
-    private String getEncryptedCardExpiry;
-    private RelativeLayout ll_Payment;
-    private String DeviceSerialNumber;
-    String ClassName, Fare;
-    String UUID, CVV;
+
+    private String getEncryptedCardNumber,getEncryptedCardType,getEncryptedCardCVV,
+            getEncryptedCardExpiry,CardType,Amount,DashDTC,DeviceSerialNumber,ClassName, Fare,UUID, CVV;
+
+    private TextView tv_paymentissuccessFull,tv_timer,tv_paymentthankyouDTC;
+    private RelativeLayout ll_Payment,ll_Webview, ll_Paymentpaid;
+    private ImageView imageView_success;
+
+
     private static PaymentResponse paymentResponse;
     private NipsiCounterInquiryResponse resObject;
-    RelativeLayout ll_Webview, ll_Paymentpaid;
+
     boolean webviewShown = true, webviewCrossCheck;
     private Handler handler;
-    private TextView tv_paymentissuccessFull;
-    private TextView tv_paymentthankyouDTC;
+
+
     Button btnrtapaycomHomeDTC;
     private static FareAfterPaymentListener fareAfterPaymentListener;
     PushDetails pushDetailsTripEnd;
     ProgressBar progressBar;
-
+    private CountDownTimer cTimer;
 
     ProgressDialog progressDialog;
 
@@ -114,14 +109,15 @@ public class FarePaymentDone extends Fragment {
 
         View view = inflater.inflate(R.layout.farepaymentdone, null);
 
+        imageView_success = view.findViewById(R.id.imgSwipeImage);
         progressBar=view.findViewById(R.id.progressbar);
         ll_Payment = view.findViewById(R.id.ll_paymentdtc);
         ll_Webview = view.findViewById(R.id.ll_webviewdtc);
         ll_Paymentpaid = view.findViewById(R.id.ll_paymentpaiddtc);
         tv_paymentissuccessFull = view.findViewById(R.id.tv_paymentissuccessfull);
-        tv_paymentthankyouDTC = view.findViewById(R.id.tv_paymentthankyoudtc);
+//        tv_paymentthankyouDTC = view.findViewById(R.id.tv_paymentthankyoudtc);
         btnrtapaycomHomeDTC = view.findViewById(R.id.btnrtapaycomhomedtc);
-        TextView tv_timer = view.findViewById(R.id.rta_mainServicestimer);
+//         tv_timer = view.findViewById(R.id.rta_mainServicestimer);
         TextView tv_Seconds = view.findViewById(R.id.textView4);
 
 
@@ -156,8 +152,8 @@ public class FarePaymentDone extends Fragment {
 
         String cardCVV = CVV;
 
-        String cardNumber = bundle.getString(ConfigrationDTC.CardNumber); //4000000000000002  <--- with otp //"4111111111111111" <--- without otp
-//        String cardNumber = "4242424242424242";//"5200000000000007";//"4000000000000002";//"5555555555554444"; //4000000000000002  <--- with otp //"4111111111111111" <--- without otp
+//        String cardNumber = bundle.getString(ConfigrationDTC.CardNumber); //4000000000000002  <--- with otp //"4111111111111111" <--- without otp
+        String cardNumber = "4242424242424242";//"5200000000000007";//"4000000000000002";//"5555555555554444"; //4000000000000002  <--- with otp //"4111111111111111" <--- without otp
         //This will be uncommented when the testing with 1 dhs amount is done
         //Amount = "96";
         Amount = Fare = PreferenceConnector.readString(getContext(), Constant.Fare, null);
@@ -184,6 +180,7 @@ public class FarePaymentDone extends Fragment {
         String customerEmail = firstName + ConfigrationDTC.DOTSEP + lastName + GMAILCOM;
         String postalCode = ConfigrationDTC.PostalCode;
         String customerContactNumber = ConfigrationDTC.ContactNumber;
+
 
         UpdatePaymentService updatePaymentService=new UpdatePaymentService(getContext());
 //        try {
@@ -212,6 +209,7 @@ public class FarePaymentDone extends Fragment {
         ServiceCallLogService serviceCallLogService = new ServiceCallLogService(getContext());
         serviceCallLogService.CallServiceCallLogService(Constant.nameDTCServices, Constant.name_RTA_ThreeD_Secure_Service_desc);
 
+//        cTimer = Common.SetCountDownTimerDtc(20000, 1000, tv_timer, MainFragment.getInstance(),getFragmentManager());
 
 
         try {
@@ -227,8 +225,10 @@ public class FarePaymentDone extends Fragment {
                             if (obj.ReasonCode.equals("100")) {
                                 ll_Paymentpaid.setVisibility(View.VISIBLE);
                                 ll_Payment.setVisibility(View.GONE);
-                                tv_paymentthankyouDTC.setText(R.string.PaymentThankyoudtc);
+//                                tv_paymentthankyouDTC.setText(R.string.PaymentThankyoudtc);
                                 tv_paymentissuccessFull.setText(R.string.PaymentisCompleteddtc);
+                                imageView_success.setImageDrawable(getResources().getDrawable(R.drawable.ic_mp_payment_success));
+
                                 getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                 PreferenceConnector.writeBoolean(getContext(),Constant.PaymentStatus,true);
 
@@ -253,7 +253,6 @@ public class FarePaymentDone extends Fragment {
                                 Timer timer = new Timer();
 
                             } else {
-
 
                                 dismissDialog();
 
@@ -280,7 +279,9 @@ public class FarePaymentDone extends Fragment {
                                 ll_Paymentpaid.setVisibility(View.VISIBLE);
                                 ll_Payment.setVisibility(View.GONE);
                                 tv_paymentissuccessFull.setText(R.string.PaymentisFaileddtc);
-                                tv_paymentthankyouDTC.setText(R.string.PaymentSorrydtc);
+//                                tv_paymentthankyouDTC.setText(R.string.PaymentSorrydtc);
+                                imageView_success.setImageDrawable(getResources().getDrawable(R.drawable.ic_mp_payment_failed));
+
                             }
 
                         }
@@ -292,7 +293,7 @@ public class FarePaymentDone extends Fragment {
                             ll_Paymentpaid.setVisibility(View.VISIBLE);
                             ll_Payment.setVisibility(View.GONE);
                             tv_paymentissuccessFull.setText(R.string.PaymentisFaileddtc);
-                            tv_paymentthankyouDTC.setText(R.string.PaymentSorrydtc);
+//                            tv_paymentthankyouDTC.setText(R.string.PaymentSorrydtc);
 
                         }
                     });
@@ -453,7 +454,7 @@ public class FarePaymentDone extends Fragment {
 
         // Set the Source Application here
         //request.setSourceApplication(ConfigurationClass.PAYMENT_SOURCE_APPLICATION);//UAT
-        request.setSourceApplication(ConfigurationClass.PAYMENT_SOURCE_APPLICATION);//Prod
+        request.setSourceApplication(ConfigurationClass.SOURCE_APPLICATION);//Prod
 
         // Set the Device Finger Print
         request.setDeviceFingerPrint(ConfigurationClass.PAYMENT_DEVICE_FINGER_PRINT);
@@ -565,20 +566,6 @@ public class FarePaymentDone extends Fragment {
 
         webView.loadData(SOAPRequestXML, "text/html", "UTF-8");
 
-
-//        Handler handler=new Handler();
-//
-//        handler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                if(progressBar.isShown()){
-//
-//
-//                    Utilities.TimeoutAlertDialogDelay(getContext());
-//                }
-//
-//            }
-//        },180000);
 
     }
 

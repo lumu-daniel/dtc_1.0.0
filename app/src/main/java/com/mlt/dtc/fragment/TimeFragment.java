@@ -16,7 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.utility.Constant;
 
@@ -93,7 +93,7 @@ class TimeFragment extends DialogFragment {
 
         }
         iv_close.setOnClickListener(v -> {
-            MainActivity.mainActivity.onFinished("finish");
+            MainFragment.mainActivity.onFinished("finish");
             try {
                 dialog.dismiss();
             } catch (Exception e) {

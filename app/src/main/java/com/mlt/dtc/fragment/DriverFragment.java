@@ -17,9 +17,8 @@ import androidx.fragment.app.DialogFragment;
 
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.model.PushDetails;
@@ -99,7 +98,7 @@ public class DriverFragment extends DialogFragment {
         dialog.setCanceledOnTouchOutside(false);
 
         iv_close.setOnClickListener(v -> {
-            MainActivity.mainActivity.onFinished("finish");
+            MainFragment.mainActivity.onFinished("finish");
             dialog.dismiss();
         });
 

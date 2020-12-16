@@ -13,10 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.utility.ConfigrationDTC;
-import com.mlt.dtc.utility.Constant;
 
 import java.util.Objects;
 
@@ -81,7 +80,7 @@ class AdminFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                MainActivity.count = 0;
+                MainFragment.count = 0;
 
                 mFragment = MainBannerVideoFragment.newInstance();
                 addFragment();

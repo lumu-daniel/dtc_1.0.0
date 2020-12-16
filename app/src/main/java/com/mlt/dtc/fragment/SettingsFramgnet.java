@@ -20,7 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.interfaces.ServiceCallback;
 import com.mlt.dtc.model.Response.UserLoginDetailsResponse;
@@ -42,7 +42,7 @@ class SettingsFramgnet  extends DialogFragment {
     Button btnSubmit;
     Context context;
     Fragment mFragment;
-    MainActivity mainActivity;
+    MainFragment mainActivity;
     String getTaxiPlateNo, getTaxiCode, getDeviceSerialNo;
     BufferedInputStream is;
     Gson gson = new Gson();
@@ -66,7 +66,7 @@ class SettingsFramgnet  extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder customDialogMain = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
         context = getContext();
-        mainActivity = new MainActivity();
+        mainActivity = new MainFragment();
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.custom_dialog_settingpop, null);
         ImageView iv_close = view.findViewById(R.id.iv_closeemailpop);

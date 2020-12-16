@@ -35,8 +35,8 @@ class TopBannerAdapter  extends PagerAdapter {
         imageView =  view.findViewById(R.id.image);
 
 
-        //Todo convert image to base64
 
+        //Todo convert image to base64
         Glide.with(mContext)
                 .load(flag?viewList.get(position).getTBThumbnail():viewList.get(position).getTBImage())
                 .dontAnimate()

@@ -1,0 +1,10 @@
+package com.mlt.e200cp.models.enums;
+
+public enum EmvTransactionType {
+    VOID_PURCHASE_TRANSACTION,
+    REFUND_TRANSACTION,
+    VOID_REFUND_TRANSACTION,
+    REPRINT_RECEIPT,
+    LST_TXN_REPRINT_RECEIPT,
+    PURCHASE_TRANSACTION;
+}

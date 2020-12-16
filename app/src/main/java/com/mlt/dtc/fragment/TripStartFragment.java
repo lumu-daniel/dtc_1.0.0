@@ -62,6 +62,7 @@ public class TripStartFragment extends DialogFragment implements Dialogdismissli
     LinkedHashMap<String, String> hashMap = new LinkedHashMap<>();
     String TripStartLatitude, TripStartLongitude, StartDate, TripTimeDuration,
             TripID, getTripStartAddress, getTripEndAddress, Fare, ErrorMessage;
+
     Button btn_Pay;
     Bundle bundle;
     ClickLogServiceResponseObject clickLogServiceResponseObject;

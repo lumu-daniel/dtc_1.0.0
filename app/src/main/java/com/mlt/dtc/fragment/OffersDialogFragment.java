@@ -16,12 +16,13 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.adapter.OffersAdapter;
-import com.mlt.dtc.common.Common;
 import com.mlt.dtc.model.SideBannerObject;
 import com.mlt.dtc.utility.Constant;
 import java.util.ArrayList;
+
+import static com.mlt.dtc.common.Common.sideOfferList;
 
 
 public class OffersDialogFragment extends DialogFragment {
@@ -75,7 +76,10 @@ public class OffersDialogFragment extends DialogFragment {
     private void initViews(ViewPager adsAiewPagerOffers) {
         try {
 
-            OffersAdapter adapter = new OffersAdapter(getListofImages,getContext());
+
+//            OffersAdapter adapter = new OffersAdapter(getListofImages,getContext());
+
+            OffersAdapter adapter = new OffersAdapter(sideOfferList(),getContext());
 
 
             adsAiewPagerOffers.setAdapter(adapter);
@@ -113,7 +117,8 @@ public class OffersDialogFragment extends DialogFragment {
         try {
             Bundle bundle = getArguments();
 
-            getListofImages = (ArrayList<SideBannerObject>) getArguments().getSerializable(Constant.ArrayImagesSelectedOffers);
+//            getListofImages = (ArrayList<SideBannerObject>) getArguments().getSerializable(Constant.ArrayImagesSelectedOffers);
+
             position = bundle.getInt(Constant.PositionSelectedOffers);
 
 
@@ -140,9 +145,9 @@ public class OffersDialogFragment extends DialogFragment {
 
             iv_close.setOnClickListener(v -> {
 
-                MainActivity.mainActivity.onFinished("Finish");
+                MainFragment.mainActivity.onFinished("Finish");
 
-                MainActivity.restrict_double_click = 0;
+                MainFragment.restrict_double_click = 0;
                 dialog.dismiss();
             });
 

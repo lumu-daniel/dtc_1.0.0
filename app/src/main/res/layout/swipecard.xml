@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr"
+    android:background="@drawable/shape_mp_main_screen"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_mp_main_screen">
+
+
+        <LinearLayout
+            android:id="@+id/layoutTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/tv_width10"
+            android:layout_marginTop="@dimen/tv_width10"
+            android:background="@drawable/shape_mp_timer"
+            android:padding="@dimen/tv_width5"
+            >
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/secondsdtc"
+                android:textColor="@color/mdtp_white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/tv_width4"
+                />
+
+            <TextView
+                android:id="@+id/rta_mainServicestimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:textColor="@color/mdtp_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_below="@+id/layoutTimer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="2.0"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center">
+
+
+
+                <TextView
+                    android:id="@+id/tvCardPayment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mp_titleCardPayment"
+                    android:gravity="center_horizontal"
+                    android:textSize="40sp"
+                    android:textColor="@color/mdtp_white"
+                    android:fontFamily="@font/bebasneue_regular"
+                    />
+
+                <ImageView
+                    android:id="@+id/imgSwipeImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:src="@drawable/ic_mp_swipecard"
+                    android:scaleType="centerInside"
+                    android:layout_marginTop="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/tvLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mp_cardswipe"
+                    android:gravity="center_horizontal"
+                    android:textSize="22sp"
+                    android:textColor="@color/mdtp_white"
+                    android:fontFamily="@font/bebasneue_regular"
+                    />
+
+                <TextView
+                    android:id="@+id/tvLabel2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mp_cardswipe2"
+                    android:gravity="center_horizontal"
+                    android:textSize="22sp"
+                    android:textColor="@color/mdtp_white"
+                    android:fontFamily="@font/bebasneue_regular"
+                    android:layout_marginBottom="50dp"
+                    />
+
+                <Button
+                    android:id="@+id/btnbackswipecardpaynow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:background="@drawable/gradientlighttodarkgrey"
+                    android:clickable="true"
+                    android:layout_marginEnd="@dimen/tv_width10"
+                    android:layout_marginBottom="@dimen/tv_width10"
+                    android:drawableLeft="@drawable/backgndwhiteroundedcorner"
+                    android:onClick="onClick"
+                    android:padding="5dp"
+                    android:text="@string/BackEnglish"
+                    android:textColor="@color/colorwhite"
+                    android:focusable="true" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

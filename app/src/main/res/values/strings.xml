@@ -581,7 +581,6 @@
     <string name="thousandaed">1000.00 AED</string>
 
 
-
     <!--Nol Refund-->
     <string name="nolservices">                             NOL Services                                                                                                    </string>
     <string name="enternolid">                              Enter NOL TagID                                                                                                 </string>
@@ -623,28 +622,28 @@
     <!-- joseph nol transfer screens-->
     <string name="TransferBalance">Transfer Balance</string>
     <string name="tapnolcardrequiretopup">Please tap NOL card that requires topup</string>
-<string name="NoltransferBal">Transfer Balance</string>
-<!--<string name="pleasesselectamount">PleaseSelectAmount</string>-->
-<!--<string name="fiveaed">5.00AED</string>-->
-<!--<string name="tenaed">7.50AED</string>-->
-<!--<string name="twentyaed">9.01AED</string>-->
-<!--<string name="thirtyaed">10.00AED</string>-->
-<!--<string name="fourtyaed">20.00AED</string>-->
-<!--<string name="fiftyaed">30.00AED</string>-->
-<!--<string name="hundredaed">40.00AED</string>-->
-<!--<string name="hundrednfiftyaed">50.00AED</string>-->
-<!--<string name="twohundredaed">100.00AED</string>-->
-<!--<string name="threehundredaed">150.00AED</string>-->
-<!--<string name="fourhundredaed">200.00AED</string>-->
-<!--<string name="fivehundredaed">300.00AED</string>-->
-<!--<string name="thousandaed">400.00AED</string>-->
-<!--<string name="reset">RESET</string>-->
-<!--<string name="selectedamount">SelectedAmount</string>-->
-<!--<string name="zeroaed">0.00AED</string>-->
-<string name="fiveeaed">500.00AED</string>
-<string name="onethousandaed">1000.00AED</string>
-<string name="tapnolcardtotransfrom">Please tap the NOL Card you want to transfer the amount from </string>
-<string name="tapnolcardrequiretoptup">Please tap the NOL Card that require top up </string>
+    <string name="NoltransferBal">Transfer Balance</string>
+    <!--<string name="pleasesselectamount">PleaseSelectAmount</string>-->
+    <!--<string name="fiveaed">5.00AED</string>-->
+    <!--<string name="tenaed">7.50AED</string>-->
+    <!--<string name="twentyaed">9.01AED</string>-->
+    <!--<string name="thirtyaed">10.00AED</string>-->
+    <!--<string name="fourtyaed">20.00AED</string>-->
+    <!--<string name="fiftyaed">30.00AED</string>-->
+    <!--<string name="hundredaed">40.00AED</string>-->
+    <!--<string name="hundrednfiftyaed">50.00AED</string>-->
+    <!--<string name="twohundredaed">100.00AED</string>-->
+    <!--<string name="threehundredaed">150.00AED</string>-->
+    <!--<string name="fourhundredaed">200.00AED</string>-->
+    <!--<string name="fivehundredaed">300.00AED</string>-->
+    <!--<string name="thousandaed">400.00AED</string>-->
+    <!--<string name="reset">RESET</string>-->
+    <!--<string name="selectedamount">SelectedAmount</string>-->
+    <!--<string name="zeroaed">0.00AED</string>-->
+    <string name="fiveeaed">500.00AED</string>
+    <string name="onethousandaed">1000.00AED</string>
+    <string name="tapnolcardtotransfrom">Please tap the NOL Card you want to transfer the amount from </string>
+    <string name="tapnolcardrequiretoptup">Please tap the NOL Card that require top up </string>
 
     <!-- azhar nol topup screens-->
     <string name="topupamount">Top Up Amount</string>
@@ -669,7 +668,7 @@
     <string name="balancetransfersuccess">Balance Transfer is completed successfully</string>
 
     <string name="transfer_from_nol_card">Transferred from NOL Card</string>
-    
+
     <string name="your_requestfortransferingbalnce">Your request for transferring balance to</string>
 
     <string name="hasbeensubmitted">has been submitted successfully </string>
@@ -715,7 +714,7 @@
     <string name="sorryfor_inconvenionse">Sorry for the inconvenience caused. Card Replacement not allowed for this Tag ID</string>
     <string name="cardblockstart">Card is blocked and cannot initialize another service</string>
 
-        <string name="card_transfer_declined">  The balance transfer request to your nol card has been declined</string>
+    <string name="card_transfer_declined">  The balance transfer request to your nol card has been declined</string>
     <string name="special_card_not_Replaces">This is a special card which is not allowed to be replaced or refunded</string>
     <string name="transfer_tagid_notenable">Please contact RTA, as your nol Tag ID is not enabled.</string>
     <string name="card_expired">The entered nol Tag ID is Expired, Please try again.</string>
@@ -732,7 +731,6 @@
 
     <string name="mlttxt">MLT</string>
     <string name="yeartxt">2018</string>
-
 
 
     <string name="copyrighttxt">Copyright</string>

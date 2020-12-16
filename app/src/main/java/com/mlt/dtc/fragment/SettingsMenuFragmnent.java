@@ -3,24 +3,17 @@ package com.mlt.dtc.fragment;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.media.AudioManager;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.SeekBar;
+
 import androidx.fragment.app.Fragment;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.SystemUIService;
-import com.mlt.dtc.utility.Constant;
-
-import static android.content.Context.AUDIO_SERVICE;
 
 public
 class SettingsMenuFragmnent extends Fragment {
@@ -109,7 +102,7 @@ class SettingsMenuFragmnent extends Fragment {
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.count = 0;
+                MainFragment.count = 0;
                 getFragmentManager().beginTransaction()
                         .replace(R.id.content, SettingsLoginFragment.newInstance())
                         .addToBackStack(null)

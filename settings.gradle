@@ -1,2 +1,3 @@
+include ':e200cp'
 include ':app'
 rootProject.name = "DTC"
