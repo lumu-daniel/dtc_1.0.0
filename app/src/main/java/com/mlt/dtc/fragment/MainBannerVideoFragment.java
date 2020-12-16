@@ -199,12 +199,16 @@ class MainBannerVideoFragment extends Fragment {
                 mMethodCallBack.MainVideoBannerallBackMethod(iv_fullScreen, rl_Video_Brightness_Box, tv_Video_Brightness, R.id.rl_videoviewmainbanner, video_view);
             }
         });
+
 //        iv_Plus.setOnClickListener(v -> volumeBar.setProgress(volumeBar.getProgress() + 4));
+
 //        iv_Minus.setOnClickListener(v -> volumeBar.setProgress(volumeBar.getProgress() - 4));
+
 //        iv_brightness_Plus.setOnClickListener(v -> {
 //            sb_Brightness.setProgress(sb_Brightness.getProgress() + 20);
 //            updateBrightness();
 //        });
+
 //        iv_brightness_Minus.setOnClickListener(v -> {
 //            sb_Brightness.setProgress(sb_Brightness.getProgress() - 20);
 //            updateBrightness();

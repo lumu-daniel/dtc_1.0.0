@@ -19,11 +19,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
+import com.mlt.dtc.ISO_Payment.satefragments.PaymentSuccessfull;
+import com.mlt.dtc.ISO_Payment.satefragments.RecieptCheck;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.interfaces.Dialogdismisslistener;
@@ -39,7 +43,12 @@ import com.mlt.dtc.model.PushDetails;
 import com.mlt.dtc.services.ConfigurationService;
 import com.mlt.dtc.services.ServiceCallLogService;
 import com.mlt.dtc.utility.Constant;
+import com.mlt.e200cp.interfaces.TransactionDoneCallback;
+import com.mlt.e200cp.models.PosDetails;
+import com.mlt.e200cp.models.enums.EmvTransactionType;
+import com.mlt.e200cp.models.response.ISOPaymentResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,11 +66,12 @@ import java.util.TimerTask;
 
 import static android.content.ContentValues.TAG;
 import static com.mlt.dtc.MainApp.internetCheck;
-import static com.mlt.dtc.activity.MainActivity.mainActivity;
+import static com.mlt.dtc.activity.MainFragment.mainActivity;
+import static com.mlt.e200cp.utilities.helper.util.Utility.txn_type;
 
 
 public class TripEndFragment extends DialogFragment implements Dialogdismisslistener, OverwriteTripFragmentListener, FareAfterPaymentListener {
-
+    private AppCompatActivity compatActivity;
     private AlertDialog dialog;
 
     AlertDialog.Builder customDialogMain;
@@ -109,6 +119,8 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
 
         context = getContext();
 
+
+
         customDialogMain = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -116,6 +128,9 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
         View view = inflater.inflate(R.layout.farefragment, null);
         //set the view to the dialog
         customDialogMain.setView(view);
+
+        compatActivity = (AppCompatActivity) getContext();
+
 
         handlerThread = new HandlerThread("endlocation");
         handlerThread.start();
@@ -255,14 +270,16 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
     }
 
     private void addFragment(DialogFragment fragment, String name) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-//                compatActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainview,fragment).addToBackStack(name).commitAllowingStateLoss();
-                fragment.setCancelable(false);
-                fragment.show(getActivity().getSupportFragmentManager(), name);
-            }
-        });
+            compatActivity.runOnUiThread(new Runnable(){
+                @Override
+                public void run(){
+                    //                compatActivity.getSupportFragmentManager().beginTransaction().replace(R.id.mainview,fragment).addToBackStack(name).commitAllowingStateLoss();
+                    fragment.setCancelable(false);
+                    fragment.show(compatActivity.getSupportFragmentManager(), name);
+                }
+            });
+
+
     }
 
     @Override
@@ -284,7 +301,7 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
 
         //Callbak Method to trigger in the main activity
         //dismiss trip start dialog
-        MainActivity.dialogdismissCallBackMethod(this);
+        MainFragment.dialogdismissCallBackMethod(this);
 
 
         try {
@@ -375,12 +392,8 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
                         endLocation.setLongitude(Double.parseDouble(hashMap.get(Constant.TSEndlongitudeKey)));
 
                         try {
-
                             Common.writeObject(getContext(), Constant.PushDetailsTripEnd, pushDetailsTripEnd);
-
                         } catch (IOException e) {
-
-
 
                         }
                         pushDetails = pushDetailsTripEnd;
@@ -549,9 +562,13 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
                         configurationService.CallConfigurationService(new ServiceCallback() {
                             @Override
                             public void onSuccess(JSONObject obj) throws JSONException {
+
                                 Log.d(TAG, "onSuccess: " + obj.toString());
+
                                 String data = obj.optJSONObject("CustomerUniqueNo").getString("a:CKeyValuePair");
+
                                 Object json = new JSONTokener(data).nextValue();
+
                                 if (json instanceof JSONObject) {
                                     configurationServiceResponseObject = gson.fromJson(obj.toString(), ConfigurationServiceResponseObject.class);
                                     PaynowCheck = configurationServiceResponseObject.getCustomerUniqueNo().getACKeyValuePair().getAValue();
@@ -559,7 +576,6 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
                                     configurationServiceResponseArray = gson.fromJson(obj.toString(), ConfigurationServiceResponseArray.class);
                                     PaynowCheck = configurationServiceResponseArray.getCustomerUniqueNo().getaCKeyValuePair().get(0).getAValue();
                                 }
-
 
                                 Log.d(TAG, "configurationService" + obj.toString());
                             }
@@ -597,19 +613,50 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
                     } else {
 
 //                        if (getActivity().getLocalClassName().equals("rtaservices.RTAMainActivity")){
-//
-//
 //                            Intent intent=new Intent(getActivity(), DTCFareActivity.class);
 //                            context.startActivity(intent);
-//
-//
-//
 //                        }else {
-
-                        mFragment = new PayNowFragmnent();
-                        addFragment(mFragment, "PayNowFragmnent");
-
+//                        mFragment = new PayNowFragmnent();
+//                        addFragment(mFragment, "PayNowFragmnent");
 //                        }
+
+                        PosDetails posDetails = setPosDetails("55000","1255");
+                        txn_type= EmvTransactionType.PURCHASE_TRANSACTION;
+
+                        addFragment(new RecieptCheck(new TransactionDoneCallback() {
+                            @Override
+                            public void onSuccess(ISOPaymentResponse response) {
+
+                                Log.d("NewNewResponse",response.getTransactionDetailsData().getResponseCode());
+
+                                if(response.getTransactionDetailsData().getResponseCode().equals("00"))
+                                {
+                                    //Success
+                                    Log.d("FragmentSuccess","Fragment Success");
+
+                                    addFragment(new PaymentSuccessfull(), "PayNowFragmnent");
+                                }
+
+                                if(response.getTransactionDetailsData().getResponseCode().equals("104") || response.getTransactionDetailsData().getResponseCode().equals("91"))
+                                {
+                                    //Move To PG
+                                    swipeCard();
+                                }
+                                else
+                                {
+                                    //Error
+                                    Log.d("ISO_Payment",response.getTransactionDetailsData().getResponseCode());
+
+                                    Toast.makeText(compatActivity, "Payment Failed", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onfailure(String error) {
+                                Log.d("NewNewResponse",error);
+                                swipeCard();
+                            }
+                        },posDetails),"RecieptCheck");
 
 
                         final Timer t = new Timer();
@@ -647,19 +694,34 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
         });
     }
 
+
+
+
+
     private final Runnable runnable = () -> {
 
         reverseGeoCoding.getAddress(Double.parseDouble(TripEndLat), Double.parseDouble(TripEndLong));
         getTripEndAddress = reverseGeoCoding.getAddress1();
-        getActivity().runOnUiThread(new Runnable() {
+
+        compatActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tv_dest_end_Address.setText(getTripEndAddress);
 
+                tv_dest_end_Address.setText(getTripEndAddress);
             }
         });
 
     };
+
+
+    private void swipeCard(){
+       Fragment mFragment =SwipeCard.newInstance();
+
+        compatActivity.getSupportFragmentManager().beginTransaction()
+                .replace(R.id.mainViewLinear, mFragment)
+                .addToBackStack(null)
+                .commit();
+    }
 
 
     @Override
@@ -687,9 +749,45 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
     }
 
     @Override
-    public void onDestroyView() {
+    public void onDestroyView()
+    {
         super.onDestroyView();
     }
 
+
+    private PosDetails setPosDetails(String rcptNo, String txnId){
+        PosDetails details = new PosDetails();
+
+        if (!Fare.contains(".")){
+            Fare +=".00";
+        }else{
+            if(Fare.substring(Fare.indexOf(".")).length()<2){
+                Fare+="0";
+            }
+        }
+
+        details.setCustomerAddress("Dubai PLot");
+        details.setTxnAmt(StringUtils.leftPad(String.valueOf(Fare.replace(".", "")), 12, '0'));
+        details.setCustomerCity("Dubai");
+        details.setCustomerContactNumber("0527000000");
+        details.setCustomerCountry("UAE");
+//        details.setCustomerEmail("azhar.v@networkips.com");
+        details.setHostDeviceName("ICounter");
+        details.setLanguage("English");
+        details.setRequestingApplicationID("2");
+        details.setReversalReason("");
+        details.setServiceID("110");
+        details.setServiceName("Test Name");
+        details.setServiceNameAR("Test Name");
+        details.setSignatureFields("ServiceCode,TerminalID,TimeStamp");
+        details.setTransactionCurreny("784");
+        details.setSourceApplication("1");
+        details.setUserName("Test User");
+        details.setTransactionReferenceNumber(txnId);
+        details.setTransactionType("Purchase");
+        details.setpOSDeviceName("MLT_EC200CP");
+
+        return details;
+    }
 
 }

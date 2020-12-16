@@ -24,13 +24,12 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.Configuration;
 import com.mlt.dtc.utility.Constant;
 import java.util.LinkedHashMap;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 import example.CustomKeyboard.Components.CustomKeyboardView;
 import static com.mlt.dtc.MainApp.internetCheck;
 import static com.mlt.dtc.common.Common.isEmailValid;
@@ -101,10 +100,10 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
         sp_issues_Feedback = view.findViewById(R.id.sp_issues_feedback);
 
         confirmationMessage = view.findViewById(R.id.confirmation_message);
-        MainActivity.keyboard.registerEditText(CustomKeyboardView.KeyboardType.QWERTY, edtMessage);
-        MainActivity.keyboard.registerEditText(CustomKeyboardView.KeyboardType.NUMBER_DECIMAL, edtMobileno);
-        MainActivity.keyboard.registerEditText(CustomKeyboardView.KeyboardType.QWERTY, edtEmail);
-        MainActivity.keyboard.registerEditText(CustomKeyboardView.KeyboardType.QWERTY, edtName);
+        MainFragment.keyboard.registerEditText(CustomKeyboardView.KeyboardType.QWERTY, edtMessage);
+        MainFragment.keyboard.registerEditText(CustomKeyboardView.KeyboardType.NUMBER_DECIMAL, edtMobileno);
+        MainFragment.keyboard.registerEditText(CustomKeyboardView.KeyboardType.QWERTY, edtEmail);
+        MainFragment.keyboard.registerEditText(CustomKeyboardView.KeyboardType.QWERTY, edtName);
     }
 
     public void ZoomOut() {

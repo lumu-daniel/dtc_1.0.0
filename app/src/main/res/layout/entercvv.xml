@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_mp_main_screen">
+
+        <LinearLayout
+            android:id="@+id/layoutTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/tv_width10"
+            android:layout_marginTop="@dimen/tv_width10"
+            android:background="@drawable/shape_mp_timer"
+            android:padding="@dimen/tv_width5">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/secondsdtc"
+                android:textColor="@color/mdtp_white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/tv_width4"
+                />
+
+            <TextView
+                android:id="@+id/rta_mainServicestimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="20"
+                android:textColor="@color/mdtp_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="2.0"
+            android:layout_below="@+id/layoutTimer"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+
+            <TextView
+                android:id="@+id/tvCardPayment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mp_titleCardPayment"
+                android:gravity="center_horizontal"
+                android:textSize="40sp"
+                android:textColor="@color/mdtp_white"
+                android:fontFamily="@font/bebasneue_regular"
+                android:visibility="gone"
+                />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2">
+
+                <ImageView
+                    android:id="@+id/imgSwipeImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_mp_cvv_img" />
+
+                <EditText
+                    android:id="@+id/edt_cvv"
+                    android:layout_width="@dimen/tv_width60"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/shape_mp_cvv_bg"
+                    android:gravity="center"
+                    android:text=""
+                    android:maxLength="3"
+                    android:inputType="numberPassword"
+                    android:textStyle="bold"
+                    android:textColor="@color/mp_cartCountColor"
+                    android:layout_marginBottom="@dimen/tv_width5"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/mp_entercvv"
+                android:gravity="center_horizontal"
+                android:textSize="22sp"
+                android:textColor="@color/mdtp_white"
+                android:fontFamily="@font/bebasneue_regular"
+                android:layout_marginBottom="50dp"
+                />
+            <Button
+                android:id="@+id/btnbackentercvv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginEnd="@dimen/tv_width10"
+                android:layout_marginBottom="@dimen/tv_width10"
+                android:background="@drawable/gradientlighttodarkgrey"
+                android:clickable="true"
+                android:drawableLeft="@drawable/backgndwhiteroundedcorner"
+                android:onClick="onClick"
+                android:padding="5dp"
+                android:text="@string/BackEnglish"
+                android:textColor="@color/colorwhite"
+                android:focusable="true" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+<!--    -->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/ll_entercvv"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical">-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginLeft="20dp"-->
+<!--            android:layout_marginTop="20dp">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvrtaservice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="left"-->
+<!--                android:text="Card Payment"-->
+<!--                android:textColor="@color/colorgreyrtabuttons"-->
+<!--                android:textSize="30sp"-->
+<!--                android:textStyle="bold" />-->
+
+<!--            <RelativeLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:layout_marginRight="@dimen/tv_width20">-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textView4"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Sec "-->
+<!--                        android:textColor="@color/colorblack"-->
+<!--                        android:textSize="30sp"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/rta_mainServicestimer"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="20"-->
+<!--                        android:textColor="@color/colorblack"-->
+<!--                        android:textSize="30sp"-->
+<!--                        android:textStyle="bold" />-->
+<!--                </LinearLayout>-->
+<!--            </RelativeLayout>-->
+<!--        </LinearLayout>-->
+
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="280dp"-->
+<!--            android:background="@color/colorbluerta"-->
+<!--            android:gravity="center|start"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:baselineAligned="false">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="vertical"-->
+<!--                android:layout_margin="@dimen/tv_width10">-->
+
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:layout_gravity="center">-->
+
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:padding="30dp"-->
+<!--                        android:text="Please Enter your CVV"-->
+<!--                        android:textColor="@color/colorwhite"-->
+<!--                        android:textSize="20sp"-->
+<!--                        android:textStyle="bold" />-->
+
+<!--                    <EditText-->
+<!--                        android:id="@+id/edt_cvv"-->
+<!--                        android:layout_width="300dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:background="@color/colorwhite"-->
+<!--                        android:imeActionLabel="Go"-->
+<!--                        android:imeOptions="actionGo"-->
+<!--                        android:focusable="true"-->
+<!--                        android:inputType="number"-->
+<!--                        android:maxLength="3"-->
+<!--                        android:textColor="@color/colordarkbluerta" />-->
+
+<!--                    <Button-->
+<!--                        android:id="@+id/btn_submitentercvv"-->
+<!--                        android:layout_width="200dp"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_gravity="center"-->
+<!--                        android:layout_marginTop="10dp"-->
+<!--                        android:background="@drawable/button_background"-->
+<!--                        android:clickable="true"-->
+<!--                        android:text="Submit"-->
+<!--                        android:textColor="@color/colorwhite"-->
+<!--                        android:visibility="visible"-->
+<!--                        android:focusable="true" />-->
+
+<!--                </LinearLayout>-->
+
+<!--            </LinearLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_height="match_parent">-->
+
+<!--&lt;!&ndash;                <example.dtc.ui.view.GifView&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_height="match_parent"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_gravity="center_vertical"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_marginTop="@dimen/tv_width10"&ndash;&gt;-->
+<!--&lt;!&ndash;                    android:layout_marginRight="@dimen/tv_width10"&ndash;&gt;-->
+<!--&lt;!&ndash;                    custom:gif="@drawable/entercvvgif" />&ndash;&gt;-->
+
+<!--            </LinearLayout>-->
+
+<!--        </LinearLayout>-->
+
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="right"-->
+<!--            android:padding="@dimen/tv_width20"-->
+<!--            android:layout_weight="1">-->
+
+<!--            <Button-->
+<!--                android:id="@+id/btnbackentercvv"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="right"-->
+<!--                android:background="@drawable/gradientlighttodarkgrey"-->
+<!--                android:clickable="true"-->
+<!--                android:drawableLeft="@drawable/backgndwhiteroundedcorner"-->
+<!--                android:onClick="onClick"-->
+<!--                android:padding="5dp"-->
+<!--                android:text="@string/BackEnglish"-->
+<!--                android:textColor="@color/colorwhite"-->
+<!--                android:focusable="true" />-->
+
+<!--            <androidx.legacy.widget.Space-->
+<!--                android:layout_width="10dp"-->
+<!--                android:layout_height="wrap_content" />-->
+
+
+
+<!--        </LinearLayout>-->
+
+<!--    </LinearLayout>-->
+
+</LinearLayout>

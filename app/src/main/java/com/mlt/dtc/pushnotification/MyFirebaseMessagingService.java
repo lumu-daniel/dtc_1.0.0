@@ -36,6 +36,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
 import com.mlt.dtc.interfaces.DriverImageListener;
@@ -59,7 +60,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
     Map<String, String> arrayMap;
     String TripID, TripStatus, GivenName, FamilyName, ShiftID, ShiftStatus, DriverID, EventCode;
-    MainActivity mainActivity = new MainActivity();
+    MainFragment mainActivity = new MainFragment();
     static private FareDialogListener fareDialogListenerCallback;
     static private DriverImageListener driverImageListener;
     static private TripStartedForPaymentListener tripStartedForPaymentListener;
@@ -153,6 +154,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 //To save it in the text file for the log
                 TripID = hashMap.get(Constant.TSTripIdKey);
+
+                PreferenceConnector.writeString(getApplicationContext(), Constant.TSTripIdKey, TripID);
 
                 Log.d(TAG, "TripID: "+TripID);
 

@@ -1,7 +1,7 @@
 package com.mlt.dtc.utility;
 
 
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.fragment.FarePaymentDone;
 
 /**
@@ -12,7 +12,7 @@ public class ConfigrationDTC {
 
 
     private FarePaymentDone farePaymentDone = new FarePaymentDone();
-    private MainActivity mainActivity=new MainActivity();
+    private MainFragment mainActivity=new MainFragment();
     //To make id dynamic
     //private MerchantConfiguration merchantConfiguration = new MerchantConfiguration();
 

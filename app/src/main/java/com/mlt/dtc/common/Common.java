@@ -15,6 +15,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -26,6 +29,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import com.bumptech.glide.Glide;
 import com.github.infinitebanner.InfiniteBannerView;
 import com.google.gson.Gson;
@@ -654,8 +660,39 @@ class Common {
         return result;
     }
 
+//    public static CountDownTimer SetCountDownTimerDtc(long millisInFuture, long countDownInterval, TextView textView,
+//                                                      Class aClass, Context context) {
+//        // adjust the milli seconds here
+//        //Set timer in seconds seconds
+//
+//        return new CountDownTimer(millisInFuture, countDownInterval) { // adjust the milli seconds here
+//
+//            public void onTick(long millisUntilFinished) {
+//
+//                int seconds = (int) (millisUntilFinished / 1000);
+//
+//                int hours = seconds / (60 * 60);
+//                int tempMint = (seconds - (hours * 60 * 60));
+//                int minutes = tempMint / 60;
+//                seconds = tempMint - (minutes * 60);
+//
+//                //Set timer in seconds seconds
+//                textView.setText(String.format(Locale.ENGLISH, "%02d", seconds));
+//
+//            }
+//
+//            public void onFinish() {
+//                Intent intent = new Intent(context,aClass);
+//                ((AppCompatActivity)context).finish();
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                context.startActivity(intent);
+//            }
+//        }.start();
+//    }
+
     public static CountDownTimer SetCountDownTimerDtc(long millisInFuture, long countDownInterval, TextView textView,
-                                                      Class aClass, Context context) {
+                                                      Fragment aClass, FragmentManager fragmentManager) {
         // adjust the milli seconds here
         //Set timer in seconds seconds
 
@@ -676,14 +713,14 @@ class Common {
             }
 
             public void onFinish() {
-                Intent intent = new Intent(context,aClass);
-                ((AppCompatActivity)context).finish();
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                context.startActivity(intent);
+                fragmentManager.beginTransaction()
+                        .replace(R.id.mainViewLinear, aClass)
+                        .addToBackStack(null)
+                        .commitAllowingStateLoss();
             }
         }.start();
     }
+
 
     //Function to encrypt datetime with the security key
     public static String getencryptedsecureHash(String dateTime, String securityKey) {
@@ -748,6 +785,7 @@ class Common {
      * @param fetchWeatherObjectCallback
      */
     public static void getFetchWeatherResponse(String body, Context context, FetchWeatherObjectCallback fetchWeatherObjectCallback) {
+
         Retrofit retrofit = new Retrofit.Builder().baseUrl("http://dtcwbsvc.networkips.com/ServiceModule/DTCService.svc/")
                 .client(new OkHttpClient())
                 .addConverterFactory(ScalarsConverterFactory.create())
@@ -757,6 +795,7 @@ class Common {
         NetWorkRequest netWorkRequest = retrofit.create(NetWorkRequest.class);
 
         Call<FetchCurrentWeatherResponse> categoryProductCall = netWorkRequest.GetFetchWeatherResponse(body);
+
         categoryProductCall.enqueue(new Callback<FetchCurrentWeatherResponse>() {
             @Override
             public void onResponse(Call<FetchCurrentWeatherResponse> call, Response<FetchCurrentWeatherResponse> response) {
@@ -766,8 +805,6 @@ class Common {
                     fetchWeatherObjectCallback.successful(response.body());
                 }
             }
-
-
             @Override
             public void onFailure(Call<FetchCurrentWeatherResponse> call, Throwable t) {
                 String errorMessage = t.getLocalizedMessage();
@@ -780,6 +817,77 @@ class Common {
                 }
             }
         });
+    }
+
+    /**
+     * CVV will be hiddenby stars
+     */
+    public static class MyPasswordTransformationMethod extends PasswordTransformationMethod {
+        @Override
+        public CharSequence getTransformation(CharSequence source, View view) {
+            return new PasswordCharSequence(source);
+        }
+
+        private static class PasswordCharSequence implements CharSequence {
+            private CharSequence mSource;
+
+            public PasswordCharSequence(CharSequence source) {
+                mSource = source;
+            }
+
+            public char charAt(int index) {
+                char caracter;
+                switch (index) {
+                    case 4:
+                    case 9:
+                    case 14:
+                        caracter = ' ';
+                        break;
+                    default:
+                        if (index < 15)
+                            return '*';
+                        else
+                            caracter = mSource.charAt(index);
+                        break;
+
+                }
+
+
+                return caracter;
+            }
+
+            public int length() {
+                return mSource.length();
+            }
+
+            public CharSequence subSequence(int start, int end) {
+                return mSource.subSequence(start, end);
+            }
+        }
+    }
+
+
+    //When text is changed reset the timer
+    public static TextWatcher getTextWatcher(CountDownTimer cTimer) {
+
+        return new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                if (cTimer != null)
+                    cTimer.start();
+
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // you can check for enter key here
+                if (cTimer != null)
+                    cTimer.start();
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (cTimer != null)
+                    cTimer.start();
+            }
+        };
     }
 
 

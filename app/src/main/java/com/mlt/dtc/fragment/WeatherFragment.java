@@ -157,6 +157,7 @@ class WeatherFragment extends DialogFragment {
 
             });
         } catch (Exception e) {
+
         }
 
     }

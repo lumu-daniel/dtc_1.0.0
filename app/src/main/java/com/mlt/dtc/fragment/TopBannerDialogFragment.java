@@ -10,33 +10,34 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.mlt.dtc.R;
-import com.mlt.dtc.activity.MainActivity;
+import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.adapter.TopBannerAdapter;
 import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.utility.Constant;
 
 import java.util.ArrayList;
 
+import static com.mlt.dtc.common.Common.topBannerList;
+
 public
-class TopBannerDialogFragment  extends DialogFragment{
+class TopBannerDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     Context context;
-    Fragment mFragment;
-    MainActivity mainActivity;
+    MainFragment mainActivity;
     ArrayList<TopBannerObject> getListOfImages = new ArrayList<>();
 
     ViewPager AdsAiewPager;
-    ImageView iv_close,iv_arrowleft_topbanner_Dialog,iv_arrowright_topbanner_Dialog;
+    ImageView iv_close, iv_arrowleft_topbanner_Dialog, iv_arrowright_topbanner_Dialog;
     int position;
     private TopBannerAdapter adapter;
-
 
 
     @Override
@@ -46,20 +47,23 @@ class TopBannerDialogFragment  extends DialogFragment{
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        try{
+        try {
 
 
-            mainActivity = MainActivity.getInstance();
+            mainActivity = MainFragment.getInstance();
 
             AlertDialog.Builder customDialogMain = new AlertDialog.Builder(getActivity(), R.style.CustomDialog);
             context = getContext();
             LayoutInflater inflater = getActivity().getLayoutInflater();
             View view = inflater.inflate(R.layout.tobbanner_dialog, null);
+
             iv_close = view.findViewById(R.id.iv_close);
             iv_arrowleft_topbanner_Dialog = view.findViewById(R.id.iv_arrowleft_topbanner_dialog);
             iv_arrowright_topbanner_Dialog = view.findViewById(R.id.iv_arrowright_topbanner_dialog);
             AdsAiewPager = view.findViewById(R.id.adsviewPager);
 //            AdsAiewPager.setScrollDuration(2000);
+
+
 
             customDialogMain.setView(view);
             customDialogMain.setCancelable(false);
@@ -67,23 +71,26 @@ class TopBannerDialogFragment  extends DialogFragment{
             dialog.setCanceledOnTouchOutside(false);
 
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return dialog;
 
     }
 
-    private void initViews( ViewPager adsAiewPagerOffers) {
+    private void initViews(ViewPager adsAiewPagerOffers) {
         try {
 
-            adapter = new TopBannerAdapter(getListOfImages,getContext(),false);
+//            adapter = new TopBannerAdapter(getListOfImages, getContext(), false);
+
+            adapter = new TopBannerAdapter(topBannerList(), getContext(), false);
 
             adsAiewPagerOffers.setAdapter(adapter);
             //sets the position in viewpager
             adsAiewPagerOffers.setCurrentItem(position);
 
             adsAiewPagerOffers.setOffscreenPageLimit(3);
+
 
             adsAiewPagerOffers.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
@@ -113,14 +120,17 @@ class TopBannerDialogFragment  extends DialogFragment{
         try {
             Bundle bundle = getArguments();
             bundle.get(Constant.PositionTopBanner);
-            getListOfImages = (ArrayList<TopBannerObject>) getArguments().getSerializable(Constant.TopImagesSelectedOffers);
+
+//            getListOfImages = (ArrayList<TopBannerObject>) getArguments().getSerializable(Constant.TopImagesSelectedOffers);
+
             position = bundle.getInt(Constant.PositionTopBanner);
+
 
             initViews(AdsAiewPager);
 
             iv_close.setOnClickListener(v -> {
 
-                MainActivity.mainActivity.onFinished("Finish");
+                MainFragment.mainActivity.onFinished("Finish");
                 dialog.dismiss();
 
             });
@@ -158,19 +168,19 @@ class TopBannerDialogFragment  extends DialogFragment{
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
-        mainActivity.isSelected=false;
+        mainActivity.isSelected = false;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        context=null;
-        AdsAiewPager=null;
-        iv_close=null;
-        iv_arrowleft_topbanner_Dialog=null;
-        iv_arrowright_topbanner_Dialog=null;
+        context = null;
+        AdsAiewPager = null;
+        iv_close = null;
+        iv_arrowleft_topbanner_Dialog = null;
+        iv_arrowright_topbanner_Dialog = null;
 
-        dialog=null;
+        dialog = null;
 //        System.gc();
         Glide.get(getActivity()).clearMemory();
 
