@@ -15,9 +15,12 @@ import com.mlt.dtc.R;
 import com.mlt.dtc.adapter.WeatherListViewAdapter;
 import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+
 import static com.mlt.dtc.utility.Constant.weatherDetailsListviewAList;
 
 
@@ -84,7 +87,8 @@ class WeatherFragment extends DialogFragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                tv_DeviceTime.setText(new SimpleDateFormat("HH:mm a").format(now));
+                String time = new SimpleDateFormat("hh : mm a", Locale.getDefault()).format(Calendar.getInstance().getTime());
+                tv_DeviceTime.setText(time);
                 tv_Devicemdd.setText(new SimpleDateFormat("MMMM dd yyyy").format(now));
             }
         });

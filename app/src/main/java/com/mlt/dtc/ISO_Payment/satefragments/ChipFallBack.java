@@ -49,6 +49,7 @@ public class ChipFallBack extends DialogFragment implements View.OnClickListener
         ((TextView) view.findViewById(R.id.actionTitle)).setText("TripID: "+ PreferenceConnector.readString(getContext(),TSTripIdKey,""));
         ((TextView)view.findViewById(R.id.actionType)).setText("Use Chip.");
 //            ((TextView)view.findViewById(R.id.actionTitle)).setText("FallBack to chip.");
+        view.findViewById(R.id.greenbutton).setVisibility(View.GONE);
         ((ImageView)view.findViewById(R.id.cancel_action)).setVisibility(View.GONE);
         ((TextView)view.findViewById(R.id.yellowbutton)).setVisibility(View.GONE);
         ((Button)view.findViewById(R.id.paynow_btn)).setVisibility(View.GONE);
@@ -58,8 +59,10 @@ public class ChipFallBack extends DialogFragment implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()){
 
         }
+
     }
 }

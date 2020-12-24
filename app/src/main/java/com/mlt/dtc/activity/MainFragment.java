@@ -95,6 +95,7 @@ import static com.mlt.dtc.utility.Constant.WeatherTime;
 public class MainFragment extends Fragment implements View.OnClickListener, TaskListener,
         RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener,
         FareDialogListener, DriverImageListener, MainVideoBannerListener, ResultsCallback {
+
     private TextView tv_timemainbox, tv_datemainbox, tv_VideoBr, tv_degree;
     private LinearLayout ll_driverinfo, llMenuBottom, llMenuUp, llsideOffers;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
@@ -131,6 +132,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     private String DriverImage;
     private HashMap<String, Integer> hmweatherimageDay;
     private View view;
+
+    private boolean isAppInstalled;
 
 
     public static MainFragment getInstance() {
@@ -187,6 +190,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
 
 
         getFetchWeather();
+
+
 
         try {
             // String DeviceSerialNumber = "E2C1000063";//E2C1000954 /<-**Prod**/ //"E2C1000590";  /<-**UAT**/
@@ -474,6 +479,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     @Override
     public void onItemClick(int position, View v) {
         Intent i;
+
         if (position == 0) {
             mltButtonCount++;
 
@@ -486,20 +492,31 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
             addFragment();
         } else if (position == 1) {
             try {
-                rtaServicesCount++;
-                PreferenceConnector.writeInteger(getContext(), Constant.RTAServicesCount, rtaServicesCount);
-                PreferenceConnector.writeString(getContext(), Constant.ButtonClicked, Constant.nameRTAServices);
 
-                Constant.ButtonClicked = Constant.nameRTAServices;
-                WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
-                Common.getlistofclickLog(getContext(), Constant.ButtonClicked, getdateTime());
+                // Use package name which we want to check
+                isAppInstalled = appInstalledOrNot("example.rta");
 
-                i = new Intent(Intent.ACTION_MAIN);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                i.putExtra("isFromDTC", true);
-                i.setComponent(new ComponentName("example.rta", "rtaservices.RTAMainActivity"));
-                startActivity(i);
+                if(isAppInstalled) {
+
+                    rtaServicesCount++;
+                    PreferenceConnector.writeInteger(getContext(), Constant.RTAServicesCount, rtaServicesCount);
+                    PreferenceConnector.writeString(getContext(), Constant.ButtonClicked, Constant.nameRTAServices);
+
+                    Constant.ButtonClicked = Constant.nameRTAServices;
+                    WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
+                    Common.getlistofclickLog(getContext(), Constant.ButtonClicked, getdateTime());
+
+                    i = new Intent(Intent.ACTION_MAIN);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    i.putExtra("isFromDTC", true);
+                    i.setComponent(new ComponentName("example.rta", "rtaservices.RTAMainActivity"));
+                    startActivity(i);
+
+                } else {
+
+                }
+
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -514,6 +531,18 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
 
         }
     }
+
+    private boolean appInstalledOrNot(String uri) {
+        PackageManager pm = getActivity().getPackageManager();
+        try {
+            pm.getPackageInfo(uri, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException e) {
+        }
+
+        return false;
+    }
+
 
     //Set Call back to close the opened dialog
     public static void dialogdismissCallBackMethod(OverwriteTripFragmentListener CallBack) {
@@ -813,8 +842,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         ConfigurationClass.PASSWORD = object.optString("Password");
         ConfigurationClass.PAYMENT_USER_ID = object.optString("PaymentUserId");
         ConfigurationClass.PAYMENT_PASSWORD = object.optString("PaymentPassword");
-//        ConfigurationClass.SOURCE_APPLICATION = object.optString("SourceApplication");
-        ConfigurationClass.SOURCE_APPLICATION = ConfigurationClass.TERMINAL_ID;
+        ConfigurationClass.SOURCE_APPLICATION = object.optString("SourceApplication");
+//        ConfigurationClass.SOURCE_APPLICATION = ConfigurationClass.TERMINAL_ID;
         ConfigurationClass.PAYMENT_ACTION = object.optString("PaymentAction");
         ConfigurationClass.PAYMENT_CALL_BACK_URL = object.optString("CallBackURL");
         ConfigurationClass.PAYMENT_DEVICE_FINGER_PRINT = object.optString("DeviceFingerPrint");

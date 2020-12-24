@@ -174,7 +174,8 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
             PresenterClasses.sendState(TxnState.PIN_ENTERED.label);
         }
 
-        addFragment(new PinEntryScreen(),"PinEntryScreen");
+        fragment = new PinEntryScreen();
+        addFragment(fragment,"PinEntryScreen");
     }
 
     @Override
@@ -213,6 +214,7 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
 
     @Override
     public void onStartProcessing() {
+        dismissDialog(progDialog);
         if(serviceFlag.equalsIgnoreCase("Integrated")){
             PresenterClasses.sendState(TxnState.PROC_ONLINE.label);
         }
@@ -228,6 +230,7 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
                 dismissDialog(fragment);
             }
         });
+
     }
 
     @Override
@@ -237,14 +240,21 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
         dismissDialog(progDialog);
 //        fragment = new TxnError("Successful");
 //        addFragment(fragment,"Error");
-        onTransactionEnded(response);
+        onTransactionEnded("Success",response);
 
     }
 
+
+
     @Override
-    public void onTransactionEnded(ISOPaymentResponse response) {
+    public void onTransactionEnded(String ErrorMessage,ISOPaymentResponse response) {
         dismissDialog(progDialog);
-        callback.onSuccess(response);
+        dismissDialog(fragment);
+        if (response==null){
+            callback.onfailure(ErrorMessage);
+        }else {
+            callback.onSuccess(response);
+        }
     }
 
     @Override

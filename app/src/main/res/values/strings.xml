@@ -652,8 +652,9 @@
     <string name="pleasetapnolcardrequiredtopup">Please Tap Nol Card Required Topup</string>
     <string name="pleaseselectyouramount">Please Select Amount</string>
     <string name="Pleasetapyourcard">please tap your card</string>
-    <string name="redbuttontext">Please Press red button to cancel transaction.</string>
+    <string name="redbuttontext">Please press red button to cancel the transaction.</string>
     <string name="yellowbuttontext">Please Press yellow button to clear text.</string>
+    <string name="greenbuttontext">Please Press green button to Proceed Transaction.</string>
 
 
     <string name="NOLPayment">NOL Payment</string>
@@ -786,9 +787,9 @@
     <string name="pleaseenterpin">Please enter PIN.</string>
     <string name="tripId">TripID: </string>
     <string name="use_chip">Use Chip.</string>
-    <string name="tap_swipe_insert">Please tap, swipe or insert card.</string>
+    <string name="tap_swipe_insert">Please Tap, Insert or Swipe card..</string>
     <string name="present_card">Present Card.</string>
-    <string name="tap_insert">Please tap or insert card.</string>
+    <string name="tap_insert">Please Tap or Insert card.</string>
     <string name="txn_err">Transaction Error.</string>
     <string name="want_a_reciept">Do you want a receipt ?</string>
     <string name="yes">Yes</string>

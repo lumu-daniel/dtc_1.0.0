@@ -226,6 +226,34 @@
                                 android:textSize="@dimen/text_size_s"
                                 android:textStyle="bold" />
 
+                            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"
+                                android:visibility="gone"
+                                android:layout_marginEnd="@dimen/tv_width30"
+                                android:layout_marginStart="@dimen/tv_width150"
+                                android:padding="@dimen/tv_width3">
+
+                                <ImageView
+                                    android:id="@+id/img_mlt"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:layout_marginBottom="3dp"/>
+                                <ImageView
+                                    android:id="@+id/img_rta"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:layout_toRightOf="@+id/img_mlt"
+                                    android:layout_marginBottom="3dp"/>
+                                <ImageView
+                                    android:id="@+id/img_dtc"
+                                    android:layout_width="70dp"
+                                    android:layout_height="70dp"
+                                    android:layout_toRightOf="@+id/img_rta"
+                                    android:layout_marginBottom="3dp"/>
+
+                            </RelativeLayout>
+
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/recycler_bottom_menu"
                                 android:layout_width="250dp"

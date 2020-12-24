@@ -32,6 +32,8 @@ import static android.content.ContentValues.TAG;
 import static com.mlt.e200cp.models.MessageFlags.TXN_ERROR;
 import static com.mlt.e200cp.models.MessageFlags.TXN_REVERSED;
 import static com.mlt.e200cp.models.MessageFlags.TXN_SUCCESSFUL;
+import static com.mlt.e200cp.utilities.helper.util.ISOConstant.SUCCESSFLAG;
+import static com.mlt.e200cp.utilities.helper.util.ISOConstant.calledService;
 import static com.mlt.e200cp.utilities.helper.util.ISOConstant.currentDateTime;
 import static com.mlt.e200cp.utilities.helper.util.ISOConstant.printReversal;
 import static com.mlt.e200cp.utilities.helper.util.Logger.LINE_OUT;
@@ -195,7 +197,9 @@ public class CallIsoServiceClass {
                         setVariables();
                         String reponseCode = response.getTransactionDetailsData().getResponseCode();
                         Utility.recieptNumber = response.getTransactionDetailsData().getReceiptNumber();
-                        HelperEMVClass.helperEMVClass.onResponseRecieved(response);
+                        if (!getTransactionDetails.getIsReversal().equals("true")){
+                            HelperEMVClass.helperEMVClass.onResponseRecieved(response);
+                        }
                         if(!response.getReceiptMerchantCopy().equalsIgnoreCase("")){
                             ISOConstant.calledService = true;
                         }
@@ -218,7 +222,7 @@ public class CallIsoServiceClass {
 
                         }
                         else{
-                            sequenceInterface.onTransactionEnded(response);
+                            HelperEMVClass.helperEMVClass.onResponseRecieved(response);
                         }
                     } catch (Exception e) {
                         onResponseFailure("Failed");
@@ -234,6 +238,7 @@ public class CallIsoServiceClass {
 
             @Override
             public String onResponseFailure(String t) {
+                calledService = true;
                 if(ISOConstant.reversal){
                     t = "Transaction reversal error.";
                     ISOConstant.reversal = false;

@@ -97,7 +97,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
     private HashMap<String, Object> map;
     public static AppCompatActivity appCompatActivity;
     private TLV dataField = null;
-//    public boolean errorFlag;
+    //    public boolean errorFlag;
     private int ChipProcessingRetryCounter;
     private boolean fallBackFlag; // Used to determine card with chip and ctls.
     private int reverseCount = 0;
@@ -134,7 +134,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 
     public static HelperEMVClass getInstance(AppCompatActivity context, String amount, PosSequenceInterface sequenceInterface, int timeOut1, ViewInterface viewInterface, PosDetails details, boolean isIntergrated){
         if(helperEMVClass!=null){
-           helperEMVClass = null;
+            helperEMVClass = null;
         }
         helperEMVClass=new HelperEMVClass(context,amount,sequenceInterface,timeOut1,viewInterface,details,isIntergrated);
         return helperEMVClass;
@@ -297,29 +297,29 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                 @Override
                 public void run() {
                     new AlertDialog.Builder(appCompatActivity)
-                    .setCancelable(false)
-                    .setMessage("Please Insert Or Tap Card.")
-                    .setPositiveButton("Ok",(dialog, which) -> {
-                        SequencyHandler.getInstance(FALLBACKCHIPORTAP,callbackInterface).execute( HelperEMVClass.this);
-                        dialog.dismiss();
-                    })
-                    /*.setItems(MC_OPTIONS, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
-                                case 0:
-                                    dialog.dismiss();
-                                    getTransactionDetails.setPOSENTRYTYPE(Constants.MAGSTRIPE_TECHNICAL_FALLBACK.label);
-                                    SequencyHandler.getInstance(callbackInterface).execute(TXN_PROCESSING,ctx,posDetails,callbackInterface);
-                                    break;
-                                case 1:
-                                    dialog.dismiss();
-                                    SequencyHandler.getInstance(callbackInterface).execute(CHIP_FALLBACK,HelperEMVClass.this);
-                                    break;
-                            }
-                        }
-                    })*/
-                    .create().show();
+                            .setCancelable(false)
+                            .setMessage("Please Insert Or Tap Card.")
+                            .setPositiveButton("Ok",(dialog, which) -> {
+                                SequencyHandler.getInstance(FALLBACKCHIPORTAP,callbackInterface).execute( HelperEMVClass.this);
+                                dialog.dismiss();
+                            })
+                            /*.setItems(MC_OPTIONS, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    switch (which){
+                                        case 0:
+                                            dialog.dismiss();
+                                            getTransactionDetails.setPOSENTRYTYPE(Constants.MAGSTRIPE_TECHNICAL_FALLBACK.label);
+                                            SequencyHandler.getInstance(callbackInterface).execute(TXN_PROCESSING,ctx,posDetails,callbackInterface);
+                                            break;
+                                        case 1:
+                                            dialog.dismiss();
+                                            SequencyHandler.getInstance(callbackInterface).execute(CHIP_FALLBACK,HelperEMVClass.this);
+                                            break;
+                                    }
+                                }
+                            })*/
+                            .create().show();
                 }
             });
         }
@@ -352,7 +352,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             }
 
             if(checkFlag){
-               ctlsAfterPhone();
+                ctlsAfterPhone();
             }else{
                 endTransaction(NOT_VER_ERR.label);
             }
@@ -591,7 +591,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         else{
             endTransaction("");
             if(SUCCESSFLAG){
-                callbackInterface.onTransactionEnded(response);
+                callbackInterface.onTransactionEnded("Successfull",response);
                 SUCCESSFLAG = false;
             }
         }
@@ -629,15 +629,11 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         } );
         if(!SUCCESSFLAG){
             if(!msg.equalsIgnoreCase("")){
-                if(!msg.equalsIgnoreCase("Failed case")){
-                    if(!msg.equals("Timed out.")){
-                        SequencyHandler.getInstance(TXN_ERROR,callbackInterface).execute(msg,response);
-                    }
-                }
+                callbackInterface.onTransactionEnded("Failed to read card.",response);
             }
         }else{
             SUCCESSFLAG=false;
-            callbackInterface.onTransactionEnded(response);
+            callbackInterface.onTransactionEnded("Successful",response);
         }
         try {
             Thread.sleep(500);

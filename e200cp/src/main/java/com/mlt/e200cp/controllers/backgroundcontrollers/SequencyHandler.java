@@ -3,9 +3,7 @@ package com.mlt.e200cp.controllers.backgroundcontrollers;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.bumptech.glide.Glide;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,9 +21,7 @@ import com.mlt.e200cp.models.PosDetails;
 import com.mlt.e200cp.models.enums.EmvTransactionType;
 import com.mlt.e200cp.models.response.ISOPaymentResponse;
 import com.mlt.e200cp.utilities.helper.util.ISOConstant;
-
 import java.lang.ref.WeakReference;
-
 import static android.content.ContentValues.TAG;
 import static com.mlt.e200cp.models.MessageFlags.CHIP_FALLBACK;
 import static com.mlt.e200cp.models.MessageFlags.FALLBACKCHIPORTAP;
