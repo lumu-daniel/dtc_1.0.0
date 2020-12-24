@@ -17,6 +17,6 @@ public interface PosSequenceInterface {
      void onTransactionSuccessful(ISOPaymentResponse response);
      void onTrasactionError(String error);
      void onTrasactionSvcError(String error, ISOPaymentResponse response);
-     void onTransactionEnded(ISOPaymentResponse response);
+     void onTransactionEnded(String errorMessage,ISOPaymentResponse response);
      void removeCardDisplayed();
 }

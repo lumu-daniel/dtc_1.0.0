@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.Selection;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -216,6 +219,30 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
         String UUID = Common.getUUID();
         getFirstsixchar = UUID.substring(0, 7).toUpperCase();
 
+        edtMobileno.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                if (!s.toString().startsWith("9715")) {
+                    edtMobileno.setText("9715");
+                    Selection.setSelection(edtMobileno.getText(), edtMobileno.getText().length());
+
+                }
+            }
+        });
+
         iv_Contactus.setOnClickListener(v -> {
             //buttonPressed = PreferenceConnector.readString(getContext(), Constant.ButtonPressed, null);
             if (buttonPressed != Constant.Contactus || !buttonPressed.equals(Constant.Contactus)) {
@@ -329,8 +356,14 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
                 if (edtName.getText().toString().equals("") || edtEmail.getText().toString().equals("")
                         || edtMobileno.getText().toString().equals("") || edtMessage.getText().toString().equals("")) {
                     Toast.makeText(getContext(), "Kindly fill all the fields", Toast.LENGTH_LONG).show();
-                } else {
-                    if (isEmailValid(edtEmail.getText().toString())) {
+                }else if (!isEmailValid(edtEmail.getText().toString())){
+                    Toast.makeText(getContext(), "Kindly provide a correct email address", Toast.LENGTH_SHORT).show();
+                }
+                else if (edtMobileno.length() < 12 || edtMobileno.length() > 12 ){
+
+                    Toast.makeText(getContext(), "Enter the correct mobile number", Toast.LENGTH_LONG).show();
+                }  else{
+//                    if (isEmailValid(edtEmail.getText().toString())) {
                         String [] arguments = {
                                 edtName.getText().toString(),
                                 edtEmail.getText().toString(),
@@ -347,10 +380,11 @@ class ContactUsFragment extends DialogFragment  implements View.OnClickListener,
                         edtMobileno.setText("");
                         edtName.setText("");
                         sp_issues_Feedback.setSelection(1);
-                    } else {
-                        Toast.makeText(getContext(), "Kindly provide a correct email address", Toast.LENGTH_SHORT).show();
                     }
-                }
+//                else {
+//
+//                    }
+//                }
             }
 
         });

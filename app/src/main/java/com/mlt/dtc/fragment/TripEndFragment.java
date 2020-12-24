@@ -2,10 +2,12 @@ package com.mlt.dtc.fragment;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
@@ -27,6 +29,7 @@ import com.google.gson.Gson;
 import com.mlt.dtc.ISO_Payment.satefragments.PaymentSuccessfull;
 import com.mlt.dtc.ISO_Payment.satefragments.RecieptCheck;
 import com.mlt.dtc.R;
+import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.activity.MainFragment;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
@@ -621,40 +624,66 @@ public class TripEndFragment extends DialogFragment implements Dialogdismisslist
 //                        }
 
                         PosDetails posDetails = setPosDetails("55000","1255");
+
                         txn_type= EmvTransactionType.PURCHASE_TRANSACTION;
 
                         addFragment(new RecieptCheck(new TransactionDoneCallback() {
                             @Override
                             public void onSuccess(ISOPaymentResponse response) {
+                                Log.d(TAG, "ISOPaymentResponse: "+response);
+//                                    Log.d("NewNewResponse",response.getTransactionDetailsData().toString());
 
-                                Log.d("NewNewResponse",response.getTransactionDetailsData().getResponseCode());
+                                    if(response.getTransactionDetailsData()!=null && response.getTransactionDetailsData().getResponseCode().equals("00"))
+                                    {
 
-                                if(response.getTransactionDetailsData().getResponseCode().equals("00"))
-                                {
-                                    //Success
-                                    Log.d("FragmentSuccess","Fragment Success");
+                                        PreferenceConnector.writeBoolean(context,Constant.PaymentStatus,true);
+                                        //Success
+                                        Log.d("FragmentSuccess","Fragment Success");
 
-                                    addFragment(new PaymentSuccessfull(), "PayNowFragmnent");
-                                }
+                                        addFragment(new PaymentSuccessfull(), "PayNowFragmnent");
 
-                                if(response.getTransactionDetailsData().getResponseCode().equals("104") || response.getTransactionDetailsData().getResponseCode().equals("91"))
-                                {
-                                    //Move To PG
-                                    swipeCard();
-                                }
-                                else
-                                {
-                                    //Error
-                                    Log.d("ISO_Payment",response.getTransactionDetailsData().getResponseCode());
+                                    }
 
-                                    Toast.makeText(compatActivity, "Payment Failed", Toast.LENGTH_SHORT).show();
-                                }
+                                    if(response.getTransactionDetailsData().getResponseCode().equals("104") || response.getTransactionDetailsData().getResponseCode().equals("91"))
+                                    {
+                                        PreferenceConnector.writeBoolean(context,Constant.PaymentStatus,false);
+                                        //Move To PG
+                                        swipeCard();
+                                    }
+                                    else
+                                    {
+                                        //Error
+                                        Log.d("ISO_Payment",response.getTransactionDetailsData().getResponseCode());
+
+//                                    Toast.makeText(compatActivity, "Payment Failed", Toast.LENGTH_SHORT).show();
+                                    }
+
+
                             }
 
                             @Override
                             public void onfailure(String error) {
+                                PreferenceConnector.writeBoolean(context,Constant.PaymentStatus,false);
                                 Log.d("NewNewResponse",error);
-                                swipeCard();
+                                if (error.equals("Restart Activity")){
+                                    compatActivity.startActivity(new Intent(compatActivity, MainActivity.class));
+                                    return;
+                                }
+                                if (error.equals("Reversing transaction")){
+
+                                }else {
+                                    if (!error.equalsIgnoreCase("Reader time out") && !error.equalsIgnoreCase("Failed to read card.")) {
+                                        swipeCard();
+                                    }else {
+                                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                Toast.makeText(compatActivity, "Transaction Error Please Try Again", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                                    }
+                                }
+
                             }
                         },posDetails),"RecieptCheck");
 

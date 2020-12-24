@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="300dp"
+    android:layout_height="350dp"
     android:gravity="center"
     android:orientation="vertical">
     <LinearLayout
@@ -13,11 +13,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/gif_layout"
             android:layout_width="350dp"
             android:layout_height="match_parent"
             android:padding="@dimen/tv_width15">
+
             <ImageView
                 android:id="@+id/gifImageView"
                 android:layout_width="match_parent"
@@ -37,44 +39,60 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="@dimen/tv_width15"
-                android:paddingBottom="@dimen/tv_width15"
+                android:paddingTop="@dimen/tv_width5"
+                android:paddingBottom="@dimen/tv_width5"
                 android:paddingLeft="@dimen/tv_width40"
                 android:paddingRight="@dimen/tv_width40"
                 android:text="@string/Pleasetapyourcard"
                 android:maxWidth="300dp"
                 android:textColor="@color/colorbrown"
-                android:textSize="@dimen/tv_width20" />
+                android:textSize="@dimen/tv_size_n" />
 
             <TextView
                 android:id="@+id/redbutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="@dimen/tv_width15"
-                android:paddingBottom="@dimen/tv_width15"
+                android:paddingTop="@dimen/tv_width5"
+                android:paddingBottom="@dimen/tv_width5"
                 android:paddingLeft="@dimen/tv_width40"
                 android:paddingRight="@dimen/tv_width40"
                 android:text="@string/redbuttontext"
                 android:maxWidth="300dp"
                 android:textColor="@color/colorbrown"
-                android:textSize="@dimen/tv_width20" />
+                android:textSize="@dimen/tv_size_n" />
+
+            <TextView
+                android:id="@+id/greenbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="@dimen/tv_width5"
+                android:paddingBottom="@dimen/tv_width5"
+                android:paddingLeft="@dimen/tv_width40"
+                android:paddingRight="@dimen/tv_width40"
+                android:text="@string/greenbuttontext"
+                android:maxWidth="300dp"
+                android:textColor="@color/colorbrown"
+                android:textSize="@dimen/tv_size_n" />
+
 
             <TextView
                 android:id="@+id/yellowbutton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingTop="@dimen/tv_width15"
-                android:paddingBottom="@dimen/tv_width15"
+                android:paddingTop="@dimen/tv_width5"
+                android:paddingBottom="@dimen/tv_width5"
                 android:paddingLeft="@dimen/tv_width40"
                 android:paddingRight="@dimen/tv_width40"
                 android:text="@string/yellowbuttontext"
                 android:maxWidth="300dp"
                 android:textColor="@color/colorbrown"
-                android:textSize="@dimen/tv_width20" />
+                android:textSize="@dimen/tv_size_n" />
 
         </LinearLayout>
+
     </LinearLayout>
 
 

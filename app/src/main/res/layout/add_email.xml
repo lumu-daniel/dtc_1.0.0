@@ -29,8 +29,8 @@
             android:gravity="end">
             <ImageView
                 android:id="@+id/cancel_action"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="@dimen/tv_width30"
+                android:layout_height="@dimen/tv_width30"
                 android:background="@drawable/ic_close_black_36dp" />
         </LinearLayout>
 
@@ -109,16 +109,13 @@
 
         <EditText
             android:id="@+id/ctx_email"
-            android:layout_width="wrap_content"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="@dimen/tv_width15"
-            android:paddingBottom="@dimen/tv_width15"
-            android:paddingLeft="@dimen/tv_width40"
-            android:paddingRight="@dimen/tv_width40"
             android:inputType="textEmailAddress"
             android:imeOptions="actionDone"
-            android:hint="Please type your email address"
+            android:hint="Please enter your email address"
             android:maxWidth="400dp"
             android:textColor="@color/colorbrown"
             android:textSize="@dimen/text_size_fare" />
@@ -135,15 +132,12 @@
 
         <Button
             android:id="@+id/submit"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/tv_width150"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:background="@drawable/button_background"
             android:paddingTop="@dimen/tv_width15"
             android:paddingBottom="@dimen/tv_width15"
-            android:paddingLeft="@dimen/tv_width40"
-            android:paddingRight="@dimen/tv_width40"
-            android:layout_marginLeft="@dimen/tv_width50"
             android:text="@string/Submit"
             android:maxWidth="300dp"
             android:textColor="@color/colorwhite"

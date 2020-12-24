@@ -7,6 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,11 +61,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="15dp"
+            android:paddingTop="10dp"
             android:text="@string/pleaseselectyouramount"
             android:textColor="@color/colorbrown"
             android:textSize="20dp"
             android:textStyle="bold" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -75,11 +77,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingTop="15dp"
+            android:paddingTop="10dp"
             android:text="60 Secs"
             android:textColor="@color/colorbrown"
             android:textSize="20dp"
             android:textStyle="bold" />
 
     </LinearLayout>
+
 </LinearLayout>

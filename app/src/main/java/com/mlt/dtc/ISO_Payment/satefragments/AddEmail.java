@@ -21,6 +21,8 @@ import com.mlt.dtc.utility.Constant;
 import com.mlt.e200cp.interfaces.TransactionDoneCallback;
 import com.mlt.e200cp.models.PosDetails;
 import com.mlt.e200cp.utilities.helper.util.PreferenceConnector;
+
+import static com.mlt.dtc.common.Common.isEmailValid;
 import static com.mlt.dtc.utility.Constant.TSTripIdKey;
 
 
@@ -81,7 +83,13 @@ public class AddEmail extends DialogFragment implements View.OnClickListener {
                         Toast.makeText(getContext(),"Please enter email address to proceed.",Toast.LENGTH_LONG).show();
                     });
                     return;
-                }else{
+                }else if (!isEmailValid(ctx_email.getText().toString().trim())){
+                    getActivity().runOnUiThread(()->{
+                        Toast.makeText(getContext(), "Please enter correct email address", Toast.LENGTH_SHORT).show();
+                    });
+                    return;
+                }
+                else{
                     dismiss();
                 }
                 String Fare = PreferenceConnector.readString(getContext(), Constant.Fare, "");

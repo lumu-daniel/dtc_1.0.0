@@ -28,16 +28,19 @@ public class PaymentSuccessfull extends DialogFragment implements View.OnClickLi
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
          view = inflater.inflate(R.layout.payment_successful_ctx,container,false);
+
         initView();
+
         return view;
     }
 
     private void initView(){
         timer = view.findViewById(R.id.timer);
         ((TextView) view.findViewById(R.id.tripID)).setText("TripID: "+ PreferenceConnector.readString(getContext(),TSTripIdKey,""));
-        ((Button)view.findViewById(R.id.home_btn1)).setOnClickListener(this);
-        ((Button)view.findViewById(R.id.home_btn2)).setVisibility(View.GONE);
+        ((Button)view.findViewById(R.id.btn_yes)).setOnClickListener(this);
+        ((Button)view.findViewById(R.id.btn_no)).setVisibility(View.GONE);
         ((LinearLayout)view.findViewById(R.id.separator)).setVisibility(View.GONE);
+        view.findViewById(R.id.cancel_action).setOnClickListener(this);
     }
 
     private void addFragment(Fragment fragment, String name){
@@ -64,7 +67,10 @@ public class PaymentSuccessfull extends DialogFragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.home_btn1:
+            case R.id.btn_yes:
+                dismiss();
+                break;
+            case R.id.cancel_action:
                 dismiss();
                 break;
         }

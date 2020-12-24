@@ -36,7 +36,7 @@ public class RecieptCheck extends DialogFragment implements View.OnClickListener
     CountDownTimer countDownTimer;
     TextView timer;
     View view;
-    Button home_btn1,home_btn2;
+    Button btn_yes,btn_no;
 
     @Nullable
     @Override
@@ -64,17 +64,17 @@ public class RecieptCheck extends DialogFragment implements View.OnClickListener
     }
 
     private void initView() {
-        home_btn1 = (Button)view.findViewById(R.id.home_btn1);
-        home_btn2 = (Button)view.findViewById(R.id.home_btn2);
+        btn_yes = (Button)view.findViewById(R.id.btn_yes);
+        btn_no = (Button)view.findViewById(R.id.btn_no);
         timer = (TextView)view.findViewById(R.id.timer);
-        home_btn1.setText(R.string.yes);
-        home_btn2.setText(R.string.no);
+        btn_yes.setText(R.string.yes);
+        btn_no.setText(R.string.no);
         ((ImageView)view.findViewById(R.id.cancel_action)).setOnClickListener(this);
         ((TextView) view.findViewById(R.id.tripID)).setText("TripID: "+ PreferenceConnector.readString(getContext(),TSTripIdKey,""));
         ((TextView) view.findViewById(R.id.thank_you)).setVisibility(View.INVISIBLE);
         ((TextView) view.findViewById(R.id.ctx_msg)).setText(R.string.want_a_reciept);
-        home_btn1.setOnClickListener(this);
-        home_btn2.setOnClickListener(this);
+        btn_yes.setOnClickListener(this);
+        btn_no.setOnClickListener(this);
 
     }
 
@@ -82,23 +82,24 @@ public class RecieptCheck extends DialogFragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
 
-            case R.id.home_btn1:
+            case R.id.btn_yes: //YES - add email
                 dismiss();
                 addFragment(new AddEmail(callback,posDetails),"AddEmail");
                 break;
 
-            case R.id.home_btn2:
+            case R.id.btn_no: //No - tap card/insert
                 String Fare = PreferenceConnector.readString(getContext(), Constant.Fare, "");
                 if(Fare.contains(".")){
                     Fare = Fare.replace(".","");
                 }
                 dismiss();
-
                 BaseClass.getInstance((AppCompatActivity) getContext(),posDetails.getTxnAmt(),20000,posDetails,true,null,callback);
                 break;
+
             case R.id.cancel_action:
                 dismiss();
                 break;
+
         }
     }
 

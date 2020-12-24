@@ -49,11 +49,12 @@ public class PortsOpened extends DialogFragment implements View.OnClickListener 
         timer = view.findViewById(R.id.timer);
         ((TextView) view.findViewById(R.id.actionTitle)).setText("TripID: "+ PreferenceConnector.readString(getContext(),TSTripIdKey,""));
         if(flagChipOrTap){
-            ((TextView)view.findViewById(R.id.actionType)).setText("Please tap or insert card.");
+            ((TextView)view.findViewById(R.id.actionType)).setText("Please Tap, Insert or Swipe card.");
             flagChipOrTap = false;
         }else{
-            ((TextView)view.findViewById(R.id.actionType)).setText("Please tap insert, or swipe card.");
+            ((TextView)view.findViewById(R.id.actionType)).setText("Please Tap, Insert or Swipe card.");
         }
+        view.findViewById(R.id.greenbutton).setVisibility(View.GONE);
         ((ImageView)view.findViewById(R.id.cancel_action)).setVisibility(View.GONE);
         ((TextView)view.findViewById(R.id.yellowbutton)).setVisibility(View.GONE);
         ((Button)view.findViewById(R.id.paynow_btn)).setVisibility(View.GONE);
