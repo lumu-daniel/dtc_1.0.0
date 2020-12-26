@@ -2,10 +2,10 @@ package com.mlt.e200cp.models;
 
 import android.util.Log;
 
-import com.mlt.e200cp.models.requests.ISOPaymentRequest;
-import com.mlt.e200cp.models.requests.NipsMerchantDetailsRequest;
-import com.mlt.e200cp.models.requests.NipsiCounterInquiryRequest;
-import com.mlt.e200cp.models.requests.PaymentConfiguration;
+import com.mlt.e200cp.models.repository.requests.ISOPaymentRequest;
+import com.mlt.e200cp.models.repository.requests.NipsMerchantDetailsRequest;
+import com.mlt.e200cp.models.repository.requests.NipsiCounterInquiryRequest;
+import com.mlt.e200cp.models.repository.requests.PaymentConfiguration;
 
 import static com.mlt.e200cp.utilities.helper.util.Utility.appendLog;
 

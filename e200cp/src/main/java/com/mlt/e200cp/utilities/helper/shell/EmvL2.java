@@ -1,28 +1,28 @@
 package com.mlt.e200cp.utilities.helper.shell;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.mlt.e200cp.controllers.backgroundcontrollers.SequencyHandler;
 import com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass;
 import com.mlt.e200cp.interfaces.PosSequenceInterface;
-import com.mlt.e200cp.models.enums.Constants;
 import com.mlt.e200cp.models.PosDetails;
 import com.mlt.e200cp.utilities.helper.listener.EmvCallback;
 import com.mlt.e200cp.utilities.helper.protocol.EMV;
 import com.mlt.e200cp.utilities.helper.protocol.TLV;
 import com.mlt.e200cp.utilities.helper.util.Utility;
 
-import static com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass.getTransactionDetails;
-import static com.mlt.e200cp.models.MessageFlags.PINENTRY_FAIL;
-import static com.mlt.e200cp.models.MessageFlags.START_PINENTRY;
-import static com.mlt.e200cp.models.MessageFlags.TXN_PROCESSING;
+import static com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass.emvTransactionDetails;
+import static com.mlt.e200cp.models.StringConstants.CANCEL_TXN;
+import static com.mlt.e200cp.models.StringConstants.CONTACTLESS_ENTRY_MODE;
+import static com.mlt.e200cp.models.StringConstants.EMPTY_PIN_ERR;
+import static com.mlt.e200cp.models.StringConstants.PINENTRY_FAIL;
+import static com.mlt.e200cp.models.StringConstants.PIN_CVM_TYPE;
+import static com.mlt.e200cp.models.StringConstants.PIN_ERR;
+import static com.mlt.e200cp.models.StringConstants.PIN_TIME_OUT_ERR;
+import static com.mlt.e200cp.models.StringConstants.START_PINENTRY;
+import static com.mlt.e200cp.models.StringConstants.TXN_PROCESSING;
 import static com.mlt.e200cp.utilities.helper.protocol.EMV.CMD_ID._53_PayFirstGenAC;
-import static com.mlt.e200cp.models.enums.ErrorCenter.CANCEL_TXN;
-import static com.mlt.e200cp.models.enums.ErrorCenter.EMPTY_PIN_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.PIN_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.PIN_TIME_OUT_ERR;
 import static com.mlt.e200cp.utilities.helper.util.Logger.LINE_OUT;
 import static com.mlt.e200cp.utilities.helper.util.Logger.log;
 import static com.mlt.e200cp.utilities.helper.util.Utility.appendLog;
@@ -135,7 +135,7 @@ public class EmvL2 extends BaseShell {
             if(panNumeric!=null){
                 String pan = Utility.numeric2string(panNumeric).replace("F","");
 //                ULTests.getInstance().pan = pan;
-                getTransactionDetails.setCardNumber(pan);
+                emvTransactionDetails.setCardNumber(pan);
             }else {
                 return null;
             }
@@ -170,7 +170,7 @@ public class EmvL2 extends BaseShell {
         EMV rsp = runTransactionFlow(new EMV((byte) _53_PayFirstGenAC, (byte)EMV.CMD_TYPE.REQUEST, P1, (byte)0, data), callback);
 
         if(rsp==null){
-            HelperEMVClass.helperEMVClass.endTransaction(CANCEL_TXN.label);
+            HelperEMVClass.helperEMVClass.endTransaction(CANCEL_TXN);
         }
         String response = Utility.bytes2Hex(rsp.dataField.data);
 //        Log.e("TAG",response);
@@ -179,9 +179,9 @@ public class EmvL2 extends BaseShell {
 
         Log.e("ICC",iccData);
         if(iccData.substring(iccData.indexOf("9505")+4,iccData.indexOf("9505")+14).substring(4,5).equals("4")){
-            getTransactionDetails.setUNKNOWNCVM(true);
+            emvTransactionDetails.setUNKNOWNCVM(true);
         }else{
-            getTransactionDetails.setUNKNOWNCVM(false);
+            emvTransactionDetails.setUNKNOWNCVM(false);
         }
 
         return rsp;
@@ -192,9 +192,9 @@ public class EmvL2 extends BaseShell {
         int num = (Integer.parseInt(length.trim(), 16 ))*2;
         String name = data.substring(6,num+6);
         String nameData = getName(name);
-        getTransactionDetails.setCardName(nameData);
+        emvTransactionDetails.setCardName(nameData);
         String ICC = data.replace(data.substring(0,num+6),"");
-        getTransactionDetails.setICCDATA(ICC);
+        emvTransactionDetails.setICCDATA(ICC);
     }
 
     private static String getName(String hex){
@@ -236,7 +236,7 @@ public class EmvL2 extends BaseShell {
 
 
         if (pinType == EMV.CVM_PIN_TYPE.OnlinePin)
-            params = new Pinpad.Params(Pinpad.TYPE.ONLINE, pinKey, '0', getTransactionDetails.getCardNumber());
+            params = new Pinpad.Params(Pinpad.TYPE.ONLINE, pinKey, '0', emvTransactionDetails.getCardNumber());
         else
             params = new Pinpad.Params(Pinpad.TYPE.OFFLINE, pinInfo.retrieveTag(0xC2, true));
 
@@ -258,9 +258,9 @@ public class EmvL2 extends BaseShell {
                     }else{
                         String epb_ksnString = pinResult.data.substring(0,36);
                         Log.e("PINEPB",epb_ksnString);
-                        getTransactionDetails.setEPB(epb_ksnString.substring(0,16));
-                        getTransactionDetails.setKSN(epb_ksnString.substring(16));
-                        getTransactionDetails.setCVMType(Constants.PIN_CVM_TYPE.label);
+                        emvTransactionDetails.setEPB(epb_ksnString.substring(0,16));
+                        emvTransactionDetails.setKSN(epb_ksnString.substring(16));
+                        emvTransactionDetails.setCVMType(PIN_CVM_TYPE);
                     }
 
                 } else {
@@ -270,8 +270,8 @@ public class EmvL2 extends BaseShell {
                     String rpduString = Utility.bytes2Hex(rpdu);
                     Log.e("PINEPB",rpduString);
                     if(rpduString.equals("9000")){
-                        getTransactionDetails.setEPB("offline");
-                        getTransactionDetails.setKSN("offline");
+                        emvTransactionDetails.setEPB("offline");
+                        emvTransactionDetails.setKSN("offline");
                     }else {
                         if(count>1){
                             HelperEMVClass.helperEMVClass.endTransaction("Wrong pin entered multiple times.");
@@ -283,12 +283,12 @@ public class EmvL2 extends BaseShell {
                         }
 
                     }
-                    getTransactionDetails.setCVMType(Constants.PIN_CVM_TYPE.label);
+                    emvTransactionDetails.setCVMType(PIN_CVM_TYPE);
                 }
-                getTransactionDetails.setPINENTERED(true);
-                if(getTransactionDetails.getPOSENTRYTYPE().equals(Constants.CONTACTLESS_ENTRY_MODE.label)){
+                emvTransactionDetails.setPINENTERED(true);
+                if(emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACTLESS_ENTRY_MODE)){
                     if(HelperEMVClass.checkPinEmpty){
-                        HelperEMVClass.helperEMVClass.endTransaction(EMPTY_PIN_ERR.label);
+                        HelperEMVClass.helperEMVClass.endTransaction(EMPTY_PIN_ERR);
                         HelperEMVClass.checkPinEmpty = false;
                     }else{
                         SequencyHandler.getInstance(TXN_PROCESSING,sequenceInterface).execute(ctx,posDetails);
@@ -296,26 +296,26 @@ public class EmvL2 extends BaseShell {
                 }
                 break;
             case CANCEL:
-                if(!getTransactionDetails.getPOSENTRYTYPE().equals(Constants.CONTACTLESS_ENTRY_MODE.label)){
+                if(!emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACTLESS_ENTRY_MODE)){
                     HelperEMVClass.cancelledflag = true;
                 }
-                HelperEMVClass.helperEMVClass.endTransaction(CANCEL_TXN.label);
+                HelperEMVClass.helperEMVClass.endTransaction(CANCEL_TXN);
                 break;
             case TIMEOUT:
-                if(!getTransactionDetails.getPOSENTRYTYPE().equals(Constants.CONTACTLESS_ENTRY_MODE.label)){
+                if(!emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACTLESS_ENTRY_MODE)){
                     HelperEMVClass.cancelledflag = true;
                 }
                 emvCallbackRsp.parameter[1] = 2;
-                HelperEMVClass.helperEMVClass.endTransaction(PIN_TIME_OUT_ERR.label);
+                HelperEMVClass.helperEMVClass.endTransaction(PIN_TIME_OUT_ERR);
                 break;
             case BYPASS:
                 emvCallbackRsp.parameter[1] = 3;
                 break;
             case ERR:
-                if(!getTransactionDetails.getPOSENTRYTYPE().equals(Constants.CONTACTLESS_ENTRY_MODE.label)){
+                if(!emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACTLESS_ENTRY_MODE)){
                     HelperEMVClass.cancelledflag = true;
                 }
-                HelperEMVClass.helperEMVClass.endTransaction(PIN_ERR.label);
+                HelperEMVClass.helperEMVClass.endTransaction(PIN_ERR);
                 break;
             default:
                 emvCallbackRsp.parameter[1] = 1;

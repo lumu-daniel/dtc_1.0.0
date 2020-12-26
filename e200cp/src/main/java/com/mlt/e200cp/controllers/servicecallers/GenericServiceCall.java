@@ -3,6 +3,7 @@ package com.mlt.e200cp.controllers.servicecallers;
 import android.util.Log;
 
 import com.mlt.e200cp.interfaces.ClientApi;
+import com.mlt.e200cp.interfaces.GeneralServiceCallback;
 import com.mlt.e200cp.interfaces.ResultsCallback;
 
 import org.simpleframework.xml.convert.AnnotationStrategy;
@@ -71,7 +72,7 @@ public class GenericServiceCall {
     }
 
 
-    public synchronized void callService(final ResultsCallback callback){
+    public synchronized void callService(final GeneralServiceCallback callback){
         try {
             RequestBody requestBody = RequestBody.create(MediaType.parse("text/plain"), SOAPRequestXML);
 

@@ -17,12 +17,10 @@ import com.mlt.e200cp.interfaces.PosSequenceInterface;
 import com.mlt.e200cp.interfaces.ResponseReciever;
 import com.mlt.e200cp.interfaces.ResultsCallback;
 import com.mlt.e200cp.interfaces.ViewInterface;
-import com.mlt.e200cp.models.GetTransactionDetails;
+import com.mlt.e200cp.models.EmvTransactionDetails;
 import com.mlt.e200cp.models.PosDetails;
 import com.mlt.e200cp.models.TestData;
-import com.mlt.e200cp.models.enums.Constants;
-import com.mlt.e200cp.models.enums.TxnState;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
 import com.mlt.e200cp.utilities.FetchDeviceSerialNumber.BasePresenterViewWrapper;
 import com.mlt.e200cp.utilities.helper.protocol.EMV;
 import com.mlt.e200cp.utilities.helper.protocol.TLV;
@@ -40,31 +38,36 @@ import java.util.HashMap;
 import java.util.List;
 
 import saioapi.util.Sys;
-
-import static com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass.reversalFlag;
-import static com.mlt.e200cp.models.MessageFlags.CARD_INSERTED;
-import static com.mlt.e200cp.models.MessageFlags.CARD_SWIPPED;
-import static com.mlt.e200cp.models.MessageFlags.CARD_TAPPED;
-import static com.mlt.e200cp.models.MessageFlags.CHIP_FALLBACK;
-import static com.mlt.e200cp.models.MessageFlags.FALLBACKCHIPORTAP;
-import static com.mlt.e200cp.models.MessageFlags.PROMPT_PHONE;
-import static com.mlt.e200cp.models.MessageFlags.SELECT_APP;
-import static com.mlt.e200cp.models.MessageFlags.TXN_ERROR;
-import static com.mlt.e200cp.models.MessageFlags.TXN_PROCESSING;
-import static com.mlt.e200cp.models.MessageFlags.TXN_REVERSAL;
-import static com.mlt.e200cp.models.MessageFlags.TXN_SUCCESSFUL;
-import static com.mlt.e200cp.models.enums.EmvTransactionType.REFUND_TRANSACTION;
-import static com.mlt.e200cp.models.enums.ErrorCenter.CANCEL_TXN;
-import static com.mlt.e200cp.models.enums.ErrorCenter.CARD_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.CARD_REMOVED_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.CRD_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.CRD_UNSPTD_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.EMPTY_PIN_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.MSR_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.NOT_VER_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.TIME_OUT_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.TXN_FLOW_ERR;
-import static com.mlt.e200cp.models.enums.ErrorCenter.USE_CHIP_ERR;
+import static com.mlt.e200cp.models.EmvTransactionType.REFUND_TRANSACTION;
+import static com.mlt.e200cp.models.StringConstants.CANCEL_TXN;
+import static com.mlt.e200cp.models.StringConstants.CARD_ERR;
+import static com.mlt.e200cp.models.StringConstants.CARD_INSERTED;
+import static com.mlt.e200cp.models.StringConstants.CARD_REMOVED_ERR;
+import static com.mlt.e200cp.models.StringConstants.CARD_SWIPPED;
+import static com.mlt.e200cp.models.StringConstants.CARD_TAPPED;
+import static com.mlt.e200cp.models.StringConstants.CHIP_FALLBACK;
+import static com.mlt.e200cp.models.StringConstants.CONTACTLESS_ENTRY_MODE;
+import static com.mlt.e200cp.models.StringConstants.CONTACTLESS_MGSTRIPE;
+import static com.mlt.e200cp.models.StringConstants.CONTACT_ENTRY_MODE;
+import static com.mlt.e200cp.models.StringConstants.CRD_ERR;
+import static com.mlt.e200cp.models.StringConstants.CRD_NO_RMVD;
+import static com.mlt.e200cp.models.StringConstants.CRD_RMVD;
+import static com.mlt.e200cp.models.StringConstants.CRD_UNSPTD_ERR;
+import static com.mlt.e200cp.models.StringConstants.EMPTY_PIN_ERR;
+import static com.mlt.e200cp.models.StringConstants.FALLBACKCHIPORTAP;
+import static com.mlt.e200cp.models.StringConstants.MAGSTRIPE_ENTRY_MODE;
+import static com.mlt.e200cp.models.StringConstants.MSR_ERR;
+import static com.mlt.e200cp.models.StringConstants.NOT_VER_ERR;
+import static com.mlt.e200cp.models.StringConstants.NO_CVM_PRF;
+import static com.mlt.e200cp.models.StringConstants.NO_CVM_TYPE;
+import static com.mlt.e200cp.models.StringConstants.PROMPT_PHONE;
+import static com.mlt.e200cp.models.StringConstants.SELECT_APP;
+import static com.mlt.e200cp.models.StringConstants.SIGNATURE_CVM_TYPE;
+import static com.mlt.e200cp.models.StringConstants.TIME_OUT_ERR;
+import static com.mlt.e200cp.models.StringConstants.TXN_FLOW_ERR;
+import static com.mlt.e200cp.models.StringConstants.TXN_PROCESSING;
+import static com.mlt.e200cp.models.StringConstants.TXN_REVERSAL;
+import static com.mlt.e200cp.models.StringConstants.USE_CHIP_ERR;
 import static com.mlt.e200cp.utilities.helper.shell.Reader.STATE.OUT_WITH_DATA;
 import static com.mlt.e200cp.utilities.helper.util.ISOConstant.SUCCESSFLAG;
 import static com.mlt.e200cp.utilities.helper.util.Logger.LINE_OUT;
@@ -84,7 +87,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
      * Use a single global object and call the
      * onAction(function) method from the global object
      * It should be loaded at the beginning of the main Activity (Starter activity)*/
-    public static GetTransactionDetails getTransactionDetails;
+    public static EmvTransactionDetails emvTransactionDetails;
     public static boolean cancelFlag = false;
     public Reader.STATE state = null;
     private Handler mHandler = null;
@@ -115,10 +118,10 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         FeaturesByProduct.product = getProductName(context);
         FeaturesByProduct.initRelatedObjects(context);
         helperEMVClass=this;
-        getTransactionDetails = new GetTransactionDetails();
-        getTransactionDetails.setIntergrated(isIntergrated);
-        getTransactionDetails.setGrossAmount(StringUtils.leftPad(amount,12,'0'));
-        getTransactionDetails.setTransactionInitiationDateAndTime(getTranasctionDateAndTime().replace("T"," ").replace("Z",""));
+        emvTransactionDetails = new EmvTransactionDetails();
+        emvTransactionDetails.setIntergrated(isIntergrated);
+        emvTransactionDetails.setGrossAmount(StringUtils.leftPad(amount,12,'0'));
+        emvTransactionDetails.setTransactionInitiationDateAndTime(getTranasctionDateAndTime().replace("T"," ").replace("Z",""));
         this.timeOut = timeOut1;
         this.callbackInterface = sequenceInterface;
         this.appCompatActivity = context;
@@ -150,7 +153,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             checkPinEmpty = false;
             cancelledflag = false;
             cancelFlag = false;
-            getTransactionDetails.setPINENTERED(false);
+            emvTransactionDetails.setPINENTERED(false);
             return connect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -180,26 +183,26 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             VNG response;
             if(txn_type.equals(REFUND_TRANSACTION)){
                 map = Reader.autoReport(true, true, true, timeOut,
-                        Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(getTransactionDetails.getGrossAmount(),
-                                12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 03 DF 20 01 14"),getTransactionDetails);
+                        Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(emvTransactionDetails.getGrossAmount(),
+                                12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 03 DF 20 01 14"), emvTransactionDetails);
             }else{
                 map = Reader.autoReport(true, true, true, timeOut,
-                        Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(getTransactionDetails.getGrossAmount(),
-                                12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"),getTransactionDetails);
+                        Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(emvTransactionDetails.getGrossAmount(),
+                                12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"), emvTransactionDetails);
             }
 
             //Initialise the global tag length Value object to set the tag length values.
             dataField = new TLV();
             dataField.clear();
-            dataField.addData(0x9F02, StringUtils.leftPad(getTransactionDetails.getGrossAmount(),12,'0'));          //Set the amount for both the Contact and the magnetic Stripe.
+            dataField.addData(0x9F02, StringUtils.leftPad(emvTransactionDetails.getGrossAmount(),12,'0'));          //Set the amount for both the Contact and the magnetic Stripe.
             if(txn_type.equals(REFUND_TRANSACTION)){
                 dataField.addData(0x9C, "20");                     //transaction type refund
             }else{
                 dataField.addData(0x9C, "00");                     //transaction type purchase
             }
             dataField.addData(0xDF46, "0001");                  // transaction type by XAC
-            getTransactionDetails.setGenerateReceiptOnly("false");
-            getTransactionDetails.setIsReversal("false");
+            emvTransactionDetails.setGenerateReceiptOnly("false");
+            emvTransactionDetails.setIsReversal("false");
             dataField.addData(0xDF41, "575A");                // required tags
 
             state = (Reader.STATE) map.get("State");    //State type of port transaction.
@@ -213,11 +216,11 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 
             switch(state){
                 case IN_ICC:
-                    getTransactionDetails.setPOSENTRYTYPE(Constants.CONTACT_ENTRY_MODE.label);
+                    emvTransactionDetails.setPOSENTRYTYPE(CONTACT_ENTRY_MODE);
                     parseICC(dataField);
                     break;
                 case IN_CTLS:
-                    getTransactionDetails.setPOSENTRYTYPE(Constants.CONTACTLESS_ENTRY_MODE.label);
+                    emvTransactionDetails.setPOSENTRYTYPE(CONTACTLESS_ENTRY_MODE);
                     if(!processCTLS(response)){
                         return;
                     }else{
@@ -225,10 +228,10 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                             SequencyHandler.getInstance(TXN_PROCESSING,callbackInterface).execute(appCompatActivity,posDetails);
                             return;
                         }else{
-                            if(getTransactionDetails.getCVMType().equals(Constants.NO_CVM_TYPE.label)){
+                            if(emvTransactionDetails.getCVMType().equals(NO_CVM_TYPE)){
                                 SequencyHandler.getInstance(TXN_PROCESSING,callbackInterface).execute(appCompatActivity,posDetails);
-                            }else if(getTransactionDetails.getCVMType().equals(Constants.NO_CVM_PRF.label)){
-                                if(Integer.parseInt(getTransactionDetails.getGrossAmount()) > CVMReqLimit){
+                            }else if(emvTransactionDetails.getCVMType().equals(NO_CVM_PRF)){
+                                if(Integer.parseInt(emvTransactionDetails.getGrossAmount()) > CVMReqLimit){
                                     EmvL2.pinInputProcess((byte) 1, null, TestData.DK4PIN.slot, callbackInterface,ctx,posDetails);
                                 }else{
                                     SequencyHandler.getInstance(TXN_PROCESSING,callbackInterface).execute(appCompatActivity,posDetails);
@@ -242,11 +245,11 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                     }
                     break;
                 case IN_MSR:
-                    getTransactionDetails.setPOSENTRYTYPE(Constants.MAGSTRIPE_ENTRY_MODE.label);
+                    emvTransactionDetails.setPOSENTRYTYPE(MAGSTRIPE_ENTRY_MODE);
                     processMSR(response);
                     break;
                 case TIMEOUT_CANCEL:
-                    endTransaction(CANCEL_TXN.label);
+                    endTransaction(CANCEL_TXN);
                     log("Reader time out...",LINE_OUT());
                     break;
                 case UNKNOWN:
@@ -256,11 +259,11 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                         endTransaction(NULL.label);
                         ChipProcessingRetryCounter++;
                     }*/
-                    endTransaction(CARD_ERR.label);
+                    endTransaction(CARD_ERR);
                     log("",LINE_OUT());
                     break;
                 case ERROR:
-                    endTransaction(CARD_ERR.label);
+                    endTransaction(CARD_ERR);
                     log("Card error 1, Device restart required",LINE_OUT());
                     break;
             }
@@ -268,26 +271,26 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             ex.printStackTrace();
             appendLog(ex.getLocalizedMessage());
             log("Card not Supported..."+ex.getStackTrace()[0].getLineNumber()+" "+ex.getStackTrace()[0].getClassName(),LINE_OUT());
-            endTransaction(TXN_FLOW_ERR.label);
+            endTransaction(TXN_FLOW_ERR);
         }
 
     }
 
     private void processMSR(VNG rsp){
         SequencyHandler.getInstance(CARD_SWIPPED,callbackInterface).execute();
-        getTransactionDetails.setCVMType(/*ctlsData.substring(ctlsData.indexOf("C701")+4,ctlsData.indexOf("C701")+6)*/"01");
+        emvTransactionDetails.setCVMType(/*ctlsData.substring(ctlsData.indexOf("C701")+4,ctlsData.indexOf("C701")+6)*/"01");
         String response = Utility.bytes2Hex(rsp.parseBytes(rsp.size));
 
         //incase of magstripe failure
         if(response.contains("1C1C")){
             log("Error in magnetic stripe reading",LINE_OUT());
-            endTransaction(MSR_ERR.label);
+            endTransaction(MSR_ERR);
             return;
             //ToDo;
         }
         String track2Data = response.replace("1C","2D").split("2D")[1];
         String CardName = hex2string(response).split("\\^")[1].replace("/"," ");
-        getTransactionDetails.setCardName(CardName);
+        emvTransactionDetails.setCardName(CardName);
         Log.e("TRACK2",CardName);
         setRequestValues(hex2string(track2Data).replace("=","D"));
         Log.e("TRACK2",track2Data);
@@ -324,7 +327,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             });
         }
         else{
-            getTransactionDetails.setPOSENTRYTYPE(Constants.MAGSTRIPE_ENTRY_MODE.label);
+            emvTransactionDetails.setPOSENTRYTYPE(MAGSTRIPE_ENTRY_MODE);
             SequencyHandler.getInstance(TXN_PROCESSING,callbackInterface).execute(ctx,posDetails);
         }
     }
@@ -333,7 +336,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         SequencyHandler.getInstance(CARD_TAPPED,callbackInterface).execute();
         String ctlsData = Utility.bytes2Hex(rsp.parseBytes(rsp.size));
         if(ctlsData.contains("C701")){
-            getTransactionDetails.setCVMType(ctlsData.substring(ctlsData.indexOf("C701")+4,ctlsData.indexOf("C701")+6));
+            emvTransactionDetails.setCVMType(ctlsData.substring(ctlsData.indexOf("C701")+4,ctlsData.indexOf("C701")+6));
         }
         if(ctlsData.contains("5F 20")){
             processCardName(ctlsData.replace(" ",""));
@@ -354,12 +357,12 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             if(checkFlag){
                 ctlsAfterPhone();
             }else{
-                endTransaction(NOT_VER_ERR.label);
+                endTransaction(NOT_VER_ERR);
             }
             return false;
         }
         else if(ctlsData.contains("C30129")){
-            endTransaction(CRD_UNSPTD_ERR.label);
+            endTransaction(CRD_UNSPTD_ERR);
             return false;
         }
         else if(ctlsData.contains("C30102")){
@@ -369,11 +372,11 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             if(ctlsData.contains("C00101")) {
                 if(ctlsData.substring(ctlsData.indexOf("C101")+4,ctlsData.indexOf("C101")+6).equals(CTLSTypes.MC_MagStripe.label)){
                     setRequestValues(getTrack2DataCTLSMSR(ctlsData));
-                    getTransactionDetails.setICCDATA(ctlsData);
+                    emvTransactionDetails.setICCDATA(ctlsData);
                 }else if(ctlsData.substring(ctlsData.indexOf("C101")+4,ctlsData.indexOf("C101")+6).equals(CTLSTypes.MC_Mchip.label)){
                     String trkData = getTrack2DataCTLSICC(ctlsData);
                     setRequestValues(trkData);
-                    getTransactionDetails.setICCDATA(ctlsData);
+                    emvTransactionDetails.setICCDATA(ctlsData);
                 }
                 return true;
 
@@ -382,20 +385,20 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                 //MSR ctls processing
                 if(ctlsData.substring(ctlsData.indexOf("C101")+4,ctlsData.indexOf("C101")+6).equals(CTLSTypes.VISA_MSD_Legacy.label)){
                     setRequestValues(getTrack2DataCTLSMSR(ctlsData));
-                    getTransactionDetails.setICCDATA(ctlsData);
+                    emvTransactionDetails.setICCDATA(ctlsData);
                 }else if(ctlsData.substring(ctlsData.indexOf("C101")+4,ctlsData.indexOf("C101")+6).equals(CTLSTypes.VISA_qVSDC.label)){
                     setRequestValues(getTrack2DataCTLSICC(ctlsData));
-                    getTransactionDetails.setICCDATA(ctlsData);
+                    emvTransactionDetails.setICCDATA(ctlsData);
                 }
                 return true;
             }
             else{
                 if(ctlsData.contains("C30105")){
-                    endTransaction(TIME_OUT_ERR.label);
+                    endTransaction(TIME_OUT_ERR);
                 }
                 else{
                     exchangeData(new VNG(Utility.hex2Byte("51 52 1E 00 03 56 00 00")));
-                    endTransaction(USE_CHIP_ERR.label);
+                    endTransaction(USE_CHIP_ERR);
                 }
                 Log.e("CTLS","CTLS error");
 
@@ -411,9 +414,9 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         EMV rsp = EmvL2.payStart(false, dataField, (callback) -> handlingEmvCallback(callback));
         if (!rsp.isSuccess) {
             if(cancelFlag){
-                endTransaction(CANCEL_TXN.label);
+                endTransaction(CANCEL_TXN);
             }else{
-                endTransaction(CRD_UNSPTD_ERR.label);
+                endTransaction(CRD_UNSPTD_ERR);
             }
             log("Chip card not read. Please swipe card...",LINE_OUT());
 
@@ -440,7 +443,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             if (!rsp.isSuccess) {
 
                 if(!cancelledflag){
-                    endTransaction(CARD_REMOVED_ERR.label);
+                    endTransaction(CARD_REMOVED_ERR);
                 }
 
                 cancelledflag = false;
@@ -448,7 +451,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
             }
 
             if(checkPinEmpty){
-                endTransaction(EMPTY_PIN_ERR.label);
+                endTransaction(EMPTY_PIN_ERR);
                 checkPinEmpty = false;
                 return;
             }
@@ -459,9 +462,9 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         dataField.clear();
         dataField.addData(0xDF41, "5F205F245F2A5F348284959A9B9C9F029F039F099F109F1A9F269F279F339F349F399F359F369F379F089F1E");            // required tags
 
-        if(!getTransactionDetails.getPINENTERED()){
-            getTransactionDetails.setEPB("Optional");
-            getTransactionDetails.setKSN("Optional");
+        if(!emvTransactionDetails.getPINENTERED()){
+            emvTransactionDetails.setEPB("Optional");
+            emvTransactionDetails.setKSN("Optional");
         }
         // ================================== PAY First Gen AC ===================================
         rsp = EmvL2.payFirstGenAC(false, dataField, (callback) -> handlingEmvCallback(callback));
@@ -473,9 +476,9 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 //            cancelExcecutution();
 //            SequencyHandler.getInstance(callbackInterface).execute(SWIPE_FALLBACK,this);
                 if(cancelFlag){
-                    endTransaction(CANCEL_TXN.label);
+                    endTransaction(CANCEL_TXN);
                 }else{
-                    endTransaction(CARD_REMOVED_ERR.label);
+                    endTransaction(CARD_REMOVED_ERR);
                 }
                 return;
             }
@@ -484,13 +487,13 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 
             addLog("First Gen AC : " + rsp.result.toString());
 
-            if(!getTransactionDetails.getPINENTERED()){
-                if(getTransactionDetails.getUNKNOWNCVM())
-                    getTransactionDetails.setCVMType(Constants.SIGNATURE_CVM_TYPE.label);
+            if(!emvTransactionDetails.getPINENTERED()){
+                if(emvTransactionDetails.getUNKNOWNCVM())
+                    emvTransactionDetails.setCVMType(SIGNATURE_CVM_TYPE);
                 else
-                    getTransactionDetails.setCVMType(Constants.NO_CVM_TYPE.label);
-                getTransactionDetails.setEPB("optional");
-                getTransactionDetails.setKSN("optional");
+                    emvTransactionDetails.setCVMType(NO_CVM_TYPE);
+                emvTransactionDetails.setEPB("optional");
+                emvTransactionDetails.setKSN("optional");
             }
         }
 
@@ -520,15 +523,15 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         if(!txn_type.equals(REFUND_TRANSACTION)){
             try{
                 //=================================== Ist Issuer Scripth Command =========================
-                if(getTransactionDetails.getIssuerAuthorisationData()!=null&&!getTransactionDetails.getIssuerAuthorisationData().equals("")){
-                    ServerIAD = getTransactionDetails.getIssuerAuthorisationData();
+                if(emvTransactionDetails.getIssuerAuthorisationData()!=null&&!emvTransactionDetails.getIssuerAuthorisationData().equals("")){
+                    ServerIAD = emvTransactionDetails.getIssuerAuthorisationData();
                 }
 
                 String ISD71,ISD72 = "";
-                if(getTransactionDetails.getIssuerScriptingData71()!=null&&getTransactionDetails.getIssuerScriptingData72()!=null){
-                    if(!getTransactionDetails.getIssuerScriptingData71().equals("")&&!getTransactionDetails.getIssuerScriptingData72().equals("")){
-                        ISD71 = getTransactionDetails.getIssuerScriptingData71();
-                        ISD72 = getTransactionDetails.getIssuerScriptingData72();
+                if(emvTransactionDetails.getIssuerScriptingData71()!=null&& emvTransactionDetails.getIssuerScriptingData72()!=null){
+                    if(!emvTransactionDetails.getIssuerScriptingData71().equals("")&&!emvTransactionDetails.getIssuerScriptingData72().equals("")){
+                        ISD71 = emvTransactionDetails.getIssuerScriptingData71();
+                        ISD72 = emvTransactionDetails.getIssuerScriptingData72();
 
                     }else{
                         ISD71 = "00";
@@ -543,7 +546,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                 if(SUCCESSFLAG){
                     dataField.clear();
                     dataField.addData(0x8A, Utility.hex2Byte("3030"));
-                    String HexapprovalCode = Utility.bytes2Hex(getTransactionDetails.getApprovalCode()!=null?getTransactionDetails.getApprovalCode().getBytes():"000000".getBytes());
+                    String HexapprovalCode = Utility.bytes2Hex(emvTransactionDetails.getApprovalCode()!=null? emvTransactionDetails.getApprovalCode().getBytes():"000000".getBytes());
                     dataField.addData(0x89, Utility.hex2Byte(HexapprovalCode));
                     dataField.addData(0x9F01, Utility.hex2Byte("414243444546"));
                     dataField.addData(0x91, Utility.hex2Byte(ServerIAD));
@@ -559,7 +562,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                     if (!rsp.isSuccess) {
                         log("failed",LINE_OUT());
 //                endTransaction("Reversal call required...");
-                        getTransactionDetails.setIsReversal("true");
+                        emvTransactionDetails.setIsReversal("true");
                         posDetails.setReversalReason("Card Removed.");
                         SequencyHandler.getInstance(TXN_REVERSAL,callbackInterface).execute(appCompatActivity,posDetails,callbackInterface);
 
@@ -616,9 +619,9 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                 Reader.STATE name = Reader.waitForCard(20000, false);
                 if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
                     if (name == OUT_WITH_DATA) {
-                        PresenterClasses.sendState( TxnState.CRD_RMVD.label);
+                        PresenterClasses.sendState( CRD_RMVD);
                     } else {
-                        PresenterClasses.sendState(TxnState.CRD_NO_RMVD.label);
+                        PresenterClasses.sendState(CRD_NO_RMVD);
                     }
                 }
 
@@ -803,19 +806,19 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         }
         if(track2Data!=null){
             String cardNumber= track2Data.split("D")[0];
-            getTransactionDetails.setCardNumber(cardNumber);
+            emvTransactionDetails.setCardNumber(cardNumber);
             Log.e("Track2",track2Data);
-            getTransactionDetails.setTRACKDATA(track2Data);
-            getTransactionDetails.setCardExpiryDate(getExpiryDateOnCard(track2Data.split("D")[1].substring(0,4)));
-            if(getTransactionDetails.getPOSENTRYTYPE().equalsIgnoreCase(Constants.MAGSTRIPE_ENTRY_MODE.label)){
+            emvTransactionDetails.setTRACKDATA(track2Data);
+            emvTransactionDetails.setCardExpiryDate(getExpiryDateOnCard(track2Data.split("D")[1].substring(0,4)));
+            if(emvTransactionDetails.getPOSENTRYTYPE().equalsIgnoreCase(MAGSTRIPE_ENTRY_MODE)){
                 if(track2Data.split("D")[1].substring(4,5).equals("2")||track2Data.split("D")[1].substring(4,5).equals("6")){
                     fallBackFlag = true;
                 }
             }
 
-            getTransactionDetails.setCardType(cardNumber.startsWith("4")?"Visa":"Master");
-            getTransactionDetails.setKSN("optional");
-            getTransactionDetails.setEPB("optional");
+            emvTransactionDetails.setCardType(cardNumber.startsWith("4")?"Visa":"Master");
+            emvTransactionDetails.setKSN("optional");
+            emvTransactionDetails.setEPB("optional");
         }else{
             return;
         }
@@ -836,17 +839,17 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
     }
 
     private String getTrack2DataCTLSMSR(String CTLS){
-        getTransactionDetails.setPOSENTRYTYPE(Constants.CONTACTLESS_MGSTRIPE.label);
+        emvTransactionDetails.setPOSENTRYTYPE(CONTACTLESS_MGSTRIPE);
         return CTLS.substring(CTLS.indexOf("1C")+2,CTLS.indexOf("1C1E"));
     }
 
     private void setRequestValuesICC(String track2Data){
-        String cardNumber= getTransactionDetails.getCardNumber();
-        getTransactionDetails.setCardNumber(cardNumber);
+        String cardNumber= emvTransactionDetails.getCardNumber();
+        emvTransactionDetails.setCardNumber(cardNumber);
         String cardTrack2Data = track2Data.substring(4,(Integer.parseInt(track2Data.substring(2,4),16)*2)+4);
-        getTransactionDetails.setTRACKDATA(cardTrack2Data);
-        getTransactionDetails.setCardExpiryDate(getExpiryDateOnCard(cardTrack2Data.split("D")[1].substring(0,4)));
-        getTransactionDetails.setCardType(cardNumber.startsWith("4")?"Visa":"Master");
+        emvTransactionDetails.setTRACKDATA(cardTrack2Data);
+        emvTransactionDetails.setCardExpiryDate(getExpiryDateOnCard(cardTrack2Data.split("D")[1].substring(0,4)));
+        emvTransactionDetails.setCardType(cardNumber.startsWith("4")?"Visa":"Master");
     }
 
     private void processCardName(String response){
@@ -856,7 +859,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         if(length<100){
             String cardName = namePart.substring(2, length+2);
             cardName = hex2string(cardName);
-            getTransactionDetails.setCardName(cardName);
+            emvTransactionDetails.setCardName(cardName);
         }
 
     }
@@ -888,33 +891,33 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 
         //set the command to open ports
         map = Reader.autoReport(true, false, false, 20000,
-                Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(getTransactionDetails.getGrossAmount(),
-                        12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"),getTransactionDetails);
+                Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(emvTransactionDetails.getGrossAmount(),
+                        12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"), emvTransactionDetails);
 
         //Initialise the global tag length Value object to set the tag length values.
         dataField = new TLV();
         dataField.clear();
-        dataField.addData(0x9F02, StringUtils.leftPad(getTransactionDetails.getGrossAmount(),12,'0'));          //Set the amount for both the Contact and the magnetic Stripe.
+        dataField.addData(0x9F02, StringUtils.leftPad(emvTransactionDetails.getGrossAmount(),12,'0'));          //Set the amount for both the Contact and the magnetic Stripe.
         dataField.addData(0x9C, "00");                     //transaction type
         dataField.addData(0xDF46, "0001");                  // transaction type by XAC
-        getTransactionDetails.setGenerateReceiptOnly("false");
+        emvTransactionDetails.setGenerateReceiptOnly("false");
         dataField.addData(0xDF41, "575A");                // required tags
 
         state = (Reader.STATE) map.get("State");    //State type of port transaction.
         addLog(state.name()); //Shows the type of port transaction in the logs.
         switch (state){
             case IN_ICC:
-                getTransactionDetails.setPOSENTRYTYPE(Constants.CONTACT_ENTRY_MODE.label);
+                emvTransactionDetails.setPOSENTRYTYPE(CONTACT_ENTRY_MODE);
                 parseICC(dataField);
                 break;
             case TIMEOUT_CANCEL:
-                endTransaction(CANCEL_TXN.label);
+                endTransaction(CANCEL_TXN);
                 break;
             case ERROR:
 //                SequencyHandler.getInstance(callbackInterface).execute(TXN_ERROR,"Transaction timed out.");
                 break;
             default:
-                endTransaction(CRD_ERR.label);
+                endTransaction(CRD_ERR);
                 break;
         }
     }
@@ -931,8 +934,8 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 
         //set the command to open ports
         map = Reader.autoReport(false, true, false, 20000,
-                Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(getTransactionDetails.getGrossAmount(),
-                        12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"),getTransactionDetails);
+                Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(emvTransactionDetails.getGrossAmount(),
+                        12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"), emvTransactionDetails);
 
         state = (Reader.STATE) map.get("State");    //State type of port transaction.
         addLog(state.name()); //Shows the type of port transaction in the logs.
@@ -940,13 +943,13 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         switch (state){
             case IN_MSR:
                 SequencyHandler.getInstance( CARD_SWIPPED,callbackInterface).execute();
-                getTransactionDetails.setCVMType(/*ctlsData.substring(ctlsData.indexOf("C701")+4,ctlsData.indexOf("C701")+6)*/"01");
+                emvTransactionDetails.setCVMType(/*ctlsData.substring(ctlsData.indexOf("C701")+4,ctlsData.indexOf("C701")+6)*/"01");
                 String resp = Utility.bytes2Hex(response.parseBytes(response.size));
 
                 //incase of magstripe failure
                 if(resp.contains("1C1C")){
                     log("Error in magnetic stripe reading",LINE_OUT());
-                    endTransaction(MSR_ERR.label);
+                    endTransaction(MSR_ERR);
                     return;
                     //ToDo;
                 }
@@ -954,14 +957,14 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                 callback.onResponseSuccess(track2Data);
                 break;
             case ERROR:
-                callback.onResponseFailure(TIME_OUT_ERR.label);
+                callback.onResponseFailure(TIME_OUT_ERR);
                 break;
             case TIMEOUT_CANCEL:
                 log("time out",LINE_OUT());
-                callback.onResponseFailure(TIME_OUT_ERR.label);
+                callback.onResponseFailure(TIME_OUT_ERR);
                 break;
             default:
-                callback.onResponseFailure(CRD_ERR.label);
+                callback.onResponseFailure(CRD_ERR);
                 break;
         }
         //Shows the port response (ICC Data, MSR Data)
@@ -980,15 +983,15 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 
         //set the command to open ports
         map = Reader.autoReport(false, false, true, 20000,
-                Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(getTransactionDetails.getGrossAmount(),
-                        12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"),getTransactionDetails);
+                Utility.hex2Byte("00 9F 02 06 "+ StringUtils.leftPad(emvTransactionDetails.getGrossAmount(),
+                        12,'0')+"9F 03 06 00 00 00 00 00 00 DF 15 01 01 DF 20 01 14"), emvTransactionDetails);
 
         state = (Reader.STATE) map.get("State");    //State type of port transaction.
         addLog(state.name()); //Shows the type of port transaction in the logs.
         response = (VNG) map.get("Response");
         switch (state){
             case IN_CTLS:
-                getTransactionDetails.setPOSENTRYTYPE(Constants.CONTACTLESS_ENTRY_MODE.label);
+                emvTransactionDetails.setPOSENTRYTYPE(CONTACTLESS_ENTRY_MODE);
                 if(!processCTLS(response)){
                     return;
                 }else{
@@ -1000,14 +1003,14 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                 }
                 break;
             case ERROR:
-                endTransaction(TIME_OUT_ERR.label);
+                endTransaction(TIME_OUT_ERR);
                 break;
             case TIMEOUT_CANCEL:
                 log("time out",LINE_OUT());
-                endTransaction(TIME_OUT_ERR.label);
+                endTransaction(TIME_OUT_ERR);
                 break;
             default:
-                endTransaction(CRD_ERR.label);
+                endTransaction(CRD_ERR);
                 break;
         }
         //Shows the port response (ICC Data, MSR Data)

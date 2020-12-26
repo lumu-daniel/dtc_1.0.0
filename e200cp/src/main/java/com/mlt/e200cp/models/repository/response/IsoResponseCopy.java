@@ -1,4 +1,4 @@
-package com.mlt.e200cp.models.response;
+package com.mlt.e200cp.models.repository.response;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -11,39 +11,35 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass;
 import com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass;
 import com.mlt.e200cp.controllers.mainlogiccontrollers.SerialConnection;
-import com.mlt.e200cp.controllers.servicecallers.CallIsoServiceClass;
-import com.mlt.e200cp.controllers.servicecallers.RefundAndVoidServices;
 import com.mlt.e200cp.interfaces.PosSequenceInterface;
 import com.mlt.e200cp.interfaces.ResultsCallback;
 import com.mlt.e200cp.interfaces.SerialCallback;
 import com.mlt.e200cp.interfaces.ViewInterface;
 import com.mlt.e200cp.models.PosDetails;
-import com.mlt.e200cp.models.enums.EmvTransactionType;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
-import com.mlt.e200cp.utilities.helper.util.ISOConstant;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
+
 import java.lang.ref.WeakReference;
 import static android.content.ContentValues.TAG;
-import static com.mlt.e200cp.models.MessageFlags.CHIP_FALLBACK;
-import static com.mlt.e200cp.models.MessageFlags.FALLBACKCHIPORTAP;
-import static com.mlt.e200cp.models.MessageFlags.PORT_OPEN;
-import static com.mlt.e200cp.models.MessageFlags.SELECT_APP;
-import static com.mlt.e200cp.models.MessageFlags.SENDSTATE;
-import static com.mlt.e200cp.models.MessageFlags.START_INT_TXN;
-import static com.mlt.e200cp.models.MessageFlags.STOP_INT_TXN;
-import static com.mlt.e200cp.models.MessageFlags.SWIPE_FALLBACK;
-import static com.mlt.e200cp.models.MessageFlags.TXN_ERROR;
-import static com.mlt.e200cp.models.MessageFlags.TXN_PROCESSING;
-import static com.mlt.e200cp.models.MessageFlags.TXN_REVERSAL;
-import static com.mlt.e200cp.models.MessageFlags.TXN_REVERSED;
-import static com.mlt.e200cp.models.MessageFlags.TXN_SUCCESSFUL;
-import static com.mlt.e200cp.models.enums.CommandCenter.RESPONSE_GET_POS_STATUS;
-import static com.mlt.e200cp.models.enums.CommandCenter.RESPONSE_GET_TERM_DET;
-import static com.mlt.e200cp.models.enums.CommandCenter.RESPONSE_START_TXN;
-import static com.mlt.e200cp.models.enums.CommandCenter.STATUS_NOT_READY;
-import static com.mlt.e200cp.models.enums.CommandCenter.STATUS_READY;
+import static com.mlt.e200cp.models.StringConstants.CHIP_FALLBACK;
+import static com.mlt.e200cp.models.StringConstants.FALLBACKCHIPORTAP;
+import static com.mlt.e200cp.models.StringConstants.PORT_OPEN;
+import static com.mlt.e200cp.models.StringConstants.RESPONSE_GET_POS_STATUS;
+import static com.mlt.e200cp.models.StringConstants.RESPONSE_GET_TERM_DET;
+import static com.mlt.e200cp.models.StringConstants.RESPONSE_START_TXN;
+import static com.mlt.e200cp.models.StringConstants.SELECT_APP;
+import static com.mlt.e200cp.models.StringConstants.SENDSTATE;
+import static com.mlt.e200cp.models.StringConstants.START_INT_TXN;
+import static com.mlt.e200cp.models.StringConstants.STATUS_NOT_READY;
+import static com.mlt.e200cp.models.StringConstants.STATUS_READY;
+import static com.mlt.e200cp.models.StringConstants.STOP_INT_TXN;
+import static com.mlt.e200cp.models.StringConstants.SWIPE_FALLBACK;
+import static com.mlt.e200cp.models.StringConstants.TXN_ERROR;
+import static com.mlt.e200cp.models.StringConstants.TXN_PROCESSING;
+import static com.mlt.e200cp.models.StringConstants.TXN_REVERSAL;
+import static com.mlt.e200cp.models.StringConstants.TXN_REVERSED;
+import static com.mlt.e200cp.models.StringConstants.TXN_SUCCESSFUL;
 import static com.mlt.e200cp.utilities.helper.util.ISOConstant.serialPortOpened;
 import static com.mlt.e200cp.utilities.helper.util.Utility.appendLog;
-import static com.mlt.e200cp.utilities.helper.util.Utility.txn_type;
 
 public class SequencyHandler extends HandlerThread {
 
@@ -196,12 +192,7 @@ public class SequencyHandler extends HandlerThread {
                         break;
 
                     case "TXN_PROCESSING":
-                        sequenceInterfacecallBack.onStartProcessing();
-                        if(txn_type.equals(EmvTransactionType.REFUND_TRANSACTION)){
-                            RefundAndVoidServices.getInstance(HelperEMVClass.getTransactionDetails,baseContext, posDetails,sequenceInterfacecallBack).initiateParams();
-                        }else{
-                            CallIsoServiceClass.getInstance(HelperEMVClass.getTransactionDetails,baseContext, posDetails,sequenceInterfacecallBack).initiateParams();
-                        }
+                        sequenceInterfacecallBack.onStartProcessing(posDetails,HelperEMVClass.emvTransactionDetails);
 
                         break;
 
@@ -221,9 +212,7 @@ public class SequencyHandler extends HandlerThread {
                         break;
 
                     case "TXN_REVERSAL":
-                        ISOConstant.reversal = true;
-                        CallIsoServiceClass.getInstance(HelperEMVClass.getTransactionDetails,baseContext, posDetails,sequenceInterfacecallBack).initiateParams();
-                        sequenceInterfacecallBack.onTrasactionError("Reversing transaction");
+                        sequenceInterfacecallBack.onReverseTxn(HelperEMVClass.emvTransactionDetails,posDetails);
                         break;
 
                     //Todo call transactionDetails object
@@ -301,14 +290,14 @@ public class SequencyHandler extends HandlerThread {
                     public void success(String details) {
                         String command = details.split("-")[1];
 
-                        if(command.equals(RESPONSE_GET_POS_STATUS.label)){
+                        if(command.equals(RESPONSE_GET_POS_STATUS)){
                             if(serialPortOpened){
-                                sendMessage(STATUS_READY.label);
+                                sendMessage(STATUS_READY);
                             }else{
-                                sendMessage(STATUS_NOT_READY.label);
+                                sendMessage(STATUS_NOT_READY);
                             }
                         }
-                        else if(command.equals(RESPONSE_START_TXN.label)){
+                        else if(command.equals(RESPONSE_START_TXN)){
                             try {
                                 Thread.sleep(100);
                                 callback.onResponseSuccess(details);
@@ -318,7 +307,7 @@ public class SequencyHandler extends HandlerThread {
                                 callback.onResponseFailure(e.getLocalizedMessage());
                             }
                         }
-                        else if(command.equals(RESPONSE_GET_TERM_DET.label)){
+                        else if(command.equals(RESPONSE_GET_TERM_DET)){
                             Log.e("RESPONSE_GET_TERM_DET",ConfigurationClass.TERMINAL_ID+"-"+ConfigurationClass.MERCHANT_ID);
                             sendMessage(ConfigurationClass.TERMINAL_ID+"-"+ConfigurationClass.MERCHANT_ID);
                         }else {

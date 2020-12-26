@@ -48,8 +48,8 @@ import com.mlt.dtc.services.ServiceCallLogService;
 import com.mlt.dtc.utility.Constant;
 import com.mlt.e200cp.interfaces.TransactionDoneCallback;
 import com.mlt.e200cp.models.PosDetails;
-import com.mlt.e200cp.models.enums.EmvTransactionType;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.EmvTransactionType;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;

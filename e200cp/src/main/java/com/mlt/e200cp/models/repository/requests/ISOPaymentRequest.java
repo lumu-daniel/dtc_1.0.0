@@ -1,4 +1,4 @@
-package com.mlt.e200cp.models.requests;
+package com.mlt.e200cp.models.repository.requests;
 
 public class ISOPaymentRequest {
 

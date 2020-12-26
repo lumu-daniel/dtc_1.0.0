@@ -10,7 +10,7 @@ import com.mlt.e200cp.utilities.helper.protocol.VngDef;
 import com.mlt.e200cp.utilities.helper.util.DataSync;
 import com.mlt.e200cp.utilities.helper.util.Utility;
 
-import static com.mlt.e200cp.models.MessageFlags.TXN_ERROR;
+import static com.mlt.e200cp.models.StringConstants.TXN_ERROR;
 import static com.mlt.e200cp.utilities.helper.util.Logger.LINE_OUT;
 import static com.mlt.e200cp.utilities.helper.util.Logger.log;
 

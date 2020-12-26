@@ -19,20 +19,30 @@ import com.mlt.dtc.common.Common;
 import com.mlt.e200cp.controllers.backgroundcontrollers.SequencyHandler;
 import com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass;
 import com.mlt.e200cp.controllers.presenters.PresenterClasses;
-import com.mlt.e200cp.controllers.servicecallers.RefundAndVoidServices;
+import com.mlt.e200cp.controllers.servicecallers.ServiceContract;
 import com.mlt.e200cp.interfaces.PosSequenceInterface;
+import com.mlt.e200cp.interfaces.ServiceCallback;
 import com.mlt.e200cp.interfaces.TransactionDoneCallback;
 import com.mlt.e200cp.interfaces.ViewInterface;
-import com.mlt.e200cp.models.GetTransactionDetails;
+import com.mlt.e200cp.models.EmvTransactionDetails;
 import com.mlt.e200cp.models.PosDetails;
-import com.mlt.e200cp.models.enums.TxnState;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
+import com.mlt.e200cp.utilities.helper.util.ISOConstant;
 
 import static com.mlt.dtc.ISO_Payment.satefragments.PinEntryScreen.pinEntryScreen;
 import static com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass.serviceFlag;
-import static com.mlt.e200cp.models.MessageFlags.PORT_OPEN;
-import static com.mlt.e200cp.models.enums.EmvTransactionType.VOID_PURCHASE_TRANSACTION;
-import static com.mlt.e200cp.models.enums.EmvTransactionType.VOID_REFUND_TRANSACTION;
+import static com.mlt.e200cp.models.EmvTransactionType.VOID_PURCHASE_TRANSACTION;
+import static com.mlt.e200cp.models.EmvTransactionType.VOID_REFUND_TRANSACTION;
+import static com.mlt.e200cp.models.StringConstants.CARD_INSERTED;
+import static com.mlt.e200cp.models.StringConstants.CONTACT_ENTRY_MODE;
+import static com.mlt.e200cp.models.StringConstants.ENTER_CARD;
+import static com.mlt.e200cp.models.StringConstants.PIN_ENTERED;
+import static com.mlt.e200cp.models.StringConstants.PORT_OPEN;
+import static com.mlt.e200cp.models.StringConstants.PROC_ONLINE;
+import static com.mlt.e200cp.models.StringConstants.RMV_CRD_DSP;
+import static com.mlt.e200cp.models.StringConstants.TXN_REVERSED;
+import static com.mlt.e200cp.models.StringConstants.TXN_SUCCESSFUL;
+import static com.mlt.e200cp.utilities.helper.util.ISOConstant.printReversal;
 import static com.mlt.e200cp.utilities.helper.util.Logger.LINE_OUT;
 import static com.mlt.e200cp.utilities.helper.util.Logger.log;
 import static com.mlt.e200cp.utilities.helper.util.Utility.appendLog;
@@ -49,7 +59,7 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
     private DialogFragment fragment;
     private String txnAmount;
     private String transactionID;
-    public GetTransactionDetails details;
+    public EmvTransactionDetails details;
     public static boolean flagChipOrTap = false;
     TransactionDoneCallback callback;
 
@@ -61,9 +71,9 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
         this.callback = callback;
 
         if(txn_type.equals(VOID_PURCHASE_TRANSACTION)||txn_type.equals(VOID_REFUND_TRANSACTION)){
-            details = new GetTransactionDetails();
+            details = new EmvTransactionDetails();
             details.setTransactionInitiationDateAndTime(getTranasctionDateAndTime().replace("T"," ").replace("Z",""));
-            RefundAndVoidServices.getInstance(details,appCompatActivity,posDetails,this).initiateParams();
+
         }else{
             SequencyHandler.getInstance(PORT_OPEN,this).execute(appCompatActivity,this,amount,timeOut, posDetails,isIntergrated);
         }
@@ -83,7 +93,7 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
     @Override
     public void onCardInserted() {
         if(serviceFlag.equalsIgnoreCase("Integrated")){
-            PresenterClasses.sendState(TxnState.CARD_INSERTED.label);
+            PresenterClasses.sendState(CARD_INSERTED);
         }
         log("card inserted",LINE_OUT());
 
@@ -107,7 +117,7 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
     @Override
     public void onPortOpened() {
         if(serviceFlag.equalsIgnoreCase("Integrated")){
-            PresenterClasses.sendState(TxnState.ENTER_CARD.label);
+            PresenterClasses.sendState(ENTER_CARD);
         }
         dismissDialog(fragment);
         fragment = new PortsOpened();
@@ -171,7 +181,7 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
         dismissDialog(progDialog);
 
         if(serviceFlag.equalsIgnoreCase("Integrated")){
-            PresenterClasses.sendState(TxnState.PIN_ENTERED.label);
+            PresenterClasses.sendState(PIN_ENTERED);
         }
 
         fragment = new PinEntryScreen();
@@ -213,10 +223,10 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
     }
 
     @Override
-    public void onStartProcessing() {
+    public void onStartProcessing(PosDetails posDetails,EmvTransactionDetails emvTransactionDetails) {
         dismissDialog(progDialog);
         if(serviceFlag.equalsIgnoreCase("Integrated")){
-            PresenterClasses.sendState(TxnState.PROC_ONLINE.label);
+            PresenterClasses.sendState(PROC_ONLINE);
         }
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -226,8 +236,36 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
                 dismissDialog(pinEntryScreen);
                 dismissDialog(progDialog);
                 progDialog = Common.setAvi(new AlertDialog.Builder(compatActivity).create(),compatActivity);
-//                progDialog = ProgressDialog.show(compatActivity,"Processing ...","");
                 dismissDialog(fragment);
+            }
+        });
+
+        ServiceContract.callIsoService(posDetails, emvTransactionDetails, new ServiceCallback() {
+            @Override
+            public String onResponseSuccess(EmvTransactionDetails data, ISOPaymentResponse detailsData) {
+                ISOConstant.calledService = true;
+                dismissDialog(progDialog);
+                if(ISOConstant.reversal){
+                    printReversal = true;
+                    SequencyHandler.getInstance(TXN_REVERSED,BaseClass.this).execute(detailsData);
+                    ISOConstant.reversal = false;
+                }else{
+                    if(!emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACT_ENTRY_MODE)){
+                        SequencyHandler.getInstance(TXN_SUCCESSFUL,BaseClass.this).execute(detailsData);
+                    }else{
+                        ISOConstant.SUCCESSFLAG = true;
+                        HelperEMVClass.helperEMVClass.onResponseRecieved(detailsData);
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            public String onResponseFailure(String t) {
+                ISOConstant.calledService = true;
+                dismissDialog(progDialog);
+                return null;
             }
         });
 
@@ -260,7 +298,7 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
     @Override
     public void removeCardDisplayed() {
         if(serviceFlag.equalsIgnoreCase("Integrated")){
-            PresenterClasses.sendState(TxnState.RMV_CRD_DSP.label);
+            PresenterClasses.sendState(RMV_CRD_DSP);
         }
     }
 
@@ -270,6 +308,11 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
         dismissDialog(fragment);
 
         callback.onfailure(error);
+    }
+
+    @Override
+    public void onReverseTxn(EmvTransactionDetails transactionDetails, PosDetails posDetails) {
+        onStartProcessing(posDetails,transactionDetails);
     }
 
     @Override

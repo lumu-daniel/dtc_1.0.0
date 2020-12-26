@@ -1,4 +1,4 @@
-package com.mlt.e200cp.models.response.MerchantDetailsService;
+package com.mlt.e200cp.models.repository.response.MerchantDetailsService;
 
 import java.io.Serializable;
 

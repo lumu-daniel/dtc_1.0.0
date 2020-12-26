@@ -1,8 +1,29 @@
-package com.mlt.e200cp.models.requests;
+package com.mlt.e200cp.models.repository.response.MerchantDetailsService;
 
-public class PaymentConfiguration {
+import java.io.Serializable;
 
-    private String RequestId, TimeStamp,SecureHash,SignatureField,DeviceSerialNumber,ServiceId;
+
+/**
+ * Inquiry Request Class Models
+ */
+
+
+public class NipsMerchantDetailsRequest implements Serializable {
+
+    //Request Id
+    private String RequestId;
+
+    //Device Serial Number
+    private String DeviceSerialNumber;
+
+    //Curent TimeStamp
+    private String TimeStamp;
+
+    //Secure hash to be created for every request
+    private String SecureHash;
+
+    //Signature Fields to create the hash
+    private String SignatureField;
 
     public String getRequestId() {
         return RequestId;
@@ -11,6 +32,7 @@ public class PaymentConfiguration {
     public void setRequestId(String requestId) {
         RequestId = requestId;
     }
+
 
     public String getTimeStamp() {
         return TimeStamp;
@@ -42,13 +64,5 @@ public class PaymentConfiguration {
 
     public void setDeviceSerialNumber(String deviceSerialNumber) {
         DeviceSerialNumber = deviceSerialNumber;
-    }
-
-    public String getServiceId() {
-        return ServiceId;
-    }
-
-    public void setServiceId(String serviceId) {
-        ServiceId = serviceId;
     }
 }

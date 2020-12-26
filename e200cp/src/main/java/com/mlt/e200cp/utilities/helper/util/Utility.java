@@ -9,9 +9,9 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.mlt.e200cp.models.GetTransactionDetails;
-import com.mlt.e200cp.models.enums.EmvTransactionType;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.EmvTransactionDetails;
+import com.mlt.e200cp.models.EmvTransactionType;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
 import com.mlt.e200cp.utilities.FetchDeviceSerialNumber.ULTests;
 
 import org.bouncycastle.util.encoders.Hex;
@@ -402,23 +402,23 @@ public class Utility {
 
     }
 
-    public static HashMap<String, Object> setVariables(JSONObject obj, GetTransactionDetails getTransactionDetails){
+    public static HashMap<String, Object> setVariables(JSONObject obj, EmvTransactionDetails emvTransactionDetails){
         HashMap<String, Object> data = new HashMap();
         ISOPaymentResponse response = new Gson().fromJson(obj.toString(),ISOPaymentResponse.class);
         data.put("ISOPaymentResponse",response);
         Log.e("Response command",response.getErrorDescription());
-        getTransactionDetails.setIssuerAuthorisationData(response.getIAD());
-        getTransactionDetails.setApprovalCode(response.getTransactionDetailsData().getApprovalCode());
-        getTransactionDetails.setCardType(response.getTransactionDetailsData().getCardType());
+        emvTransactionDetails.setIssuerAuthorisationData(response.getIAD());
+        emvTransactionDetails.setApprovalCode(response.getTransactionDetailsData().getApprovalCode());
+        emvTransactionDetails.setCardType(response.getTransactionDetailsData().getCardType());
         String merchantReciept = response.getReceiptMerchantCopy();
         String customerReciept = response.getReceiptCustomerCopy();
         String IssuerScriptingData71 = response.getIssuerScriptingData71();
         String IssuerScriptingData72 = response.getIssuerScriptingData72();
-        getTransactionDetails.setReceiptMerchantCopy(merchantReciept);
-        getTransactionDetails.setReceiptCustomerCopy(customerReciept);
-        getTransactionDetails.setIssuerScriptingData71(IssuerScriptingData71);
-        getTransactionDetails.setIssuerScriptingData72(IssuerScriptingData72);
-        data.put("GetTransactionDetails",getTransactionDetails);
+        emvTransactionDetails.setReceiptMerchantCopy(merchantReciept);
+        emvTransactionDetails.setReceiptCustomerCopy(customerReciept);
+        emvTransactionDetails.setIssuerScriptingData71(IssuerScriptingData71);
+        emvTransactionDetails.setIssuerScriptingData72(IssuerScriptingData72);
+        data.put("GetTransactionDetails", emvTransactionDetails);
         if(data.size()<2){
             return null;
         }else{

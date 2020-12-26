@@ -5,12 +5,13 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.mlt.e200cp.controllers.servicecallers.GenericServiceCall;
+import com.mlt.e200cp.interfaces.GeneralServiceCallback;
 import com.mlt.e200cp.interfaces.ResultsCallback;
-import com.mlt.e200cp.models.requests.NipsMerchantDetailsRequest;
-import com.mlt.e200cp.models.requests.NipsiCounterInquiryRequest;
-import com.mlt.e200cp.models.response.MerchantDetailsService.MerchantDetails;
-import com.mlt.e200cp.models.response.MerchantDetailsService.NipsMerchantDetailsResponse;
-import com.mlt.e200cp.models.response.MerchantDetailsService.NipsMerchantDetailsResponseArr;
+import com.mlt.e200cp.models.repository.requests.NipsMerchantDetailsRequest;
+import com.mlt.e200cp.models.repository.requests.NipsiCounterInquiryRequest;
+import com.mlt.e200cp.models.repository.response.MerchantDetailsService.MerchantDetails;
+import com.mlt.e200cp.models.repository.response.MerchantDetailsService.NipsMerchantDetailsResponse;
+import com.mlt.e200cp.models.repository.response.MerchantDetailsService.NipsMerchantDetailsResponseArr;
 import com.mlt.e200cp.utilities.helper.util.EncryptDecrpt;
 
 import org.json.JSONException;
@@ -47,7 +48,7 @@ public class CallMerchantDetail {
                 String DeviceSerialNumber = deviceSN;//"E2C1000590";//E2C1000954 /<-**Prod**/ //"E2C1000590";  /<-**UAT**/
 
                 genericServiceCall = GenericServiceCall.getInstance("https://testpg.networkips.com/NIPSICounterService", createInquiryDeviceSerialNumber(generateRequest(DeviceSerialNumber)), "NIPSICounterService.svc", "http://tempuri.org/INIPSiCounterService/MerchantInquiry_MultipleMerchants");
-                genericServiceCall.callService(new ResultsCallback() {
+                genericServiceCall.callService(new GeneralServiceCallback() {
                     @Override
                     public String onResponseSuccess(String object) {
                         try {
@@ -143,7 +144,7 @@ public class CallMerchantDetail {
                                 obj.put("PaymentSecretKey",details.getItemDetails().getField30());
                             }
                             genericServiceCall = GenericServiceCall.getInstance("https://testpg.networkips.com/NIPSICounterService", createInquiryCardPayment(generatePlainTextRequest(obj.optString("TerminalId"))), "NIPSICounterService.svc", "http://tempuri.org/INIPSiCounterService/Inquiry");
-                            genericServiceCall.callService(new ResultsCallback() {
+                            genericServiceCall.callService(new GeneralServiceCallback() {
                                 @Override
                                 public String onResponseSuccess(String data) {
                                     if (data != null) {

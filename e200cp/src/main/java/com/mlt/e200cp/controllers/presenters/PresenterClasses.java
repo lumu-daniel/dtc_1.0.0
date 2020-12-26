@@ -4,14 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.mlt.e200cp.controllers.backgroundcontrollers.SequencyHandler;
 import com.mlt.e200cp.controllers.deviceconfigcontrollers.CallMerchantDetail;
@@ -23,14 +20,13 @@ import com.mlt.e200cp.interfaces.ResultsCallback;
 import com.mlt.e200cp.interfaces.ViewInterface;
 import com.mlt.e200cp.models.PaymentDetailsModel;
 import com.mlt.e200cp.models.PosDetails;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
 import com.mlt.e200cp.utilities.helper.util.Utility;
-
-import static com.mlt.e200cp.models.MessageFlags.CANCEL_INT_TXN;
-import static com.mlt.e200cp.models.MessageFlags.PORT_OPEN;
-import static com.mlt.e200cp.models.MessageFlags.SENDSTATE;
-import static com.mlt.e200cp.models.MessageFlags.START_INT_TXN;
-import static com.mlt.e200cp.models.MessageFlags.STOP_INT_TXN;
+import static com.mlt.e200cp.models.StringConstants.CANCEL_INT_TXN;
+import static com.mlt.e200cp.models.StringConstants.PORT_OPEN;
+import static com.mlt.e200cp.models.StringConstants.SENDSTATE;
+import static com.mlt.e200cp.models.StringConstants.START_INT_TXN;
+import static com.mlt.e200cp.models.StringConstants.STOP_INT_TXN;
 import static com.mlt.e200cp.utilities.helper.util.Utility.appendLog;
 
 public class PresenterClasses {

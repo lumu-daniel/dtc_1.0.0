@@ -232,8 +232,8 @@ public class Pinpad extends BaseShell {
 
         String pinLen = rsp.parseString(2);
         String epb = rsp.parseString();
-        HelperEMVClass.getTransactionDetails.setEPB(epb.substring(0,16));
-        HelperEMVClass.getTransactionDetails.setKSN(epb.substring(16));
+        HelperEMVClass.emvTransactionDetails.setEPB(epb.substring(0,16));
+        HelperEMVClass.emvTransactionDetails.setKSN(epb.substring(16));
         return "0" + epb;
     }
 

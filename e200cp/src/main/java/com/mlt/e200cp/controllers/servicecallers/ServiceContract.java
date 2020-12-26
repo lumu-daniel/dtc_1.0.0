@@ -2,40 +2,34 @@ package com.mlt.e200cp.controllers.servicecallers;
 
 import android.util.Log;
 
-import com.mlt.e200cp.controllers.backgroundcontrollers.SequencyHandler;
 import com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass;
-import com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass;
-import com.mlt.e200cp.controllers.presenters.PresenterClasses;
-import com.mlt.e200cp.interfaces.PosSequenceInterface;
-import com.mlt.e200cp.interfaces.ReprintRctCallBack;
-import com.mlt.e200cp.interfaces.ResultsCallback;
-import com.mlt.e200cp.models.GetTransactionDetails;
+import com.mlt.e200cp.interfaces.GeneralServiceCallback;
+import com.mlt.e200cp.interfaces.ServiceCallback;
+import com.mlt.e200cp.models.EmvTransactionDetails;
+import com.mlt.e200cp.models.EmvTransactionType;
 import com.mlt.e200cp.models.PosDetails;
 import com.mlt.e200cp.models.XMLRequestAndResponse;
-import com.mlt.e200cp.models.enums.Constants;
-import com.mlt.e200cp.models.enums.EmvTransactionName;
-import com.mlt.e200cp.models.enums.EmvTransactionType;
-import com.mlt.e200cp.models.enums.TxnState;
-import com.mlt.e200cp.models.requests.ISOPaymentRequest;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.repository.requests.ISOPaymentRequest;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
 import com.mlt.e200cp.utilities.helper.util.EncryptDecrpt;
-import com.mlt.e200cp.utilities.helper.util.ISOConstant;
-import com.mlt.e200cp.utilities.helper.util.Utility;
 
 import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 
 import static android.content.ContentValues.TAG;
-import static com.mlt.e200cp.models.MessageFlags.TXN_ERROR;
-import static com.mlt.e200cp.models.MessageFlags.TXN_REVERSED;
-import static com.mlt.e200cp.models.MessageFlags.TXN_SUCCESSFUL;
-import static com.mlt.e200cp.utilities.helper.util.ISOConstant.currentDateTime;
-import static com.mlt.e200cp.utilities.helper.util.ISOConstant.printReversal;
-import static com.mlt.e200cp.utilities.helper.util.Logger.LINE_OUT;
-import static com.mlt.e200cp.utilities.helper.util.Logger.log;
+import static com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass.LOGIN_ID;
+import static com.mlt.e200cp.models.StringConstants.APPLICATION_VERSION;
+import static com.mlt.e200cp.models.StringConstants.LOGIN_PW;
+import static com.mlt.e200cp.models.StringConstants.MERCHANT_NAME;
+import static com.mlt.e200cp.models.StringConstants.SERVICE_CODE;
+import static com.mlt.e200cp.models.StringConstants.TXN_CURRENCY;
+import static com.mlt.e200cp.utilities.helper.util.ISOConstant.RemoveEscapeSequence;
+import static com.mlt.e200cp.utilities.helper.util.ISOConstant.shortUUID;
 import static com.mlt.e200cp.utilities.helper.util.ServiceUrls.ISO_PAYMENT_URLRetro;
+import static com.mlt.e200cp.utilities.helper.util.ServiceUrls.ISO_PAYMENT_URLRoute;
 import static com.mlt.e200cp.utilities.helper.util.ServiceUrls.ISO_SOAP_FUNCTION;
 import static com.mlt.e200cp.utilities.helper.util.Utility.appendLog;
+import static com.mlt.e200cp.utilities.helper.util.Utility.checkExpiry;
 import static com.mlt.e200cp.utilities.helper.util.Utility.convertXMLtoJSON;
 import static com.mlt.e200cp.utilities.helper.util.Utility.getTranasctionDateAndTime;
 import static com.mlt.e200cp.utilities.helper.util.Utility.processDate;
@@ -44,71 +38,37 @@ import static com.mlt.e200cp.utilities.helper.util.Utility.txn_type;
 
 public class ServiceContract {
 
-    private PosSequenceInterface sequenceInterface;
-    private GetTransactionDetails getTransactionDetails;
-    private ISOPaymentResponse response;
 
-    private ServiceContract(GetTransactionDetails getTransactionDetails1,PosSequenceInterface sequenceInterface1){
-        this.sequenceInterface = sequenceInterface1;
-        this.getTransactionDetails = getTransactionDetails1;
-    }
-
-    public ServiceContract(GetTransactionDetails getTransactionDetails1) {
-        this.getTransactionDetails = getTransactionDetails1;
-    }
-
-    public void callIsoService(PosDetails details){
+    public static void callIsoService(PosDetails details, EmvTransactionDetails transactionDetails, ServiceCallback callback){
 
         String xmlReq = "";
-        if(!ISOConstant.reversal){
-            xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(encryptParams(getTransactionDetails,ConfigurationClass.plainText),details));
+        if(!transactionDetails.getIsReversal().equals("true")){
+            xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(encryptParams(transactionDetails, ConfigurationClass.plainText,callback),details));
         }else{
-            xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(getTransactionDetails,details));
+            xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(transactionDetails,details));
         }
 
-        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,"IsoMessageService.svc",ISO_SOAP_FUNCTION).callService(new ResultsCallback() {
+        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,ISO_PAYMENT_URLRoute,ISO_SOAP_FUNCTION).callService(new GeneralServiceCallback() {
             @Override
             public String onResponseSuccess(String data) {
                 if(data!=null){
                     try {
-                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
-                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
-                        }
-                        log(currentDateTime(),LINE_OUT());
+//                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
+//                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
+//                        }
+
                         data = data.replace("i:nil=\"true\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"","").replace("i:nil=\"true\"","");
-                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"),getTransactionDetails);
-                        getTransactionDetails = (GetTransactionDetails)hashMap.get("GetTransactionDetails");
-                        response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
+                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"),transactionDetails);
+                        EmvTransactionDetails transactionDetails = (EmvTransactionDetails)hashMap.get("GetTransactionDetails");
+                        ISOPaymentResponse response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
+                        response = decryptCardValues(response);
+                        if(response.getTransactionDetailsData().getResponseCode().equals("00")){
+                            callback.onResponseSuccess(transactionDetails,response);
+                        }else{
+                            onResponseFailure("Transaction Failed.");
+                        }
 
-                        String reponseCode = response.getTransactionDetailsData().getResponseCode();
-                        Utility.recieptNumber = response.getTransactionDetailsData().getReceiptNumber();
-                        HelperEMVClass.helperEMVClass.onResponseRecieved(response);
-                        if(!response.getReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
-                        }
-                        if(!response.getReversalCauseReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
-                        }
-                        if(reponseCode.equalsIgnoreCase("00")){
-                            ISOConstant.SUCCESSDIALOGFLAG = true;
-                            if(ISOConstant.reversal){
-                                printReversal = true;
-                                SequencyHandler.getInstance(TXN_REVERSED,sequenceInterface).execute(response);
-                                ISOConstant.reversal = false;
-                            }else{
-                                if(!getTransactionDetails.getPOSENTRYTYPE().equals(Constants.CONTACT_ENTRY_MODE.label)){
-                                    SequencyHandler.getInstance(TXN_SUCCESSFUL,sequenceInterface).execute(response);
-                                }else{
-                                    ISOConstant.SUCCESSFLAG = true;
-                                }
-                            }
-
-                        } else if(reponseCode.equalsIgnoreCase("101")||reponseCode.equalsIgnoreCase("104")||reponseCode.equalsIgnoreCase("91")){//before reaching adib
-                            SequencyHandler.getInstance(TXN_ERROR,sequenceInterface).execute("Transaction Failed",response);
-                        }
-                        else{
-                            onResponseFailure(response.getErrorDescription());
-                        }
+                        return null;
                     } catch (Exception e) {
                         onResponseFailure("Failed");
                         e.printStackTrace();
@@ -123,54 +83,32 @@ public class ServiceContract {
 
             @Override
             public String onResponseFailure(String t) {
-                if(ISOConstant.reversal){
-                    t = "Transaction reversal error.";
-                    ISOConstant.reversal = false;
-                }
-                SequencyHandler.getInstance(TXN_ERROR,sequenceInterface).execute("Transaction Failed.",response);
-//                regoPrinter.initiatePrinters(appCompatActivity,sequenceInterface.onBothRecieptsSelected());
+                Log.e(TAG, "onResponseFailure: "+t );
+                callback.onResponseFailure("Transaction Failed");
                 return null;
             }
         });
 
     }
 
-    public void callRefundService(PosDetails details){
-        encryptParams(getTransactionDetails,ConfigurationClass.plainText);
-        String xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(getTransactionDetails,details));
-        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,"IsoMessageService.svc",ISO_SOAP_FUNCTION).callService(new ResultsCallback() {
+    public static void callRefundService(PosDetails details, EmvTransactionDetails emvTransactionDetails, ServiceCallback callback){
+        encryptParams(emvTransactionDetails,ConfigurationClass.plainText,callback);
+        String xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(emvTransactionDetails,details));
+        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,"IsoMessageService.svc",ISO_SOAP_FUNCTION).callService(new GeneralServiceCallback() {
             @Override
             public String onResponseSuccess(String data) {
                 if(data!=null){
                     try {
-                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
-                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
-                        }
-                        log(currentDateTime(),LINE_OUT());
+//                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
+//                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
+//                        }
                         data = data.replace("i:nil=\"true\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"","").replace("i:nil=\"true\"","");
-                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"),getTransactionDetails);
-                        getTransactionDetails = (GetTransactionDetails)hashMap.get("GetTransactionDetails");
-                        response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
-                        String reponseCode = response.getTransactionDetailsData().getResponseCode();
-                        HelperEMVClass.helperEMVClass.onResponseRecieved(response);
-                        if(!response.getReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
-                        }else if(!response.getReversalCauseReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
-                        }
-                        if(reponseCode.equalsIgnoreCase("00")){
-                            ISOConstant.SUCCESSDIALOGFLAG = true;
-                            if(!getTransactionDetails.getPOSENTRYTYPE().equals(Constants.CONTACT_ENTRY_MODE.label)){
-                                SequencyHandler.getInstance(TXN_SUCCESSFUL,sequenceInterface).execute(response);
-                            }else{
-                                ISOConstant.SUCCESSFLAG = true;
-                            }
-
-                        } else if(reponseCode.equalsIgnoreCase("101")||reponseCode.equalsIgnoreCase("104")||reponseCode.equalsIgnoreCase("91")){//before reaching adib
-
-                            SequencyHandler.getInstance(TXN_ERROR,sequenceInterface).execute("Transaction Failed",response);
-                        }
-                        else{
+                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"), emvTransactionDetails);
+                        EmvTransactionDetails emvTransactionDetails = (EmvTransactionDetails)hashMap.get("GetTransactionDetails");
+                        ISOPaymentResponse response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
+                        if(response.getTransactionDetailsData().getResponseCode().equals("00")){
+                            callback.onResponseSuccess(emvTransactionDetails,response);
+                        }else{
                             onResponseFailure(response.getErrorDescription());
                         }
                     } catch (Exception e) {
@@ -187,43 +125,75 @@ public class ServiceContract {
 
             @Override
             public String onResponseFailure(String t) {
-                SequencyHandler.getInstance(TXN_ERROR,sequenceInterface).execute("Transaction Failed.");
+                callback.onResponseFailure("Transaction Failed");
                 return null;
             }
         });
     }
 
-    public void callVoidService(PosDetails details){
-        encryptParams(getTransactionDetails,ConfigurationClass.plainText);
-        String xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(getTransactionDetails,details));
+    public static void callVoidService(PosDetails details, EmvTransactionDetails emvTransactionDetails, ServiceCallback callback){
+        encryptParams(emvTransactionDetails,ConfigurationClass.plainText,callback);
+        String xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(emvTransactionDetails,details));
 
-        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,"IsoMessageService.svc",ISO_SOAP_FUNCTION).callService(new ResultsCallback() {
+        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,"IsoMessageService.svc",ISO_SOAP_FUNCTION).callService(new GeneralServiceCallback() {
             @Override
             public String onResponseSuccess(String data) {
                 if(data!=null){
                     try {
-                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
-                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
-                        }
-                        log(currentDateTime(),LINE_OUT());
+//                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
+//                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
+//                        }
                         data = data.replace("i:nil=\"true\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"","").replace("i:nil=\"true\"","");
-                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"),getTransactionDetails);
-                        getTransactionDetails = (GetTransactionDetails)hashMap.get("GetTransactionDetails");
-                        response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
-                        String reponseCode = response.getTransactionDetailsData().getResponseCode();
-                        if(!response.getReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
-                        }else if(!response.getReversalCauseReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
+                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"), emvTransactionDetails);
+                        EmvTransactionDetails emvTransactionDetails = (EmvTransactionDetails)hashMap.get("GetTransactionDetails");
+                        ISOPaymentResponse response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
+                        if(response.getTransactionDetailsData().getResponseCode().equals("00")){
+                            callback.onResponseSuccess(emvTransactionDetails,response);
+                        }else{
+                            callback.onResponseFailure("Failed");
                         }
-                        if(reponseCode.equalsIgnoreCase("00")){
-                            ISOConstant.SUCCESSDIALOGFLAG = true;
-                            SequencyHandler.getInstance(TXN_SUCCESSFUL,sequenceInterface).execute(response);
 
-                        } else if(reponseCode.equalsIgnoreCase("101")||reponseCode.equalsIgnoreCase("104")||reponseCode.equalsIgnoreCase("91")){//before reaching adib
 
-                            SequencyHandler.getInstance(TXN_ERROR,sequenceInterface).execute("Transaction Failed",response);
+                    } catch (Exception e) {
+                        onResponseFailure("Failed");
+                        e.printStackTrace();
+                        appendLog(e.getLocalizedMessage());
+                    }
+                }else {
+                    Log.e(TAG, "onResponseSuccess: Null response." );
+                    onResponseFailure("");
+                }
+                return null;
+            }
 
+            @Override
+            public String onResponseFailure(String t) {
+                callback.onResponseFailure("Transaction Failed");
+                return null;
+            }
+        });
+
+    }
+
+    public static void callReceiptReprint(PosDetails details, EmvTransactionDetails emvTransactionDetails, ServiceCallback callback){
+        encryptParams(emvTransactionDetails,ConfigurationClass.plainText,callback);
+        String xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(emvTransactionDetails,details));
+
+        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,"IsoMessageService.svc",ISO_SOAP_FUNCTION).callService(new GeneralServiceCallback() {
+            @Override
+            public String onResponseSuccess(String data) {
+                if(data!=null){
+                    try {
+//                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
+//                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
+//                        }
+                        data = data.replace("i:nil=\"true\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"","").replace("i:nil=\"true\"","");
+                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"), emvTransactionDetails);
+                        EmvTransactionDetails emvTransactionDetails = (EmvTransactionDetails)hashMap.get("GetTransactionDetails");
+                        ISOPaymentResponse response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
+
+                        if(response.getTransactionDetailsData().getResponseCode().equalsIgnoreCase("00")){
+                            callback.onResponseSuccess(emvTransactionDetails,response);
                         }
                         else{
                             onResponseFailure(response.getErrorDescription());
@@ -242,156 +212,105 @@ public class ServiceContract {
 
             @Override
             public String onResponseFailure(String t) {
-                SequencyHandler.getInstance(TXN_ERROR,sequenceInterface).execute("Transaction Failed.",response);
+                callback.onResponseFailure("Transaction Failed");
                 return null;
             }
         });
 
     }
 
-    public void callReceiptReprint(PosDetails details, ReprintRctCallBack callback){
-        encryptParams(getTransactionDetails,ConfigurationClass.plainText);
-        String xmlReq = new XMLRequestAndResponse().ISOPaymentRequest(setIsoServiceParameters(getTransactionDetails,details));
-
-        GenericServiceCall.getInstance(ISO_PAYMENT_URLRetro,xmlReq,"IsoMessageService.svc",ISO_SOAP_FUNCTION).callService(new ResultsCallback() {
-            @Override
-            public String onResponseSuccess(String data) {
-                if(data!=null){
-                    try {
-                        if(ConfigurationClass.serviceFlag.equalsIgnoreCase("Integrated")){
-                            PresenterClasses.sendState(TxnState.RESP_FRM_HST.label);
-                        }
-                        log(currentDateTime(),LINE_OUT());
-                        data = data.replace("i:nil=\"true\" xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\"","").replace("i:nil=\"true\"","");
-                        HashMap<String, Object> hashMap = setVariables(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"),getTransactionDetails);
-                        getTransactionDetails = (GetTransactionDetails)hashMap.get("GetTransactionDetails");
-                        response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
-                        log(currentDateTime()+response.getResponseMessage(),LINE_OUT());
-                        String reponseCode = response.getTransactionDetailsData().getResponseCode();
-                        if(!response.getReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
-                        }else if(!response.getReversalCauseReceiptMerchantCopy().equalsIgnoreCase("")){
-                            ISOConstant.calledService = true;
-                        }
-                        if(reponseCode.equalsIgnoreCase("00")){
-                            callback.onResponseSuccess(response);
-                        }
-                        else{
-                            onResponseFailure(response.getErrorDescription());
-                        }
-                    } catch (Exception e) {
-                        onResponseFailure("Failed");
-                        e.printStackTrace();
-                        appendLog(e.getLocalizedMessage());
-                    }
-                }else {
-                    Log.e(TAG, "onResponseSuccess: Null response." );
-                    onResponseFailure("");
-                }
-                return null;
-            }
-
-            @Override
-            public String onResponseFailure(String t) {
-                callback.onResponseFailure(t);
-                return null;
-            }
-        });
-
-    }
-
-    private GetTransactionDetails encryptParams(GetTransactionDetails getTransactionDetails, String plaintext){
+    private static EmvTransactionDetails encryptParams(EmvTransactionDetails emvTransactionDetails, String plaintext, ServiceCallback callback){
         try {
             if(txn_type.equals(EmvTransactionType.REFUND_TRANSACTION)||txn_type.equals(EmvTransactionType.PURCHASE_TRANSACTION)){
-                if(Utility.checkExpiry(getTransactionDetails.getCardExpiryDate())){
-                    HelperEMVClass.helperEMVClass.endTransaction("Card is expired.");
+                if(checkExpiry(emvTransactionDetails.getCardExpiryDate())){
+                    callback.onResponseFailure("Card is expired.");
                     return null;
                 }else{
-                    getTransactionDetails.setCardExpiryDate(Utility.reFormatExpiry(getTransactionDetails.getCardExpiryDate()));
+                    emvTransactionDetails.setCardExpiryDate(reFormatExpiry(emvTransactionDetails.getCardExpiryDate()));
                 }
             }
 
             if(txn_type.equals(EmvTransactionType.REFUND_TRANSACTION)){
-                getTransactionDetails.setEPB("Optional");
-                getTransactionDetails.setKSN("Optional");
+                emvTransactionDetails.setEPB("Optional");
+                emvTransactionDetails.setKSN("Optional");
             }
 
             switch (txn_type){
                 case REFUND_TRANSACTION:
                 case PURCHASE_TRANSACTION:
-                    getTransactionDetails.setCardType(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getCardType(), ConfigurationClass.plainText)));
-                    getTransactionDetails.setCardNumber(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getCardNumber(), plaintext)));
-                    getTransactionDetails.setCardExpiryDate(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getCardExpiryDate(), plaintext)));
-                    getTransactionDetails.setCardName(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getCardName()==null?"":getTransactionDetails.getCardName(), plaintext)));
-                    getTransactionDetails.setEPB(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getEPB(), plaintext)));
-                    getTransactionDetails.setKSN(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getKSN(), plaintext)));
-                    getTransactionDetails.setTRACKDATA(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getTRACKDATA(), plaintext)));
-                    getTransactionDetails.setCVMType(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getCVMType()==null?"02":getTransactionDetails.getCVMType(), plaintext)));
-                    getTransactionDetails.setICCDATA(ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(getTransactionDetails.getICCDATA()!=null?getTransactionDetails.getICCDATA():"null", plaintext)));
+                    emvTransactionDetails.setCardType(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getCardType(), ConfigurationClass.plainText)));
+                    emvTransactionDetails.setCardNumber(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getCardNumber(), plaintext)));
+                    emvTransactionDetails.setCardExpiryDate(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getCardExpiryDate(), plaintext)));
+                    emvTransactionDetails.setCardName(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getCardName()==null?"": emvTransactionDetails.getCardName(), plaintext)));
+                    emvTransactionDetails.setEPB(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getEPB(), plaintext)));
+                    emvTransactionDetails.setKSN(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getKSN(), plaintext)));
+                    emvTransactionDetails.setTRACKDATA(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getTRACKDATA(), plaintext)));
+                    emvTransactionDetails.setCVMType(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getCVMType()==null?"02": emvTransactionDetails.getCVMType(), plaintext)));
+                    emvTransactionDetails.setICCDATA(RemoveEscapeSequence(EncryptDecrpt.Encrypt(emvTransactionDetails.getICCDATA()!=null? emvTransactionDetails.getICCDATA():"null", plaintext)));
                     break;
                 case REPRINT_RECEIPT:
 
                     break;
                 case VOID_PURCHASE_TRANSACTION:
                 case VOID_REFUND_TRANSACTION:
-
+                    emvTransactionDetails.setRcptNo(EncryptDecrpt.Encrypt(emvTransactionDetails.getRcptNo(), plaintext));
                     break;
 
             }
-            getTransactionDetails.setDEVICE_SERIAL_NUMBER(ConfigurationClass.DEVICE_SERIAL_NUMBER);
-            getTransactionDetails.setMerchantId(ConfigurationClass.MERCHANT_ID);//uat
-            getTransactionDetails.setTerminalID(ConfigurationClass.TERMINAL_ID);//uat
+            emvTransactionDetails.setDEVICE_SERIAL_NUMBER(ConfigurationClass.DEVICE_SERIAL_NUMBER);
+            emvTransactionDetails.setMerchantId(ConfigurationClass.MERCHANT_ID);//uat
+            emvTransactionDetails.setTerminalID(ConfigurationClass.TERMINAL_ID);//uat
         } catch (InvalidKeySpecException e) {
             if(!txn_type.equals(EmvTransactionType.REPRINT_RECEIPT)){
-                SequencyHandler.getInstance(TXN_ERROR,sequenceInterface).execute(e.getLocalizedMessage(),null);
+                callback.onResponseFailure(e.getLocalizedMessage());
             }
             e.printStackTrace();
             appendLog(e.getLocalizedMessage());
         }
 
-        return getTransactionDetails;
+        return emvTransactionDetails;
     }
 
-    public ISOPaymentRequest setIsoServiceParameters(GetTransactionDetails getTransactionDetails, PosDetails posDetails) {
+    private static ISOPaymentRequest setIsoServiceParameters(EmvTransactionDetails emvTransactionDetails, PosDetails posDetails) {
         ISOPaymentRequest request = new ISOPaymentRequest();
 
         try{
 
             String time = getTranasctionDateAndTime().replace("T"," ").replace("Z"," ");
-            String getHashPassword = ISOConstant.RemoveEscapeSequence(EncryptDecrpt.Encrypt(ConfigurationClass.SECRET_KEY, ConfigurationClass.plainText));
+            String getHashPassword = RemoveEscapeSequence(EncryptDecrpt.Encrypt(ConfigurationClass.SECRET_KEY, ConfigurationClass.plainText));
             /*==============MLT SERVICE=============================*/
 
-            request.setRequestId(ISOConstant.shortUUID());
-            request.setCardNumber(getTransactionDetails.getCardNumber());
-            request.setDeviceSerialNumber(getTransactionDetails.getDEVICE_SERIAL_NUMBER());
-            request.setCardType(getTransactionDetails.getCardType());
-            request.setMerchantID(getTransactionDetails.getMerchantId());
-            request.setkSN(getTransactionDetails.getKSN());
-            request.setExpiryDate(getTransactionDetails.getCardExpiryDate());
+            request.setRequestId(shortUUID());
+            request.setCardNumber(emvTransactionDetails.getCardNumber());
+            request.setDeviceSerialNumber(emvTransactionDetails.getDEVICE_SERIAL_NUMBER());
+            request.setCardType(emvTransactionDetails.getCardType());
+            request.setMerchantID(emvTransactionDetails.getMerchantId());
+            request.setkSN(emvTransactionDetails.getKSN());
+            request.setExpiryDate(emvTransactionDetails.getCardExpiryDate());
 
-            request.setpINBlock(getTransactionDetails.getEPB());
+            request.setpINBlock(emvTransactionDetails.getEPB());
             request.setTimestamp(time);
-            request.setFirstName(getTransactionDetails.getCardName());//getTransactionDetail.getCustomerFirstName()
+            request.setFirstName(emvTransactionDetails.getCardName());//getTransactionDetail.getCustomerFirstName()
             request.setLastName("");//getTransactionDetail.getCustomerLastName()
-            request.setSecureHash(EncryptDecrpt.GetSecureHashCardPaymentISO(Constants.SERVICE_CODE.label,getTransactionDetails.getTerminalID(),time));
-            request.setServiceCode(Constants.SERVICE_CODE.label);
-            request.setMerchantName(Constants.MERCHANT_NAME.label);
-            request.setiCC(getTransactionDetails.getICCDATA());
-            request.setTerminalID(getTransactionDetails.getTerminalID());
-            request.setAmount(getTransactionDetails.getGrossAmount());
-            request.setTrack2Data(getTransactionDetails.getTRACKDATA());
-            request.setLoginID(Constants.LOGIN_ID.label);
-            request.setPassword(Constants.LOGIN_PW.label);
+            request.setSecureHash(EncryptDecrpt.GetSecureHashCardPaymentISO(SERVICE_CODE, emvTransactionDetails.getTerminalID(),time));
+            request.setServiceCode(SERVICE_CODE);
+            request.setMerchantName(MERCHANT_NAME);
+            request.setiCC(emvTransactionDetails.getICCDATA());
+            request.setTerminalID(emvTransactionDetails.getTerminalID());
+            request.setAmount(emvTransactionDetails.getGrossAmount());
+            request.setTrack2Data(emvTransactionDetails.getTRACKDATA());
+            request.setLoginID(LOGIN_ID);
+            request.setPassword(LOGIN_PW);
             request.setGenerateReceiptOnly("false");
-            request.setTransactionInitiationDate(processDate(getTransactionDetails.getTransactionInitiationDateAndTime(),"date").substring(0,4));
-            request.setTransactionInitiationTime(processDate(getTransactionDetails.getTransactionInitiationDateAndTime(),"time"));
-            request.setcVM(getTransactionDetails.getCVMType());
-            request.setpOSEntryMode(getTransactionDetails.getPOSENTRYTYPE());
-            request.setApplicationVersion(Constants.APPLICATION_VERSION.label);
+            request.setTransactionInitiationDate(processDate(emvTransactionDetails.getTransactionInitiationDateAndTime(),"date").substring(0,4));
+            request.setTransactionInitiationTime(processDate(emvTransactionDetails.getTransactionInitiationDateAndTime(),"time"));
+            request.setcVM(emvTransactionDetails.getCVMType());
+            request.setpOSEntryMode(emvTransactionDetails.getPOSENTRYTYPE());
+            request.setApplicationVersion(APPLICATION_VERSION);
             request.setHashPassword(getHashPassword);
-            if(ISOConstant.reversal){
+            if(emvTransactionDetails.getIsReversal().equals("true")){
                 try {
-                    request.setTransactionReceiptToBeVoidedORReversedOrReprinted(EncryptDecrpt.Encrypt(Utility.recieptNumber, ConfigurationClass.plainText));
+                    request.setTransactionReceiptToBeVoidedORReversedOrReprinted(EncryptDecrpt.Encrypt(posDetails.getReceiptNumber(), ConfigurationClass.plainText));
                 } catch (InvalidKeySpecException e) {
                     e.printStackTrace();
                     appendLog(e.getLocalizedMessage());
@@ -404,12 +323,14 @@ public class ServiceContract {
                 request.setDateOfTransactionForReceiptReprint(posDetails.getDateOfTransactionForReceiptReprint());
                 request.setOriginalTransactionTypeForReceiptReprint(posDetails.getOriginalTransactionTypeForReceiptReprint());
                 request.setTransactionReceiptToBeVoidedORReversedOrReprinted(EncryptDecrpt.Encrypt(posDetails.getReceiptNumber(), ConfigurationClass.plainText));
+            }else if (txn_type.equals(EmvTransactionType.VOID_REFUND_TRANSACTION) || txn_type.equals(EmvTransactionType.VOID_PURCHASE_TRANSACTION) ){
+                request.setOriginalTransactionTypeForReceiptReprint(posDetails.getOriginalTransactionTypeForReceiptReprint());
+                request.setTransactionReceiptToBeVoidedORReversedOrReprinted(emvTransactionDetails.getRcptNo());
             }
 
             if(txn_type.equals(EmvTransactionType.LST_TXN_REPRINT_RECEIPT)){
                 request.setIsSendReceiptEmail("false");
             }
-            request.setTransactionType(EmvTransactionName.PURCHASE_TRANSACTION.label);
             request.setCustomerAddress(posDetails.getCustomerAddress());
             request.setCustomerEmail(posDetails.getCustomerEmail());
             request.setCustomerCity(posDetails.getCustomerCity());
@@ -429,10 +350,11 @@ public class ServiceContract {
             request.setTransactionReferenceNumber(posDetails.getTransactionReferenceNumber());
             request.setTransactionType(posDetails.getTransactionType());
             request.setpOSDeviceName(posDetails.getpOSDeviceName());
-            request.setIsReveralTransaction(getTransactionDetails.getIsReversal());
-            request.setTransactionCurreny(Constants.TXN_CURRENCY.label);
+            request.setIsSendReceiptEmail("false");
+            request.setIsReveralTransaction(emvTransactionDetails.getIsReversal());
+            request.setTransactionCurreny(TXN_CURRENCY);
             /*==============MLT SERVICE=============================*/
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             appendLog(ex.getLocalizedMessage());
         }
@@ -440,4 +362,35 @@ public class ServiceContract {
         return request;
     }
 
+
+    // 06-2026
+    private static String reFormatExpiry(String expiry) {
+        StringBuilder sb = new StringBuilder(expiry);
+        sb.replace(2, 5, "");
+        return sb.toString();
+
+    }
+
+    private static ISOPaymentResponse decryptCardValues(ISOPaymentResponse response) {
+        if(!response.getTransactionDetailsData().getCardType().equals("")){
+            response.getTransactionDetailsData().setCardType(EncryptDecrpt.Decrypt(response.getTransactionDetailsData().getCardType(),ConfigurationClass.plainText));
+        }
+        if(!response.getTransactionDetailsData().getApprovalCode().equals("")){
+            response.getTransactionDetailsData().setApprovalCode(EncryptDecrpt.Decrypt(response.getTransactionDetailsData().getApprovalCode(),ConfigurationClass.plainText));
+        }
+        if(!response.getTransactionDetailsData().getCardExpiryDate().equals("")){
+            response.getTransactionDetailsData().setCardExpiryDate(EncryptDecrpt.Decrypt(response.getTransactionDetailsData().getCardExpiryDate(),ConfigurationClass.plainText));
+        }
+        if(!response.getTransactionDetailsData().getCardNumber().equals("")){
+            response.getTransactionDetailsData().setCardNumber(EncryptDecrpt.Decrypt(response.getTransactionDetailsData().getCardNumber(),ConfigurationClass.plainText));
+        }
+        if(!response.getTransactionDetailsData().getPaySlipNumber().equals("")){
+            response.getTransactionDetailsData().setPaySlipNumber(EncryptDecrpt.Decrypt(response.getTransactionDetailsData().getPaySlipNumber(),ConfigurationClass.plainText));
+        }
+        if(!response.getTransactionDetailsData().getCustomerName().equals("")){
+            response.getTransactionDetailsData().setCustomerName(EncryptDecrpt.Decrypt(response.getTransactionDetailsData().getCustomerName(),ConfigurationClass.plainText));
+        }
+        return response;
+    }
 }
+

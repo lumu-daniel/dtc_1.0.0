@@ -17,11 +17,11 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.mlt.dtc.R;
 import com.mlt.dtc.common.Common;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
 import com.mlt.e200cp.utilities.helper.util.ISOConstant;
 import com.mlt.e200cp.utilities.helper.util.PreferenceConnector;
 import static com.mlt.dtc.utility.Constant.TSTripIdKey;
-import static com.mlt.e200cp.models.enums.ErrorCenter.CANCEL_TXN;
+import static com.mlt.e200cp.models.StringConstants.CANCEL_TXN;
 import static com.mlt.e200cp.utilities.helper.util.ISOConstant.payIso;
 
 public class TxnError extends DialogFragment implements View.OnClickListener {
@@ -95,7 +95,7 @@ public class TxnError extends DialogFragment implements View.OnClickListener {
             timer.setVisibility(View.GONE);
             cancel_action.setVisibility(View.GONE);
         }else if(args.equalsIgnoreCase("Transaction reversed.")){
-            args = CANCEL_TXN.label;
+            args = CANCEL_TXN;
         }else if(args.equalsIgnoreCase("Successful")){
             args = "Transaction Successful";
         }else{

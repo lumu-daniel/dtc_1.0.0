@@ -1,4 +1,4 @@
-package com.mlt.e200cp.models.enums;
+package com.mlt.e200cp.models;
 
 public enum EmvTransactionType {
     VOID_PURCHASE_TRANSACTION,

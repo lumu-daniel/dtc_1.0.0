@@ -2,7 +2,7 @@ package com.mlt.e200cp.models;
 
 import android.widget.TextView;
 
-public class GetTransactionDetails {
+public class EmvTransactionDetails {
 
     private String Version;
     private String TerminalID;
@@ -35,6 +35,15 @@ public class GetTransactionDetails {
     private Boolean UNKNOWNCVM;
     private TextView pinText;
     private boolean isIntergrated;
+    private String RcptNo;
+
+    public String getRcptNo() {
+        return RcptNo;
+    }
+
+    public void setRcptNo(String rcptNo) {
+        RcptNo = rcptNo;
+    }
 
     public String getReversalReceiptCustomerCopy() {
         return ReversalReceiptCustomerCopy;

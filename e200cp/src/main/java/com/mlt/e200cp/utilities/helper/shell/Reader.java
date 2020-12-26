@@ -1,20 +1,17 @@
 package com.mlt.e200cp.utilities.helper.shell;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.mlt.e200cp.controllers.backgroundcontrollers.SequencyHandler;
 import com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass;
-import com.mlt.e200cp.models.enums.Constants;
-import com.mlt.e200cp.models.GetTransactionDetails;
+import com.mlt.e200cp.models.EmvTransactionDetails;
 import com.mlt.e200cp.utilities.helper.protocol.VNG;
 import com.mlt.e200cp.utilities.helper.protocol.VngDef;
 
 import java.util.HashMap;
 
 import static com.mlt.e200cp.controllers.mainlogiccontrollers.HelperEMVClass.callbackInterface;
-import static com.mlt.e200cp.models.MessageFlags.RMV_CARD_DISP;
+import static com.mlt.e200cp.models.StringConstants.RMV_CARD_DISP;
 
 public class Reader extends BaseShell {
 
@@ -30,7 +27,7 @@ public class Reader extends BaseShell {
 //    public static PresentCardDialog presentCardDialog;
 
 
-    public static HashMap<String, Object> autoReport(boolean icc, boolean msr, boolean ctls, int secTimeout, byte [] data, GetTransactionDetails details) {
+    public static HashMap<String, Object> autoReport(boolean icc, boolean msr, boolean ctls, int secTimeout, byte [] data, EmvTransactionDetails details) {
 
 //        presentCardDialog = new PresentCardDialog(ctx , true);
         HashMap<String, Object> hashMap = new HashMap<>();

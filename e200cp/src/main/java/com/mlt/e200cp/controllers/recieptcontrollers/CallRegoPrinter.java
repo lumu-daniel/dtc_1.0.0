@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.mlt.e200cp.controllers.backgroundcontrollers.SequencyHandler;
 import com.mlt.e200cp.interfaces.PosSequenceInterface;
-import com.mlt.e200cp.models.response.ISOPaymentResponse;
+import com.mlt.e200cp.models.repository.response.ISOPaymentResponse;
 import com.mlt.e200cp.utilities.FetchDeviceSerialNumber.ULTests;
 
 import java.io.File;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 import rego.printlib.export.regoPrinter;
 
-import static com.mlt.e200cp.models.MessageFlags.TXN_ERROR;
+import static com.mlt.e200cp.models.StringConstants.TXN_ERROR;
 import static com.mlt.e200cp.utilities.helper.util.Utility.appendLog;
 
 public class CallRegoPrinter {

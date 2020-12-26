@@ -1,4 +1,4 @@
-package com.mlt.e200cp.models.response.MerchantDetailsService;
+package com.mlt.e200cp.models.repository.response.MerchantDetailsService;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
