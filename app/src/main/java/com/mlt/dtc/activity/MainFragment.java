@@ -6,7 +6,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
@@ -15,10 +14,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.StrictMode;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -41,6 +42,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mlt.dtc.BuildConfig;
+import com.mlt.dtc.Db.DeviceDetails;
+import com.mlt.dtc.Db.DeviceDao;
+import com.mlt.dtc.MainApp;
 import com.mlt.dtc.R;
 import com.mlt.dtc.adapter.OffersRecyclerViewAdapter;
 import com.mlt.dtc.adapter.RecyclerviewBottomAdapter;
@@ -54,15 +58,15 @@ import com.mlt.dtc.fragment.TopBannerDialogFragment;
 import com.mlt.dtc.adapter.BannerAdapter;
 import com.mlt.dtc.common.Common;
 import com.mlt.dtc.common.PreferenceConnector;
-import com.mlt.dtc.fragment.TripEndFragment;
-import com.mlt.dtc.fragment.TripStartFragment;
+import com.mlt.dtc.fragment.TripFragment;
 import com.mlt.dtc.fragment.WeatherFragment;
 import com.mlt.dtc.interfaces.DriverImageListener;
-import com.mlt.dtc.interfaces.FareDialogListener;
 import com.mlt.dtc.interfaces.FetchWeatherObjectCallback;
+import com.mlt.dtc.interfaces.FireBaseNotifiers;
 import com.mlt.dtc.interfaces.MainVideoBannerListener;
 import com.mlt.dtc.interfaces.OverwriteTripFragmentListener;
 import com.mlt.dtc.interfaces.TaskListener;
+import com.mlt.dtc.model.PushDetails;
 import com.mlt.dtc.model.Response.FetchCurrentWeatherResponse;
 import com.mlt.dtc.model.TopBannerObject;
 import com.mlt.dtc.model.request.AuthenticateRequest;
@@ -77,8 +81,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import example.CustomKeyboard.Components.CustomKeyboardView;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+
+import static com.mlt.dtc.MainApp.pushDetails;
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
 import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
 import static com.mlt.dtc.common.Common.getDateHome;
@@ -94,9 +100,9 @@ import static com.mlt.dtc.utility.Constant.WeatherTime;
 
 public class MainFragment extends Fragment implements View.OnClickListener, TaskListener,
         RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener,
-        FareDialogListener, DriverImageListener, MainVideoBannerListener, ResultsCallback {
+        DriverImageListener, MainVideoBannerListener, ResultsCallback, FireBaseNotifiers {
 
-    private TextView tv_timemainbox, tv_datemainbox, tv_VideoBr, tv_degree;
+    private TextView tv_timemainbox, tv_datemainbox, tv_VideoBr, tv_degree,tv_services;
     private LinearLayout ll_driverinfo, llMenuBottom, llMenuUp, llsideOffers;
     private RecyclerView rvBottomMenu, recycler_view_side_offers;
     public static CustomKeyboardView keyboard;
@@ -105,8 +111,10 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     VideoView videoviewMainBanner;
     private FrameLayout  tripdetail;
     public InfiniteBannerView infiniteBannerView;
-
     public Boolean isSelected = false;
+    BannerAdapter bannerAdapter;
+    private DeviceDetails deviceDetails;
+    private DeviceDao deviceDao;
 
     int topBannerCount, positionTopBanner, multipletripviewClick;
     public OffersRecyclerViewAdapter adapter_menus = null;
@@ -118,8 +126,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     private int driverCount, fareCount, weathermainCount;
     private DialogFragment dialogFragment;
     private static OverwriteTripFragmentListener overwriteTripFragmentListener;
-    TripStartFragment tripStartFragment = new TripStartFragment();
-    TripEndFragment tripEndFragment = new TripEndFragment();
     MainBannerVideoFragment mainBannerVideoFragment;
 
     boolean fullscreen = true;
@@ -156,6 +162,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.activity_main, container, false);
+        MainApp.mainNotifier = this;
 
         mWindowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
 
@@ -197,9 +204,17 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
             // String DeviceSerialNumber = "E2C1000063";//E2C1000954 /<-**Prod**/ //"E2C1000590";  /<-**UAT**/
 
             String DeviceSerialNumber = "E2C1000590";//E2C1000954 /<-**Prod**/ //"E2C1000590";  /<-**UAT**/
-
-            PresenterClasses.getConfigData("ADJD-Configs", DeviceSerialNumber, PreferenceConnector.getPreferences(getContext()), this);
-
+            deviceDao = MainApp.db.deviceDao();
+            PresenterClasses.getConfigData("RTA-Configs", DeviceSerialNumber, PreferenceConnector.getPreferences(getContext()), this);
+            if (deviceDao.getAll().size() <= 0) {
+                deviceDetails = new DeviceDetails();
+                deviceDetails.setMLTDeviceSN(DeviceSerialNumber);
+                deviceDetails.setAdvVersion("0.0.1");
+                deviceDetails.setApkVersion("0.0.1");
+                deviceDetails.setMainVideoVersion("0.0.1");
+                deviceDetails.setTopBannerVersion("0.0.1");
+                deviceDao.insertAll(deviceDetails);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -214,7 +229,10 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         //this text is moving
         weatherimg = view.findViewById(R.id.weathertypeimg);
         tv_degree = view.findViewById(R.id.tv_Degree);
-        view.findViewById(R.id.tv_services).setSelected(true);
+        tv_services = view.findViewById(R.id.tv_services);
+        Animation marquee = AnimationUtils.loadAnimation(getContext(), R.anim.merquee);
+        tv_services.startAnimation(marquee);
+        tv_services.setSelected(true);
         llsideOffers = view.findViewById(R.id.llsideoffers);
         rlviewpagerMain = view.findViewById(R.id.viewpagermain);
         llMenuUp = view.findViewById(R.id.llmenuup);
@@ -287,8 +305,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        //        fareFragment.setMethodcallbackmultipleViewClick(this);
-        MyFirebaseMessagingService.setcardValuesCallBackMethod(this);
         MyFirebaseMessagingService.setDriverImageCallBackMethod(this);
 
         tv_datemainbox.setText(getDateHome());
@@ -348,7 +364,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     }
 
     private void topBannerViews(ArrayList<TopBannerObject> topBannerList) {
-        BannerAdapter bannerAdapter = new BannerAdapter(topBannerList, getContext(), true);
+        bannerAdapter = new BannerAdapter(topBannerList, getContext(), true);
         infiniteBannerView.setAdapter(bannerAdapter);
     }
 
@@ -376,9 +392,9 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
                     WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
 
                     try {
-                        TopBannerDialogFragment topBannerDialogFragment = new TopBannerDialogFragment();
+                        TopBannerDialogFragment topBannerDialogFragment = new TopBannerDialogFragment(true);
                         Bundle bundlepos = new Bundle();
-                        bundlepos.putInt(Constant.PositionTopBanner, positionTopBanner);
+                        bundlepos.putInt(Constant.PositionTopBanner, infiniteBannerView.getCurrentPosition());
 //                        bundlepos.putSerializable(Constant.TopImagesSelectedOffers, topBannerList());
                         topBannerDialogFragment.setArguments(bundlepos);
                         topBannerDialogFragment.show(getFragmentManager(), "");
@@ -392,6 +408,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
                 if (count == 10) {
                     mFragment = AdminFragment.newInstance();
                     addFragment();
+                    count = 0;
                 }
                 break;
             case R.id.ll_driverinfo:
@@ -417,11 +434,11 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
                 Constant.ButtonClicked = Constant.nameFare;
                 WriteTextInTextFile(getFilePath(), Constant.ButtonClicked);
                 getlistofclickLog(getContext(), Constant.ButtonClicked, getdateTime());
-                dialogFragment = new TripEndFragment();
+                dialogFragment = new TripFragment(pushDetails);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean(Constant.TripEndServiceCall, true);
                 dialogFragment.setArguments(bundle);
-                dialogFragment.show(getFragmentManager(), "");
+                dialogFragment.show(getActivity().getSupportFragmentManager(), "");
                 multipletripviewClick = 1;
                 break;
 
@@ -549,79 +566,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         overwriteTripFragmentListener = CallBack;
     }
 
-
-    //Call back when get the data open the dialog automatically
-    @Override
-    public void FareCallBackMethod(String Eventcode, boolean TripEndCallService, String TripCode) {
-        //TripEndCallService is true if the notification end comes
-        Bundle bundle = new Bundle();
-        try {
-            if (Constant.TripStartEventCode.equalsIgnoreCase(TripCode)) {
-
-                Fragment fragmentA = getFragmentManager().findFragmentByTag("tripstartfragment");
-                if (fragmentA == null) {
-                    //tripStartTime = new Date();
-                    //Close the dialog
-                    if (overwriteTripFragmentListener != null) {
-                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
-                    }
-                    // DialogFragment.show() will take care of adding the fragment
-                    // in a transaction.  We also want to remove any currently showing
-                    // dialog, so make our own transaction and take care of that here.
-                    FragmentTransaction ft = getFragmentManager().beginTransaction();
-                    Fragment prev = getFragmentManager().findFragmentByTag("dialog");
-                    if (prev != null) {
-                        ft.remove(prev);
-                    }
-                    ft.addToBackStack(null);
-                    bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
-                    tripStartFragment.setArguments(bundle);
-                    tripStartFragment.show(getFragmentManager(), "tripstartfragment");
-                } else {
-                    Date tripStartTime = new Date();
-                    //Close the dialog
-                    if (overwriteTripFragmentListener != null) {
-                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
-                        Thread.sleep(1000);
-                        bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
-                        tripStartFragment.setArguments(bundle);
-                        tripStartFragment.show(getFragmentManager(), "tripstartfragment");
-                        Toast.makeText(getContext(), "Trip Start Fragment already exists", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
-
-            } else if
-            (Constant.TripEndEventCode.equalsIgnoreCase(TripCode)) {
-
-                Fragment fragmentB = getFragmentManager().findFragmentByTag("tripendfragment");
-                if (fragmentB == null) {
-                    //Close the dialog
-                    if (overwriteTripFragmentListener != null) {
-                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
-                    }
-                    bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
-                    tripEndFragment.setArguments(bundle);
-                    tripEndFragment.show(getFragmentManager(), "tripendfragment");
-
-                } else {
-                    if (overwriteTripFragmentListener != null) {
-                        overwriteTripFragmentListener.OverwriteTripFragmentListenerBackMethod();
-                        Thread.sleep(1000);
-                        bundle.putBoolean(Constant.TripEndServiceCall, TripEndCallService);
-                        tripEndFragment.setArguments(bundle);
-                        tripEndFragment.show(getFragmentManager(), "tripendfragment");
-                        Toast.makeText(getContext(), "Trip End Fragment already exists", Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-                //}
-            }
-        } catch (Exception ex) {
-            Log.e("TTTT", ex.getLocalizedMessage() + "");
-        }
-    }
-
     public void addFragment() {
         getFragmentManager().beginTransaction()
                 .replace(R.id.content, mFragment)
@@ -704,7 +648,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
             RelativeLayout.LayoutParams relativeParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             relativeLayoutfragment.setLayoutParams(relativeParams);
         } else {
-            relativeLayoutfragment.setBackgroundColor(Color.WHITE);
+//            relativeLayoutfragment.setBackgroundColor(Color.WHITE);
             imageview.setImageResource(0);
             imageview.setBackgroundResource(R.drawable.ic_fullscreen_black_36dp);
             recycler_view_side_offers.setVisibility(View.VISIBLE);
@@ -712,6 +656,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
             llMenuUp.setVisibility(View.VISIBLE);
             rlviewpagerMain.setVisibility(View.VISIBLE);
             llsideOffers.setVisibility(View.VISIBLE);
+            videoviewMainBanner.setBackground(getContext().getDrawable(R.drawable.video_round_corner));
             fullscreen = true;
         }
     }
@@ -760,7 +705,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
                 Weather = fetchCurrentWeatherResponse.getFetchCurrentWeatherInfrormationResult().getResponse().get(0).getTemperature();
 
                 try {
-                    getActivity().runOnUiThread(() -> {
+                    new Handler(Looper.getMainLooper()).post(() -> {
 
                         tv_degree.setText(String.valueOf(Math.round(Weather) + " \u2103"));
 
@@ -843,7 +788,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         ConfigurationClass.PAYMENT_USER_ID = object.optString("PaymentUserId");
         ConfigurationClass.PAYMENT_PASSWORD = object.optString("PaymentPassword");
         ConfigurationClass.SOURCE_APPLICATION = object.optString("SourceApplication");
-//        ConfigurationClass.SOURCE_APPLICATION = ConfigurationClass.TERMINAL_ID;
         ConfigurationClass.PAYMENT_ACTION = object.optString("PaymentAction");
         ConfigurationClass.PAYMENT_CALL_BACK_URL = object.optString("CallBackURL");
         ConfigurationClass.PAYMENT_DEVICE_FINGER_PRINT = object.optString("DeviceFingerPrint");
@@ -861,6 +805,115 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     public String onResponseFailure(String t)
     {
         return null;
+    }
+
+
+    @Override
+    public void onMessage(LinkedHashMap<String, String> linkedHashMap) {
+        setPushDetails(linkedHashMap,pushDetails);
+        if(dialogFragment!=null){
+            dialogFragment.dismiss();
+        }
+        dialogFragment = new TripFragment(pushDetails) ;
+        dialogFragment.show(getActivity().getSupportFragmentManager(),"");
+    }
+
+    private PushDetails setPushDetails(LinkedHashMap<String, String> linkedHashMap,PushDetails pushDetails){
+        if (linkedHashMap.get(Constant.ErrorMessage) != null) {
+            Toast.makeText(getContext(), linkedHashMap.get(Constant.ErrorMessage), Toast.LENGTH_LONG).show();
+            return null;
+        } else {
+            if (linkedHashMap.size() > 0) {
+                if (linkedHashMap.get(Constant.TSEventCodeKey)!=null)
+                    pushDetails.setEventCode(linkedHashMap.get(Constant.TSEventCodeKey));
+
+                if (linkedHashMap.get(Constant.TSFamilyNameKey)!=null)
+                    pushDetails.setFamilyName(linkedHashMap.get(Constant.TSFamilyNameKey));
+
+                if (linkedHashMap.get(Constant.TSGivenNameKey)!=null)
+                    pushDetails.setGivenName(linkedHashMap.get(Constant.TSGivenNameKey));
+
+                if (linkedHashMap.get(Constant.TSVehicleTypeKey)!=null)
+                    pushDetails.setVehicleType(linkedHashMap.get(Constant.TSVehicleTypeKey));
+
+                if (linkedHashMap.get(Constant.TSPictureKey)!=null)
+                    pushDetails.setPicture(linkedHashMap.get(Constant.TSPictureKey));
+
+                if (linkedHashMap.get(Constant.TSPlateNoKey)!=null)
+                    pushDetails.setPlateNo(linkedHashMap.get(Constant.TSPlateNoKey));
+
+                if (linkedHashMap.get(Constant.TSFlagFallKey)!=null)
+                    pushDetails.setFlagfall(linkedHashMap.get(Constant.TSFlagFallKey));
+
+                if (linkedHashMap.get(Constant.TSShiftSeqKey)!=null)
+                    pushDetails.setShiftseq(linkedHashMap.get(Constant.TSShiftSeqKey));
+
+                if (linkedHashMap.get(Constant.TSDriverIdKey)!=null)
+                    pushDetails.setDriverId(linkedHashMap.get(Constant.TSDriverIdKey));
+
+                if (linkedHashMap.get(Constant.TSDriverIdKey)!=null)
+                    pushDetails.setDriverId(linkedHashMap.get(Constant.TSDriverIdKey));
+
+                if (linkedHashMap.get(Constant.TSTripSeqKey)!=null)
+                    pushDetails.setEventName(linkedHashMap.get(Constant.TSEventNameKey));
+
+                if (linkedHashMap.get(Constant.TSTripSeqKey)!=null)
+                    pushDetails.setTripseq(linkedHashMap.get(Constant.TSTripSeqKey));
+
+                if (linkedHashMap.get(Constant.TSEventCodeKey)!=null)
+                    pushDetails.setEventCode(linkedHashMap.get(Constant.TSEventCodeKey));
+
+                if (linkedHashMap.get(Constant.TSFareKey)!=null)
+                    pushDetails.setFare(linkedHashMap.get(Constant.TSFareKey));
+
+                if (linkedHashMap.get(Constant.TSNationalityKey)!=null)
+                    pushDetails.setNationality(linkedHashMap.get(Constant.TSNationalityKey));
+
+                if (linkedHashMap.get(Constant.TSEventDescriptionKey)!=null)
+                    pushDetails.setEventDescription(linkedHashMap.get(Constant.TSEventDescriptionKey));
+
+                if (linkedHashMap.get(Constant.TSJobNumberKey)!=null)
+                    pushDetails.setJobnumber(linkedHashMap.get(Constant.TSJobNumberKey));
+
+                if (linkedHashMap.get(Constant.TSUsernameKey)!=null)
+                    pushDetails.setUsername(linkedHashMap.get(Constant.TSUsernameKey));
+
+                if (linkedHashMap.get(Constant.TSEventNameKey)!=null)
+                    pushDetails.setEventName(linkedHashMap.get(Constant.TSEventNameKey));
+
+                if (linkedHashMap.get(Constant.TSTripIdKey)!=null)
+                    pushDetails.setTripId(linkedHashMap.get(Constant.TSTripIdKey));
+
+                if (linkedHashMap.get(Constant.TSVehicleTypeKey)!=null)
+                    pushDetails.setVehicleType(linkedHashMap.get(Constant.TSVehicleTypeKey));
+
+                if (linkedHashMap.get(Constant.TSStartDateTimeKey)!=null)
+                    pushDetails.setStartdatetime(linkedHashMap.get(Constant.TSStartDateTimeKey));
+
+                if (linkedHashMap.get(Constant.TSStartLatitudeKey)!=null)
+                    pushDetails.setStartlatitude(linkedHashMap.get(Constant.TSStartLatitudeKey));
+
+                if (linkedHashMap.get(Constant.TSStartLongitudeKey)!=null)
+                    pushDetails.setStartlongitude(linkedHashMap.get(Constant.TSStartLongitudeKey));
+
+                if (linkedHashMap.get(Constant.TSStartLongitudeKey)!=null)
+                    pushDetails.setStartlongitude(linkedHashMap.get(Constant.TSStartLongitudeKey));
+
+                if (linkedHashMap.get(Constant.TSEndlongitudeKey)!=null)
+                    pushDetails.setEndlongitude(linkedHashMap.get(Constant.TSEndlongitudeKey));
+
+                if (linkedHashMap.get(Constant.TSEndLatitudeKey)!=null)
+                    pushDetails.setEndlatitude(linkedHashMap.get(Constant.TSEndLatitudeKey));
+
+                if (linkedHashMap.get(Constant.TSEndDateTimeKey)!=null)
+                    pushDetails.setEnddatetime(linkedHashMap.get(Constant.TSEndDateTimeKey));
+
+                //Trip Start
+                return pushDetails;
+            }else{
+                return null;
+            }
+        }
     }
 
 }

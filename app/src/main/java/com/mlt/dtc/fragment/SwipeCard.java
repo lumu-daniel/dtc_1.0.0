@@ -90,7 +90,6 @@ public class SwipeCard extends Fragment implements ViewInterface {
             public void run() {
                 HelperEMVClass.cancelFlag = true;
                 portManager.sendData("72".getBytes());
-                EmvTransactionPresenter.emvTransactionPresenter.procTaskThread.interrupt();
             }
         };
 
@@ -125,36 +124,48 @@ public class SwipeCard extends Fragment implements ViewInterface {
                                     LastName = getFirstLastName[1];
                                 }
 
-//                            Track1DataArr = new String[]{};
-//                            Track2DataArr = new String[]{};
-//                            Track1Data = track1;
-//                            //Track2Data = track2;
-//                            //Track2Data = "B4806660101035938^/TALAL ABSAR SHAIKH AB^20122211185700163000000";
-//                            //Track2Data = "B4266110035080009^ABSAR/TALAL^21092011145900160000000";
-//                            //Track2Data = "B4582097101179194^ALI/NAAFII FAHAR^21032011964600682000000";
-//                            Track1DataArr = Common.MySplit(Track1Data, "^");
-//                            CardNumber = getCardNumberOnCard(Track1DataArr[0]);
-//                            CardExpiry = getExpiryDateOnCard(Track1DataArr[2]);
-//                            getFirstLastName = getNameOnCard(Track1DataArr[1]);
-//                            if (getFirstLastName.equals(null) || getFirstLastName.equals("")) {
-//                                FirstName = getFirstLastName[0];
-//                                LastName = getFirstLastName[1];
-//                            }
-
-                                //if (CardNumber.substring(0, 1).equals("4") || CardNumber.substring(0, 1).equals("5")) {
                                 FirstName = getFirstLastName[0];
-                                LastName = getFirstLastName[1];
-                                Bundle bundle = new Bundle();
-                                bundle.putString(ConfigrationDTC.CardFirstName, FirstName);
-                                bundle.putString(ConfigrationDTC.CardLastName, LastName);
-                                bundle.putString(ConfigrationDTC.CardExpiry, CardExpiry);
-                                bundle.putString(ConfigrationDTC.CardNumber, CardNumber);
-                                mFragment = EnterCVVPayNow.newInstance();
-                                mFragment.setArguments(bundle);
-                                addFragment();
+                                try{
+                                    LastName = getFirstLastName[1];
+                                }catch (Exception ex){
+                                    ex.printStackTrace();
+                                    LastName = FirstName;
+                                }
+                                if(FirstName.matches(".*[0-9].*")){
+                                    getActivity().runOnUiThread(() -> {
+
+                                        if(cTimer!=null){
+                                            cTimer.cancel();
+                                        }
+                                        // Utilities utilities = new Utilities();
+                                        //utilities.AlertDialog(getContext(), "Card is not swiped properly,kindly swipe it again", mFragment);
+                                        //Class<?> clazz = null;
+                                        generateDialog("Card is not supported,kindly use another card.");
+                                    });
+                                }else{
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString(ConfigrationDTC.CardFirstName, FirstName);
+                                    bundle.putString(ConfigrationDTC.CardLastName, LastName);
+                                    bundle.putString(ConfigrationDTC.CardExpiry, CardExpiry);
+                                    bundle.putString(ConfigrationDTC.CardNumber, CardNumber);
+                                    mFragment = EnterCVVPayNow.newInstance();
+                                    mFragment.setArguments(bundle);
+                                    addFragment();
+                                }
 
                             } catch (Exception e) {
                                 Log.d("myIssue2020", e.getLocalizedMessage());
+                                getActivity().runOnUiThread(() -> {
+
+                                    if(cTimer!=null){
+                                        cTimer.cancel();
+                                    }
+                                    // Utilities utilities = new Utilities();
+                                    //utilities.AlertDialog(getContext(), "Card is not swiped properly,kindly swipe it again", mFragment);
+                                    //Class<?> clazz = null;
+                                    generateDialog("Card is not swiped properly,kindly swipe it again.");
+                                });
+
                             }
                     /*} else {
                         getActivity().runOnUiThread(new Runnable() {
@@ -200,11 +211,6 @@ public class SwipeCard extends Fragment implements ViewInterface {
                                                     portManager.sendData("72".getBytes());
                                                 }
                                             }.run();
-                                            EmvTransactionPresenter.emvTransactionPresenter.procTaskThread.interrupt();
-                                            getActivity().finish();
-                                            Intent intent = new Intent(getContext(), MainActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            getActivity().startActivity(intent);
                                         });
                                 AlertDialog alert = builder.create();
                                 alert.show();
@@ -229,14 +235,10 @@ public class SwipeCard extends Fragment implements ViewInterface {
                             if(s.equalsIgnoreCase("Error3: Auto Report : Cancel")){
                                 runnable.run();
                                 try {
-                                    Thread.sleep(2000);
+                                    Thread.sleep(1000);
                                 } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
-                                getActivity().finish();
-                                Intent intent = new Intent(getContext(), MainActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                getActivity().startActivity(intent);
                             }else{
                                 swipeBuilder = new AlertDialog.Builder(getActivity())
                                         .setTitle("Sorry for the inconvienience.")
@@ -245,13 +247,10 @@ public class SwipeCard extends Fragment implements ViewInterface {
                                         .setPositiveButton("OK", (dialog, which) -> {
                                             runnable.run();
                                             try {
-                                                Thread.sleep(2000);
+                                                Thread.sleep(1000);
                                             } catch (InterruptedException e) {
                                                 e.printStackTrace();
                                             }
-                                            getActivity().finish();
-                                            Intent intent = new Intent(getContext(), MainActivity.class);
-                                            getActivity().startActivity(intent);
 
                                         }).show();
                             }
@@ -272,7 +271,7 @@ public class SwipeCard extends Fragment implements ViewInterface {
             runnable.run();
 
             try {
-                Thread.sleep(2000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -375,6 +374,7 @@ public class SwipeCard extends Fragment implements ViewInterface {
         if (cTimer != null)
             cTimer.cancel();
         super.onPause();
+        EmvTransactionPresenter.emvTransactionPresenter.procTaskThread.interrupt();
     }
 
     @Override
@@ -392,5 +392,38 @@ public class SwipeCard extends Fragment implements ViewInterface {
     @Override
     public void addLog(String msg) {
 
+    }
+
+    private void generateDialog(String message){
+        try {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setMessage(message)
+                    .setCancelable(false)
+                    .setPositiveButton("OK", (dialog, id) -> {
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                HelperEMVClass.cancelFlag = true;
+                                portManager.sendData("72".getBytes());
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+                                getActivity().finish();
+
+                                Intent intent = new Intent(getContext(), MainActivity.class);
+                                getActivity().startActivity(intent);
+
+                            }
+                        }.run();
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

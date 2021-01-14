@@ -2,6 +2,7 @@ package com.mlt.dtc.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import com.mlt.dtc.R;
 import com.mlt.dtc.common.Common;
@@ -45,6 +47,7 @@ public class EnterCVVPayNow extends Fragment {
         return new EnterCVVPayNow();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

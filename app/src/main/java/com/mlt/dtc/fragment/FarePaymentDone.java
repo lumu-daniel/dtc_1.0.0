@@ -25,6 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.google.gson.Gson;
+import com.mlt.dtc.MainApp;
 import com.mlt.dtc.R;
 import com.mlt.dtc.activity.MainActivity;
 import com.mlt.dtc.activity.MainFragment;
@@ -69,7 +70,7 @@ public class FarePaymentDone extends Fragment {
     Fragment mFragment;
 
     private String getEncryptedCardNumber,getEncryptedCardType,getEncryptedCardCVV,
-            getEncryptedCardExpiry,CardType,Amount,DashDTC,DeviceSerialNumber,ClassName, Fare,UUID, CVV;
+            getEncryptedCardExpiry,CardType,Amount,DashDTC,DeviceSerialNumber,ClassName,UUID, CVV;
 
     private TextView tv_paymentissuccessFull,tv_timer,tv_paymentthankyouDTC;
     private RelativeLayout ll_Payment,ll_Webview, ll_Paymentpaid;
@@ -121,14 +122,7 @@ public class FarePaymentDone extends Fragment {
         TextView tv_Seconds = view.findViewById(R.id.textView4);
 
 
-        try {
-
-            pushDetailsTripEnd = (PushDetails) Common.readObject(getContext(), Constant.PushDetailsTripEnd);
-
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        pushDetailsTripEnd = MainApp.pushDetails;
 
         btnrtapaycomHomeDTC.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), MainActivity.class);
@@ -147,16 +141,16 @@ public class FarePaymentDone extends Fragment {
         String firstName = bundle.getString(ConfigrationDTC.CardFirstName);
         String lastName = bundle.getString(ConfigrationDTC.CardLastName);
         String cardExpiry = bundle.getString(ConfigrationDTC.CardExpiry);
-        cardExpiry = getFormattedExpiryDateRTA(cardExpiry);
-//        CardExpiry = "06-2026";
+//        cardExpiry = getFormattedExpiryDateRTA(cardExpiry);
+        cardExpiry = "06-2026";
 
         String cardCVV = CVV;
 
 //        String cardNumber = bundle.getString(ConfigrationDTC.CardNumber); //4000000000000002  <--- with otp //"4111111111111111" <--- without otp
-        String cardNumber = "4242424242424242";//"5200000000000007";//"4000000000000002";//"5555555555554444"; //4000000000000002  <--- with otp //"4111111111111111" <--- without otp
+        String cardNumber = "5200000000000007"; //"4242424242424242";//"5200000000000007";//"4000000000000002";//"5555555555554444"; //4000000000000002  <--- with otp //"4111111111111111" <--- without otp
         //This will be uncommented when the testing with 1 dhs amount is done
         //Amount = "96";
-        Amount = Fare = PreferenceConnector.readString(getContext(), Constant.Fare, null);
+        Amount = pushDetailsTripEnd.getFare();
 //        Amount =Amount;
 
 
@@ -176,7 +170,7 @@ public class FarePaymentDone extends Fragment {
         String customerCity = ConfigrationDTC.City;
         String customerState = ConfigrationDTC.City;
         String GMAILCOM = ConfigrationDTC.GMAILCOM;
-        String customerAddress = deviceID + " " + timeStampInMilli + " " + firstName + " " + lastName + " " + customerCity;
+        String customerAddress = deviceID + " " + timeStampInMilli + " " /*+ firstName + " " + lastName*/ + " " + customerCity;
         String customerEmail = firstName + ConfigrationDTC.DOTSEP + lastName + GMAILCOM;
         String postalCode = ConfigrationDTC.PostalCode;
         String customerContactNumber = ConfigrationDTC.ContactNumber;
@@ -364,6 +358,7 @@ public class FarePaymentDone extends Fragment {
      * @param CustomerContactNumber
      * @param callback
      */
+    String SOAPRequestXML = "";
     public void threeDSecurePayment(String CardNumber, String CardExpiry, String Amount, String TransactionReferenceNo,
                                     String ReferenceNumber, String CardType, String CVV, String IpAddress,
                                     WebView webView, String FirstName, String LastName, String CustomerAddress,
@@ -444,7 +439,7 @@ public class FarePaymentDone extends Fragment {
         String currectDateTime = currentDateTime();
 
         // Set the action here
-        request.setAction(ConfigurationClass.PAYMENT_ACTION);
+        request.setAction(/*ConfigurationClass.PAYMENT_ACTION*/"https://testPG.networkips.com/GateWay/PG");
 
         // Set the request ID
         request.setRequestId(RequestId);
@@ -454,7 +449,7 @@ public class FarePaymentDone extends Fragment {
 
         // Set the Source Application here
         //request.setSourceApplication(ConfigurationClass.PAYMENT_SOURCE_APPLICATION);//UAT
-        request.setSourceApplication(ConfigurationClass.SOURCE_APPLICATION);//Prod
+        request.setSourceApplication(ConfigurationClass.TERMINAL_ID);//Prod
 
         // Set the Device Finger Print
         request.setDeviceFingerPrint(ConfigurationClass.PAYMENT_DEVICE_FINGER_PRINT);
@@ -525,7 +520,7 @@ public class FarePaymentDone extends Fragment {
         request.setCustomerContactNumber(CustomerContactNumber);
 
         // Set the Callback Url
-        request.setCallBackUrl(ConfigurationClass.PAYMENT_CALL_BACK_URL);
+        request.setCallBackUrl(/*ConfigurationClass.PAYMENT_CALL_BACK_URL*/"https://testPG.networkips.com/Home/TestMerchantResponse");
 
         // Set the Payment Channel
         request.setPaymentChannel(ConfigurationClass.PAYMENT_CHANNEL);
@@ -562,7 +557,7 @@ public class FarePaymentDone extends Fragment {
 
         // Pass the Object Here and Get the XML
         HTMLRequestAndRequest req = new HTMLRequestAndRequest();
-        String SOAPRequestXML = req.paymentRequest(request);
+        SOAPRequestXML = req.paymentRequest(request);
 
         webView.loadData(SOAPRequestXML, "text/html", "UTF-8");
 
@@ -606,11 +601,6 @@ public class FarePaymentDone extends Fragment {
                             callback.onSuccess(paymentResponse);
 
                                     dismissDialog();
-
-
-
-
-
                         }
                         else {
                             dismissDialog();

@@ -32,13 +32,16 @@ class TopBannerDialogFragment extends DialogFragment {
     private AlertDialog dialog;
     Context context;
     MainFragment mainActivity;
-    ArrayList<TopBannerObject> getListOfImages = new ArrayList<>();
-
+    ArrayList<TopBannerObject> getListOfImages;
+    boolean flag;
     ViewPager AdsAiewPager;
     ImageView iv_close, iv_arrowleft_topbanner_Dialog, iv_arrowright_topbanner_Dialog;
-    int position;
+    int pxn;
     private TopBannerAdapter adapter;
 
+    public TopBannerDialogFragment(Boolean check) {
+        this.flag = check;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -63,14 +66,10 @@ class TopBannerDialogFragment extends DialogFragment {
             AdsAiewPager = view.findViewById(R.id.adsviewPager);
 //            AdsAiewPager.setScrollDuration(2000);
 
-
-
             customDialogMain.setView(view);
             customDialogMain.setCancelable(false);
             dialog = customDialogMain.show();
             dialog.setCanceledOnTouchOutside(false);
-
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -78,14 +77,16 @@ class TopBannerDialogFragment extends DialogFragment {
 
     }
 
-    private void initViews(ViewPager adsAiewPagerOffers) {
+    private void initViews(ViewPager adsAiewPagerOffers, int position) {
         try {
 
 //            adapter = new TopBannerAdapter(getListOfImages, getContext(), false);
+            getListOfImages = topBannerList();
 
-            adapter = new TopBannerAdapter(topBannerList(), getContext(), false);
+            adapter = new TopBannerAdapter(getListOfImages, getContext(), flag,position);
 
             adsAiewPagerOffers.setAdapter(adapter);
+
             //sets the position in viewpager
             adsAiewPagerOffers.setCurrentItem(position);
 
@@ -123,10 +124,10 @@ class TopBannerDialogFragment extends DialogFragment {
 
 //            getListOfImages = (ArrayList<TopBannerObject>) getArguments().getSerializable(Constant.TopImagesSelectedOffers);
 
-            position = bundle.getInt(Constant.PositionTopBanner);
+            pxn = bundle.getInt(Constant.PositionTopBanner);
 
 
-            initViews(AdsAiewPager);
+            initViews(AdsAiewPager,pxn);
 
             iv_close.setOnClickListener(v -> {
 
@@ -140,10 +141,8 @@ class TopBannerDialogFragment extends DialogFragment {
                 int tab = AdsAiewPager.getCurrentItem();
                 if (tab > 0) {
                     tab--;
-                    AdsAiewPager.setCurrentItem(tab);
-                } else if (tab == 0) {
-                    AdsAiewPager.setCurrentItem(tab);
                 }
+                AdsAiewPager.setCurrentItem(tab);
             });
             iv_arrowright_topbanner_Dialog.setOnClickListener(v -> {
                 int tab = AdsAiewPager.getCurrentItem();
@@ -151,6 +150,7 @@ class TopBannerDialogFragment extends DialogFragment {
                 AdsAiewPager.setCurrentItem(tab);
             });
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
     }

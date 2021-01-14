@@ -29,7 +29,7 @@ public class TxnError extends DialogFragment implements View.OnClickListener {
     private String args;
     View view;
     CountDownTimer countDownTimer;
-    public TextView timer,actionType,yellowbutton,redbutton;
+    public TextView timer,actionType,yellowbutton,redbutton,greenbutton;
     ImageView iv_flag, cancel_action,gifImageView;
     Button paynow_btn;
     FrameLayout btns;
@@ -87,7 +87,9 @@ public class TxnError extends DialogFragment implements View.OnClickListener {
         gif_layout = view.findViewById(R.id.gif_layout);
         yellowbutton = view.findViewById(R.id.yellowbutton);
         redbutton = view.findViewById(R.id.redbutton);
+        greenbutton = view.findViewById(R.id.greenbutton);
         gifImageView = view.findViewById(R.id.gifImageView);
+        greenbutton.setVisibility(View.GONE);
         if(args.equalsIgnoreCase("Reversing transaction.")){
             if(countDownTimer!=null){
                 countDownTimer.cancel();

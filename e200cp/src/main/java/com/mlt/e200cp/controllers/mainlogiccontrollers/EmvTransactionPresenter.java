@@ -72,6 +72,11 @@ public class EmvTransactionPresenter extends BasePresenterViewWrapper {
 
     @Override
     public boolean beforeInvoke(String methodName) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         return connect();
     }
 
@@ -151,6 +156,9 @@ public class EmvTransactionPresenter extends BasePresenterViewWrapper {
 
                 if(track1!=null&&track2!=null&&track3!=null){
                     JsonObject object = new JsonObject();
+                    if(track1.equals("")){
+                        track1 = "M^Card";
+                    }
                     object.addProperty("track1",track1);
                     object.addProperty("track2",track2);
                     object.addProperty("track3",track3);

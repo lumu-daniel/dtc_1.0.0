@@ -105,28 +105,4 @@ public class AddEmail extends DialogFragment implements View.OnClickListener {
                 break;
         }
     }
-
-    private PosDetails setPosDetails(){
-        PosDetails details = new PosDetails();
-        details.setCustomerAddress("Dubai PLot");
-        details.setCustomerCity("Dubai");
-        details.setCustomerContactNumber("0527000000");
-        details.setCustomerCountry("UAE");
-        details.setCustomerEmail(ctx_email.getText().toString());
-        details.setHostDeviceName("ICounter");
-        details.setLanguage("English");
-        details.setRequestingApplicationID("2");
-        details.setReversalReason("Card Removed");
-        details.setServiceID("110");
-        details.setServiceName("Test Name");
-        details.setServiceNameAR("Test Name");
-        details.setSignatureFields("ServiceCode,TerminalID,TimeStamp");
-        details.setTransactionCurreny("784");
-        details.setSourceApplication("1");
-        details.setUserName("Test User");
-        details.setTransactionReferenceNumber("MLT_EC200CP_001900_002");
-        details.setTransactionType("Purchase");
-        details.setpOSDeviceName("MLT_EC200CP");
-        return details;
-    }
 }

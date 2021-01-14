@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static com.mlt.dtc.MainApp.mainNotifier;
 import static com.mlt.dtc.common.Common.WriteTextInTextFileForShift;
 import static com.mlt.dtc.common.Common.WriteTextInTextFileForTrip;
 import static com.mlt.dtc.common.Common.getFilePath;
@@ -86,7 +87,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // and data payloads are treated as notification messages. The Firebase console always sends notification
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
-        if (processresponse(remoteMessage)) return;
+
+        if (processresponse(remoteMessage)) {
+            return;
+        }
+        mainNotifier.onMessage(hashMap);
+
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
@@ -230,10 +236,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             try {
                 Common.writeObject(getApplicationContext(), Constant.PushDetailsHashMap, hashMap);
             } catch (IOException e) {
-
+                e.printStackTrace();
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return false;
     }

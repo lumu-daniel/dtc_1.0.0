@@ -16,6 +16,7 @@ import com.mlt.e200cp.controllers.presenters.PresenterClasses;
 import com.mlt.e200cp.interfaces.PosSequenceInterface;
 import com.mlt.e200cp.interfaces.ResponseReciever;
 import com.mlt.e200cp.interfaces.ResultsCallback;
+import com.mlt.e200cp.interfaces.ReversalCallBack;
 import com.mlt.e200cp.interfaces.ViewInterface;
 import com.mlt.e200cp.models.EmvTransactionDetails;
 import com.mlt.e200cp.models.PosDetails;
@@ -70,6 +71,7 @@ import static com.mlt.e200cp.models.StringConstants.TXN_REVERSAL;
 import static com.mlt.e200cp.models.StringConstants.USE_CHIP_ERR;
 import static com.mlt.e200cp.utilities.helper.shell.Reader.STATE.OUT_WITH_DATA;
 import static com.mlt.e200cp.utilities.helper.util.ISOConstant.SUCCESSFLAG;
+import static com.mlt.e200cp.utilities.helper.util.ISOConstant.reversal;
 import static com.mlt.e200cp.utilities.helper.util.Logger.LINE_OUT;
 import static com.mlt.e200cp.utilities.helper.util.Logger.log;
 import static com.mlt.e200cp.utilities.helper.util.Utility.CVMReqLimit;
@@ -534,19 +536,19 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                         ISD72 = emvTransactionDetails.getIssuerScriptingData72();
 
                     }else{
-                        ISD71 = "00";
-                        ISD72 = "00";
+                        ISD71 = "";
+                        ISD72 = "";
                     }
                 }else {
-                    ISD71 = "00";
-                    ISD72 = "00";
+                    ISD71 = "";
+                    ISD72 = "";
                 }
 
                 // ================================== PAY Second Gen AC ==================================
                 if(SUCCESSFLAG){
                     dataField.clear();
                     dataField.addData(0x8A, Utility.hex2Byte("3030"));
-                    String HexapprovalCode = Utility.bytes2Hex(emvTransactionDetails.getApprovalCode()!=null? emvTransactionDetails.getApprovalCode().getBytes():"000000".getBytes());
+                    String HexapprovalCode = Utility.bytes2Hex(response.getTransactionDetailsData().getApprovalCode()!=null? response.getTransactionDetailsData().getApprovalCode().getBytes():"000000".getBytes());
                     dataField.addData(0x89, Utility.hex2Byte(HexapprovalCode));
                     dataField.addData(0x9F01, Utility.hex2Byte("414243444546"));
                     dataField.addData(0x91, Utility.hex2Byte(ServerIAD));
@@ -564,7 +566,9 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
 //                endTransaction("Reversal call required...");
                         emvTransactionDetails.setIsReversal("true");
                         posDetails.setReversalReason("Card Removed.");
-                        SequencyHandler.getInstance(TXN_REVERSAL,callbackInterface).execute(appCompatActivity,posDetails,callbackInterface);
+                        reversal = true;
+                        emvTransactionDetails.setReversalCallBack(reversalCallBack);
+                        callbackInterface.onStartProcessing(posDetails,emvTransactionDetails);
 
                     }else{
                         //prod
@@ -583,7 +587,7 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
                     SUCCESSFLAG = false;
                 }
                 else{
-                    endTransaction("Failed case");
+                    endTransaction(response.getErrorDescription());
                 }
             }catch (Exception ex){
                 endTransaction("Error in transaction results");
@@ -601,6 +605,18 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         response = null;
 
     }
+
+    private ReversalCallBack reversalCallBack = new ReversalCallBack() {
+        @Override
+        public void onTxnReversed(EmvTransactionDetails details) {
+            endTransaction("Transaction reversed.");
+        }
+
+        @Override
+        public void onReverseFailed(String error) {
+            endTransaction("error");
+        }
+    };
 
     @Override
     protected void onCancel() {
@@ -632,17 +648,11 @@ public class HelperEMVClass extends BasePresenterViewWrapper implements Response
         } );
         if(!SUCCESSFLAG){
             if(!msg.equalsIgnoreCase("")){
-                callbackInterface.onTransactionEnded("Failed to read card.",response);
+                callbackInterface.onTransactionEnded(msg,response);
             }
         }else{
             SUCCESSFLAG=false;
             callbackInterface.onTransactionEnded("Successful",response);
-        }
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-//            e.printStackTrace();
-            appendLog(e.getLocalizedMessage());
         }
         portManager.sendData("72".getBytes());
         procTaskThread.interrupt();

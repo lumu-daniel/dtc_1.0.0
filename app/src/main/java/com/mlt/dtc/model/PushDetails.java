@@ -36,7 +36,24 @@ public class PushDetails implements Serializable {
         private String endlatitude;
         private String endlongitude;
         private String tripId;
+        private String tripStartAddress;
+        private String tripEndAddress;
 
+    public String getTripStartAddress() {
+        return tripStartAddress;
+    }
+
+    public void setTripStartAddress(String tripStartAddress) {
+        this.tripStartAddress = tripStartAddress;
+    }
+
+    public String getTripEndAddress() {
+        return tripEndAddress;
+    }
+
+    public void setTripEndAddress(String tripEndAddress) {
+        this.tripEndAddress = tripEndAddress;
+    }
 
     public String getFamilyName() {
         return familyName;

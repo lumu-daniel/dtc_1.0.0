@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 
+import com.mlt.dtc.Db.DeviceDetails;
+import com.mlt.dtc.MainApp;
 import com.mlt.dtc.R;
 import com.mlt.dtc.common.SystemUIService;
 import com.mlt.dtc.fragment.MainBannerVideoFragment;
@@ -26,9 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_mainayout);
-
         checkPermissionREAD_EXTERNAL_STORAGE(this);
-
 
         mFragment = MainFragment.newInstance();
         addFragment();

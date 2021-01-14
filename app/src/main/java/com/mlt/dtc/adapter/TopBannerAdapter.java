@@ -20,11 +20,13 @@ class TopBannerAdapter  extends PagerAdapter {
     private RoundRectCornerImageView imageView;
     private View view;
     private boolean flag;
+    int pxn;
 
-    public TopBannerAdapter(ArrayList<TopBannerObject> viewList, Context mContext,Boolean flag) {
+    public TopBannerAdapter(ArrayList<TopBannerObject> viewList, Context mContext,Boolean flag,int position) {
         this.flag = flag;
         this.viewList = viewList;
         this.mContext = mContext;
+        this.pxn = position;
     }
 
     @Override
@@ -34,21 +36,34 @@ class TopBannerAdapter  extends PagerAdapter {
 
         imageView =  view.findViewById(R.id.image);
 
+        try{
+            if(pxn>viewList.size()){
+                pxn = pxn%viewList.size();
+            }
 
-
-        //Todo convert image to base64
-        Glide.with(mContext)
-                .load(flag?viewList.get(position).getTBThumbnail():viewList.get(position).getTBImage())
-                .dontAnimate()
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
-                .skipMemoryCache(true)
-                .apply(new RequestOptions().override(800, 800))
-                /*.apply(flag?new RequestOptions().override(700, 200):new RequestOptions().override(1300, 830))*/
-                .into(imageView);
-
+            //Todo convert image to base64
+            Glide.with(mContext)
+                    .load(flag?viewList.get(pxn).getTBImage():viewList.get(position).getTBImage())
+                    .dontAnimate()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .apply(new RequestOptions().override(800, 800))
+                    /*.apply(flag?new RequestOptions().override(700, 200):new RequestOptions().override(1300, 830))*/
+                    .into(imageView);
 //        Picasso.with(mContext).load(flag?viewList.get(position).getTBThumbnail():viewList.get(position).getTBImage()).into(imageView);
-
-        collection.addView(view, 0);
+            flag = false;
+            collection.addView(view, 0);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            Glide.with(mContext)
+                    .load(flag?viewList.get(0).getTBThumbnail():viewList.get(0).getTBImage())
+                    .dontAnimate()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .apply(new RequestOptions().override(800, 800))
+                    /*.apply(flag?new RequestOptions().override(700, 200):new RequestOptions().override(1300, 830))*/
+                    .into(imageView);
+        }
 
         return view;
     }

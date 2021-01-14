@@ -52,7 +52,6 @@ public class PinpadManager {
                 if(virtualPinpad)
                     Sys.setPinEntryModeEnabled(true);
             } catch (Exception e){
-                e.printStackTrace();
             }
 
         });

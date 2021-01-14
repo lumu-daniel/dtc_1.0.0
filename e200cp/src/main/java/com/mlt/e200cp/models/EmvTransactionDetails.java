@@ -2,6 +2,8 @@ package com.mlt.e200cp.models;
 
 import android.widget.TextView;
 
+import com.mlt.e200cp.interfaces.ReversalCallBack;
+
 public class EmvTransactionDetails {
 
     private String Version;
@@ -36,6 +38,15 @@ public class EmvTransactionDetails {
     private TextView pinText;
     private boolean isIntergrated;
     private String RcptNo;
+    private ReversalCallBack reversalCallBack;
+
+    public ReversalCallBack getReversalCallBack() {
+        return reversalCallBack;
+    }
+
+    public void setReversalCallBack(ReversalCallBack reversalCallBack) {
+        this.reversalCallBack = reversalCallBack;
+    }
 
     public String getRcptNo() {
         return RcptNo;

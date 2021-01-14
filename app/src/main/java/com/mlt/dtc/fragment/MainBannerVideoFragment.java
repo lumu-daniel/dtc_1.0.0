@@ -2,6 +2,8 @@ package com.mlt.dtc.fragment;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -94,6 +96,7 @@ class MainBannerVideoFragment extends Fragment {
         View view = inflater.inflate(R.layout.mainbannervideofragment, container, false);
 
         video_view = view.findViewById(R.id.videoviewmainbanner);
+        getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         relativeLayout = view.findViewById(R.id.rl_videoviewmainbanner);
         rl_Video_Brightness_Box = view.findViewById(R.id.rl_video_brightness_box);
         tv_Video_Brightness = view.findViewById(R.id.tv_video_brightness);

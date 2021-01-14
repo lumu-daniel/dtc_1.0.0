@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import static android.content.ContentValues.TAG;
 
 
-public class getReverseGeoCoding {
+public class GetReverseGeoCoding {
     public static final String API_KEY = "AIzaSyB0ZCLT-QKhe5S4gdIP5h9MAE9x6w33WuY";
     private String Address1 = "", Address2 = "", City = "", State = "", Country = "", County = "", PIN = "";
     String Language = "ar";

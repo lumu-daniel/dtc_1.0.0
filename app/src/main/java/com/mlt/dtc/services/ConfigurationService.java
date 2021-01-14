@@ -10,6 +10,8 @@ import com.mlt.dtc.model.AsyncServiceCallNoDialog;
 import com.mlt.dtc.model.CKeyValuePair;
 import com.mlt.dtc.model.request.ConfigurationServiceRequest;
 import com.mlt.dtc.utility.Constant;
+import com.mlt.e200cp.controllers.servicecallers.GenericServiceCall;
+import com.mlt.e200cp.interfaces.GeneralServiceCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mlt.dtc.MainApp.AndroidSerialNo;
+import static com.mlt.dtc.services.ServicesUrls.URLEndPoint;
+import static com.mlt.e200cp.utilities.helper.util.Utility.convertXMLtoJSON;
 
 
 public class ConfigurationService {
@@ -53,42 +57,45 @@ public class ConfigurationService {
             };
             configurationServiceRequest.setCustomerUniqueNo(ServiceKeyValues);
 
-
-            AsyncServiceCallNoDialog asyncCall = new AsyncServiceCallNoDialog(output -> {
-                //Log.d("Response From Asynchronous:", (String) output);
-
-                if (output != null) {
-                    JSONObject jsonObj;
-
-                    try {
-                        jsonObj = XML.toJSONObject((String) output);
-                        JSONObject body = jsonObj.getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse");
-                        JSONObject header = jsonObj.getJSONObject("s:Envelope").getJSONObject("s:Header");
-
-                        // Assign the response to result variable
-                        serviceCallback.onSuccess(body);
-
-                    } catch (JSONException e) {
-                        Log.e("JSON exception", e.getMessage());
-
-                        serviceCallback.onFailure(e.getLocalizedMessage());
-                        e.printStackTrace();
-                    }
-
-                } else {
-                    Log.d("Response Asynchronous:", "error");
-                    serviceCallback.onFailure("error");
-                }
-            }, mContext);
-
             // Pass the Object Here and Get the XML
             String SOAPRequestXML = createConfigurationService(configurationServiceRequest);
 
             // Pass the Object Here For the Service
-            asyncCall.execute(SOAPRequestXML, ServicesUrls.URL, ServicesUrls.URLSOAPAction);
+            GenericServiceCall genericServiceCall = new GenericServiceCall(ServicesUrls.URLRetro,SOAPRequestXML,URLEndPoint,ServicesUrls.URLSOAPAction);
+            genericServiceCall.callService(new GeneralServiceCallback() {
+                @Override
+                public String onResponseSuccess(String data) {
+                    if (data != null) {
+                        JSONObject jsonObj;
+
+                        try {
+
+                            // Assign the response to result variable
+                            serviceCallback.onSuccess(convertXMLtoJSON(data).getJSONObject("s:Envelope").getJSONObject("s:Body").getJSONObject("InquiryResponse"));
+
+                        } catch (JSONException e) {
+                            Log.e("JSON exception", e.getMessage());
+
+                            serviceCallback.onFailure(e.getLocalizedMessage());
+                            e.printStackTrace();
+                        }
+
+                    } else {
+                        Log.d("Response Asynchronous:", "error");
+                        serviceCallback.onFailure("error");
+                    }
+                    return null;
+                }
+
+                @Override
+                public String onResponseFailure(String t) {
+                    serviceCallback.onFailure(t);
+                    return null;
+                }
+            });
 
         } catch (Exception e) {
-
+            serviceCallback.onFailure(e.getLocalizedMessage());
         }
     }
 

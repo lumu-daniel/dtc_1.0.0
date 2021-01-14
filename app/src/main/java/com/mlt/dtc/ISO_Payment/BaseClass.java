@@ -52,7 +52,7 @@ import static com.mlt.e200cp.utilities.helper.util.Utility.txn_type;
 
 public class BaseClass implements PosSequenceInterface, ViewInterface {
 
-    private AppCompatActivity compatActivity;
+    public AppCompatActivity compatActivity;
     public static BaseClass baseClass;
 //    private ProgressDialog progDialog;
     private AlertDialog progDialog;
@@ -127,7 +127,9 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
 
     @Override
     public void onChipFallBack() {
-        addFragment(new ChipFallBack(),"ChipFallBack");
+        dismissDialog(fragment);
+        fragment = new ChipFallBack();
+        addFragment(fragment,"ChipFallBack");
     }
 
     @Override
@@ -243,18 +245,27 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
         ServiceContract.callIsoService(posDetails, emvTransactionDetails, new ServiceCallback() {
             @Override
             public String onResponseSuccess(EmvTransactionDetails data, ISOPaymentResponse detailsData) {
-                ISOConstant.calledService = true;
                 dismissDialog(progDialog);
                 if(ISOConstant.reversal){
+                    data.getReversalCallBack().onTxnReversed(data);
                     printReversal = true;
-                    SequencyHandler.getInstance(TXN_REVERSED,BaseClass.this).execute(detailsData);
                     ISOConstant.reversal = false;
                 }else{
-                    if(!emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACT_ENTRY_MODE)){
-                        SequencyHandler.getInstance(TXN_SUCCESSFUL,BaseClass.this).execute(detailsData);
+                    if(detailsData.getTransactionDetailsData().getResponseCode().equals("00")){
+                        if(!emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACT_ENTRY_MODE)){
+                            SequencyHandler.getInstance(TXN_SUCCESSFUL,BaseClass.this).execute(detailsData);
+                        }else{
+                            ISOConstant.SUCCESSFLAG = true;
+                            ISOConstant.calledService = true;
+                            HelperEMVClass.helperEMVClass.onResponseRecieved(detailsData);
+                        }
                     }else{
-                        ISOConstant.SUCCESSFLAG = true;
-                        HelperEMVClass.helperEMVClass.onResponseRecieved(detailsData);
+                        if(!emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACT_ENTRY_MODE)){
+                            HelperEMVClass.helperEMVClass.endTransaction(detailsData.getTransactionDetailsData().getErrorDescription());
+                        }else{
+                            HelperEMVClass.helperEMVClass.onResponseRecieved(detailsData);
+                            ISOConstant.calledService = true;
+                        }
                     }
                 }
 
@@ -263,7 +274,12 @@ public class BaseClass implements PosSequenceInterface, ViewInterface {
 
             @Override
             public String onResponseFailure(String t) {
-                ISOConstant.calledService = true;
+                if(ISOConstant.reversal){
+                    emvTransactionDetails.getReversalCallBack().onReverseFailed(t);
+                }
+                if(emvTransactionDetails.getPOSENTRYTYPE().equals(CONTACT_ENTRY_MODE)){
+                    ISOConstant.calledService = true;
+                }
                 dismissDialog(progDialog);
                 return null;
             }

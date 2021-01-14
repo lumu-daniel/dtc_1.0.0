@@ -51,7 +51,7 @@ public class PortManager {
             if (ret)
                 ports[0].setOnEvent(portListener[0]);
             else
-                SequencyHandler.getInstance(TXN_ERROR,HelperEMVClass.callbackInterface).execute("Restart Activity");
+                HelperEMVClass.helperEMVClass.endTransaction("Restart Activity");
             log(String.valueOf(ret),LINE_OUT());
             return ret;
         }

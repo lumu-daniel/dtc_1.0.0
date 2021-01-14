@@ -17,8 +17,8 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 
 import static android.content.ContentValues.TAG;
-import static com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass.LOGIN_ID;
 import static com.mlt.e200cp.models.StringConstants.APPLICATION_VERSION;
+import static com.mlt.e200cp.models.StringConstants.LOGIN_ID;
 import static com.mlt.e200cp.models.StringConstants.LOGIN_PW;
 import static com.mlt.e200cp.models.StringConstants.MERCHANT_NAME;
 import static com.mlt.e200cp.models.StringConstants.SERVICE_CODE;
@@ -63,10 +63,9 @@ public class ServiceContract {
                         ISOPaymentResponse response = (ISOPaymentResponse)hashMap.get("ISOPaymentResponse");
                         response = decryptCardValues(response);
                         if(response.getTransactionDetailsData().getResponseCode().equals("00")){
-                            callback.onResponseSuccess(transactionDetails,response);
-                        }else{
-                            onResponseFailure("Transaction Failed.");
+                            transactionDetails.setRcptNo(response.getTransactionDetailsData().getReceiptNumber());
                         }
+                        callback.onResponseSuccess(transactionDetails,response);
 
                         return null;
                     } catch (Exception e) {
@@ -310,7 +309,7 @@ public class ServiceContract {
             request.setHashPassword(getHashPassword);
             if(emvTransactionDetails.getIsReversal().equals("true")){
                 try {
-                    request.setTransactionReceiptToBeVoidedORReversedOrReprinted(EncryptDecrpt.Encrypt(posDetails.getReceiptNumber(), ConfigurationClass.plainText));
+                    request.setTransactionReceiptToBeVoidedORReversedOrReprinted(EncryptDecrpt.Encrypt(emvTransactionDetails.getRcptNo(), ConfigurationClass.plainText));
                 } catch (InvalidKeySpecException e) {
                     e.printStackTrace();
                     appendLog(e.getLocalizedMessage());

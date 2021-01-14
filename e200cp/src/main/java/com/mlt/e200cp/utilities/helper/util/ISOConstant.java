@@ -20,7 +20,7 @@ public class ISOConstant {
     public static boolean SUCCESSFLAG = false;
     public static boolean SUCCESSDIALOGFLAG = false;
     public static boolean reversal = false;
-    public static boolean calledService = false;
+    public static boolean calledService;
     public static boolean printReversal = false;
     public static boolean serialPortOpened = false;
     public static boolean payIso;

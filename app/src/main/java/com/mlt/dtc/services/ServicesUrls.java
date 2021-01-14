@@ -11,6 +11,8 @@ public class ServicesUrls {
 
     //Common service
     public static final String URL = "https://dtcpushservice.networkips.com:6104/ServiceModule/DTCPushService.svc/"; //UAT
+    public static final String URLRetro = "https://dtcpushservice.networkips.com:6104/ServiceModule/"; //UAT
+    public static final String URLEndPoint = "DTCPushService.svc";
 
 //    public static final String URL = "https://dtc.networkips.com:6105/ServiceModule/DTCPushService.svc/";//Prod
 

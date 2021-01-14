@@ -6,13 +6,20 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.util.Log;
-import com.google.gson.Gson;
+
+import androidx.multidex.MultiDex;
+import androidx.room.Room;
+
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.mlt.dtc.Db.DeviceMngtDB;
+import com.mlt.dtc.interfaces.FireBaseNotifiers;
 import com.mlt.dtc.interfaces.ResultsCallback;
+import com.mlt.dtc.model.PushDetails;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -22,16 +29,23 @@ public
 class MainApp extends Application   {
 
     public static String AndroidSerialNo;
+    public static MainApp mainApp;
     public static boolean  internetCheck;
     private Boolean state;
     private Handler mHandler;
-
+    public static FireBaseNotifiers mainNotifier;
+    public static PushDetails pushDetails;
     private Runnable runnable;
+    public static DeviceMngtDB db;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        mainApp = this;
+        MultiDex.install(this);
         mHandler = new Handler();
+        pushDetails = new PushDetails();
+        requestForPermissions();
         runnable=new Runnable() {
             @Override
             public void run() {
@@ -54,7 +68,7 @@ class MainApp extends Application   {
         };
         AndroidSerialNo = android.os.Build.SERIAL;
 //        getDevicetoken = FirebaseInstanceId.getInstance().getToken();
-        requestForPermissions();
+
 
     }
 
@@ -72,6 +86,10 @@ class MainApp extends Application   {
                         if (report.areAllPermissionsGranted()) {
                             Log.e("TAG", "onPermissionsChecked: Granted" );
                             mHandler.post(runnable);
+                            db = Room.databaseBuilder(getApplicationContext(), DeviceMngtDB.class,"DeviceMngtDb")
+                                    .allowMainThreadQueries()
+                                    .fallbackToDestructiveMigration()
+                                    .build();
                             reloadPage(getApplicationContext());
 
                         }

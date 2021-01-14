@@ -83,6 +83,8 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/shape_mp_cvv_bg"
                     android:gravity="center"
+                    android:focusable="true"
+                    android:focusedByDefault="true"
                     android:text=""
                     android:maxLength="3"
                     android:inputType="numberPassword"
