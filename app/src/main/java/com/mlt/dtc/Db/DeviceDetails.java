@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity
+@Entity(tableName = "device_details")
 public class DeviceDetails {
 
     @PrimaryKey(autoGenerate = true) int keyId;
@@ -14,6 +14,8 @@ public class DeviceDetails {
     @ColumnInfo(name = "DeviceMacAddress") String DeviceMacAddress;
     @ColumnInfo(name = "MainVideoVersion") String MainVideoVersion;
     @ColumnInfo(name = "TopBannerVersion") String TopBannerVersion;
+    @ColumnInfo(name = "TBMainImageVersion") String TBMainImageVersion;
+    @ColumnInfo(name = "SBMainImageVersion") String SBMainImageVersion;
 
     public String getMLTDeviceSN() {
         return MLTDeviceSN;
@@ -61,5 +63,21 @@ public class DeviceDetails {
 
     public void setTopBannerVersion(String topBannerVersion) {
         TopBannerVersion = topBannerVersion;
+    }
+
+    public String getTBMainImageVersion() {
+        return TBMainImageVersion;
+    }
+
+    public void setTBMainImageVersion(String TBMainImageVersion) {
+        this.TBMainImageVersion = TBMainImageVersion;
+    }
+
+    public String getSBMainImageVersion() {
+        return SBMainImageVersion;
+    }
+
+    public void setSBMainImageVersion(String SBMainImageVersion) {
+        this.SBMainImageVersion = SBMainImageVersion;
     }
 }

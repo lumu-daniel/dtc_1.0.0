@@ -14,6 +14,8 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -74,8 +76,12 @@ import com.mlt.dtc.pushnotification.MyFirebaseMessagingService;
 import com.mlt.dtc.utility.ConfigrationDTC;
 import com.mlt.dtc.utility.Constant;
 import com.mlt.e200cp.controllers.deviceconfigcontrollers.ConfigurationClass;
+import com.mlt.e200cp.controllers.mainlogiccontrollers.EmvTransactionPresenter;
 import com.mlt.e200cp.controllers.presenters.PresenterClasses;
 import com.mlt.e200cp.interfaces.ResultsCallback;
+import com.mlt.e200cp.interfaces.ViewInterface;
+import com.mlt.e200cp.utilities.helper.protocol.VNG;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -84,6 +90,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import static com.mlt.dtc.MainApp.MAC;
 import static com.mlt.dtc.MainApp.pushDetails;
 import static com.mlt.dtc.common.Common.WriteTextInTextFile;
 import static com.mlt.dtc.common.Common.checkPermissionREAD_EXTERNAL_STORAGE;
@@ -100,7 +107,7 @@ import static com.mlt.dtc.utility.Constant.WeatherTime;
 
 public class MainFragment extends Fragment implements View.OnClickListener, TaskListener,
         RecyclerviewBottomAdapter.ClickListener, OffersRecyclerViewAdapter.RecyclerViewClickListener,
-        DriverImageListener, MainVideoBannerListener, ResultsCallback, FireBaseNotifiers {
+        DriverImageListener, MainVideoBannerListener, ResultsCallback, FireBaseNotifiers, ViewInterface {
 
     private TextView tv_timemainbox, tv_datemainbox, tv_VideoBr, tv_degree,tv_services;
     private LinearLayout ll_driverinfo, llMenuBottom, llMenuUp, llsideOffers;
@@ -127,6 +134,7 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
     private DialogFragment dialogFragment;
     private static OverwriteTripFragmentListener overwriteTripFragmentListener;
     MainBannerVideoFragment mainBannerVideoFragment;
+    private EmvTransactionPresenter emvTransactionPresenter ;
 
     boolean fullscreen = true;
     WindowManager mWindowManager;
@@ -146,6 +154,8 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
 
         return mainActivity;
     }
+
+
 
     @NonNull
     public static MainFragment newInstance() {
@@ -184,6 +194,18 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
 
         mainActivity = this;
 
+
+        emvTransactionPresenter = EmvTransactionPresenter.getInstance(new ResultsCallback() {
+            @Override
+            public String onResponseSuccess(String s) {
+                return null;
+            }
+            @Override
+            public String onResponseFailure(String s) {
+                return null;
+            }
+        },getContext(),this,"3C");
+
         checkPermissionREAD_EXTERNAL_STORAGE(getContext());
 
         findViewById(view);
@@ -203,16 +225,17 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         try {
             // String DeviceSerialNumber = "E2C1000063";//E2C1000954 /<-**Prod**/ //"E2C1000590";  /<-**UAT**/
 
-            String DeviceSerialNumber = "E2C1000590";//E2C1000954 /<-**Prod**/ //"E2C1000590";  /<-**UAT**/
+            String DeviceSerialNumber = getSerialNumber();//"E2C1000590";//E2C1000954 /<-**Prod**/ //"E2C1000590";  /<-**UAT**/
             deviceDao = MainApp.db.deviceDao();
             PresenterClasses.getConfigData("RTA-Configs", DeviceSerialNumber, PreferenceConnector.getPreferences(getContext()), this);
-            if (deviceDao.getAll().size() <= 0) {
+            if (deviceDao.getAll().getCount() == 0) {
                 deviceDetails = new DeviceDetails();
                 deviceDetails.setMLTDeviceSN(DeviceSerialNumber);
                 deviceDetails.setAdvVersion("0.0.1");
                 deviceDetails.setApkVersion("0.0.1");
                 deviceDetails.setMainVideoVersion("0.0.1");
                 deviceDetails.setTopBannerVersion("0.0.1");
+                deviceDetails.setDeviceMacAddress(MAC);
                 deviceDao.insertAll(deviceDetails);
             }
         }catch (Exception e){
@@ -221,7 +244,6 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
 
         return view;
     }
-
 
 
     private void findViewById(View view) {
@@ -310,7 +332,12 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         tv_datemainbox.setText(getDateHome());
         Common.DateTimeRunning(tv_timemainbox);
 
-        String versionName = String.valueOf(BuildConfig.VERSION_NAME);
+        String versionName = "";
+        try{
+            versionName = getClass().getPackage().getImplementationVersion();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
 
         PreferenceConnector.writeString(getContext(), ConfigrationDTC.APK_VERSION, versionName);
@@ -916,4 +943,25 @@ public class MainFragment extends Fragment implements View.OnClickListener, Task
         }
     }
 
+    public String getSerialNumber() {
+        String serialNo = "";
+        emvTransactionPresenter.beforeInvoke("");
+        VNG rsp = emvTransactionPresenter.exchangeData(new VNG("R0"));
+        if (rsp != null && rsp.parseString(2).equals("R0")) {
+            String serial = rsp.parseString(48);
+            serialNo = serial.substring(serial.indexOf("E"));
+        }
+        emvTransactionPresenter.beforeInvoke("");
+        return serialNo;
+    }
+
+    @Override
+    public void setActionTable(String[] actionList) {
+
+    }
+
+    @Override
+    public void addLog(String msg) {
+
+    }
 }

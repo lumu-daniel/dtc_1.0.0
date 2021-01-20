@@ -98,7 +98,7 @@ class Common {
         ArrayList<TopBannerObject> topBannerList=new ArrayList<>();
         try {
             File dir = new File(multimediaPath+"/topbanner/");
-            File dirMI = new File(multimediaPath+"/TBMainImage/");
+            File dirMI = new File(multimediaPath+"/tbmainimage/");
             File[] files = dir.listFiles();
             File[] filesMI = dirMI.listFiles();
 
@@ -129,7 +129,7 @@ class Common {
         ArrayList<SideBannerObject> sideBannerObjects=new ArrayList<>();
         try {
             File dir = new File(multimediaPath + "/adv/");
-            File dirMI = new File(multimediaPath + "/SBMainImage/");
+            File dirMI = new File(multimediaPath + "/sbmainimage/");
             File[] files = dir.listFiles();
             File[] MIFiles = dirMI.listFiles();
             //fileList = new ArrayList<File>();

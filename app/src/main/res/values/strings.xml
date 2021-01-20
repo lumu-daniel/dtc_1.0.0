@@ -835,5 +835,8 @@
 
     <string name="about_us">About Us</string>
 
+    <string name="access_label">DTC Data Base</string>
+    <string name="access_desc">Read and write from the DTC Data Base </string>
+
 
 </resources>

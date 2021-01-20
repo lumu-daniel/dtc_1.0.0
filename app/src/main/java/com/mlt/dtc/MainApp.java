@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.util.Log;
 
@@ -37,6 +39,7 @@ class MainApp extends Application   {
     public static PushDetails pushDetails;
     private Runnable runnable;
     public static DeviceMngtDB db;
+    public static String MAC;
 
     @Override
     public void onCreate() {
@@ -45,7 +48,6 @@ class MainApp extends Application   {
         MultiDex.install(this);
         mHandler = new Handler();
         pushDetails = new PushDetails();
-        requestForPermissions();
         runnable=new Runnable() {
             @Override
             public void run() {
@@ -54,6 +56,7 @@ class MainApp extends Application   {
                     public String onResponseSuccess(String data) {
                         internetCheck =true;
 //                        sendDetails();
+                        MAC = getMACAdd();
                         mHandler.postDelayed(runnable,3600000);
                         return null;
                     }
@@ -66,12 +69,18 @@ class MainApp extends Application   {
                 });
             }
         };
+        requestForPermissions();
         AndroidSerialNo = android.os.Build.SERIAL;
 //        getDevicetoken = FirebaseInstanceId.getInstance().getToken();
 
 
     }
 
+    private String getMACAdd() {
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wInfo = wifiManager.getConnectionInfo();
+        return wInfo.getMacAddress();
+    }
 
 
     private void requestForPermissions() {
